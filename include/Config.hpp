@@ -3,6 +3,8 @@
 /**
  * simulation parameters
  * see doc for explanation
+ *
+ * TODO: CTOR with preamble
  */
 class Config
 {
@@ -18,6 +20,8 @@ class Config
     //(hard to have 1000 best friends)
     const unsigned int maxEdgesPerNode;
 
+    //how are sales skills distributed throughout the population?
+    //random guess: normal distribution?
     //const ??? salesSkillDistribution;
     
     /**
