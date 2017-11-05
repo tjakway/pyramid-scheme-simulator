@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 /**
  * simulation parameters
  * see doc for explanation
@@ -22,7 +24,7 @@ class Config
 
     //how are sales skills distributed throughout the population?
     //random guess: normal distribution?
-    //const ??? salesSkillDistribution;
+    const std::function<double()> salesSkillDistribution;
     
     /**
      * Distribution of funds among the general population
