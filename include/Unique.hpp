@@ -37,6 +37,7 @@ public:
 /**
  * TODO: implement
  * a trait for classes with Unique IDs
+ * TODO: ought to be pure virtual
  */
 class Uniqueable 
 {
