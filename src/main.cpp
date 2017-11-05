@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Config.hpp"
+#include "Unique.hpp"
 
 int main(int argc, char** argv)
 {

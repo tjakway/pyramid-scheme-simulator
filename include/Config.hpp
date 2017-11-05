@@ -4,6 +4,14 @@
 #include <random>
 #include <functional>
 
+namespace pyramid_scheme_simulator {
+
+/**
+ * type alias representing a pointer to a random generator
+ */
+using rd_ptr = std::shared_ptr<std::mt19937_64>;
+
+
 /**
  * simulation parameters
  * see doc for explanation
@@ -19,7 +27,8 @@ class Config
 
 //public config values
 public:
-    const std::shared_ptr<std::mt19937_64> randomGen;
+
+    const rd_ptr randomGen;
 
     const unsigned long graphSize;
 
@@ -62,3 +71,5 @@ public:
     //const ??? capitalizationChange;
 
 };
+
+}
