@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+#include <random>
 #include <functional>
 
 /**
@@ -7,9 +9,18 @@
  * see doc for explanation
  *
  * TODO: CTOR with preamble
+ * TODO: for C++ random number distributions, see  C++ concepts: RandomNumberDistribution
+ *  [numeric/random/*]
  */
 class Config
 {
+//private internal variables
+    const int randomSeed;
+
+//public config values
+public:
+    const std::uniq_ptr<std::mt19937_64> randomGen;
+
     const unsigned long graphSize;
 
     //how likely are people to have connections to other people?
