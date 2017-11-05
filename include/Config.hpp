@@ -5,6 +5,7 @@
 #include <functional>
 
 #include "RDType.hpp"
+#include "Unique.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -26,6 +27,8 @@ class Config
 public:
 
     const rd_ptr randomGen;
+
+    const std::shared_ptr<UniqueGen> uniqueGen;
 
     const unsigned long graphSize;
 
