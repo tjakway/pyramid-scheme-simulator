@@ -19,7 +19,7 @@ class Config
 
 //public config values
 public:
-    const std::uniq_ptr<std::mt19937_64> randomGen;
+    const std::unique_ptr<std::mt19937_64> randomGen;
 
     const unsigned long graphSize;
 
