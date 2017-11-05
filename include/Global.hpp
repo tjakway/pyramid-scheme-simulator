@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CapitalHolder.hpp"
+#include "Config.hpp"
+#include "Unique.hpp"
 
 namespace pyramid_scheme_simulator {
 
