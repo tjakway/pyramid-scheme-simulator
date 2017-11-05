@@ -21,13 +21,15 @@ public:
  */
 class Unique 
 {
+private:
+    friend UniqueGen;
 
-    //TODO: private internal state
-    
-    //TODO: override equality operators
-    
+    rd_type id;
+    Unique(rd_type x) : id(x) {}
 
-    //TODO: delete public constructors
+public:
+    bool operator==(const Unique& rhs){ this->id == rhs.id; }
+    bool operator!=(const Unique& rhs){ return !(*this == rhs); }
 };
 
 }
