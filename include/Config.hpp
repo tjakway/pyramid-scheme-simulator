@@ -4,13 +4,9 @@
 #include <random>
 #include <functional>
 
-namespace pyramid_scheme_simulator {
+#include "RDType.hpp"
 
-/**
- * type alias representing a pointer to a random generator
- */
-using rd_ptr  = std::shared_ptr<std::mt19937_64>;
-using rd_type = decltype(std::mt19937_64()());
+namespace pyramid_scheme_simulator {
 
 
 /**

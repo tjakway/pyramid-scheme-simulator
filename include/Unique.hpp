@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
+#include "RDType.hpp"
 
 namespace pyramid_scheme_simulator {
 
