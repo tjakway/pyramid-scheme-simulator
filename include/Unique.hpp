@@ -5,6 +5,7 @@
 namespace pyramid_scheme_simulator {
 
 class Unique;
+class Uniqueable;
 
 class UniqueGen 
 {
@@ -30,6 +31,16 @@ private:
 public:
     bool operator==(const Unique& rhs){ this->id == rhs.id; }
     bool operator!=(const Unique& rhs){ return !(*this == rhs); }
+};
+
+
+/**
+ * TODO: implement
+ * a trait for classes with Unique IDs
+ */
+class Uniqueable 
+{
+    Unique id;
 };
 
 }

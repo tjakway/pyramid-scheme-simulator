@@ -10,10 +10,9 @@ class CapitalHolder;
 class Company;
 class Distributor;
 
-class CapitalHolder 
+class CapitalHolder : public Uniqueable
 {
     double money;
-    Unique id;
 
 protected:
     void setMoney(double);
