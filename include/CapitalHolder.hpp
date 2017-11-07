@@ -21,12 +21,12 @@ protected:
 /**
  * someone who hasn't been converted
  */
-class Person
+class Person : protected CapitalHolder
 {
 
 };
 
-class Company
+class Company : protected CapitalHolder
 {
     /**
      * the company has a set of distributors working for them
