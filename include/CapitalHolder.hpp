@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Unique.hpp"
-#include "Simulation.hpp"
+#include "Tick.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -34,7 +34,7 @@ class Company : protected CapitalHolder
 
 class Sale
 {
-    const Simulation::tick when;
+    const SimulationTick when;
     const std::shared_ptr<Distributor> boughtFrom;
 };
 

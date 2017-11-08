@@ -15,11 +15,6 @@ class Simulation
 
 public:
     Simulation(Config c) : config(c) {}
-
-    /**
-     * represents 1 step of the simulation
-     */
-    using tick = unsigned int;
 };
 
 } //namespace pyramid_scheme_simulator
