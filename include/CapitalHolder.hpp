@@ -15,10 +15,13 @@ class Distributor;
 
 class CapitalHolder : public Uniqueable
 {
-    double money;
+    unsigned int money;
 
 protected:
-    void setMoney(double);
+    void setMoney(unsigned int);
+    bool canPurchase(unsigned int cost) {
+        return money >= cost;
+    }
 
 public:
     CapitalHolder() : Uniqueable() {}
@@ -43,10 +46,12 @@ public:
 
 class Distributor : protected Consumer
 {
+    using SalesFunction = std::function<double(const CapitalHolder const&)>
+
     /**
-     * describes the chance of making a sale to the given target
+     * describes the chance of making a sale to the passed target
      */
-    const std::function<double(const CapitalHolder const&)> saleChance;
+    const SalesFunction saleChance;
 
 public:
     /**
@@ -54,7 +59,7 @@ public:
      */
     double getSalesChance(const CapitalHolder const& x) = saleChance(x);
 
-    Distributor(std::function<double(const CapitalHolder const&)> f) : saleChance(f)
+    Distributor(SalesFunction f) : saleChance(f)
 };
 
 } //pyramid_scheme_simulator
