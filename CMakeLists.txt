@@ -32,6 +32,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
 #link dependencies
 target_link_libraries(${MAIN_LIB_TARGET} xg)
+#see https://stackoverflow.com/a/43885372/450153 for an explanation of this syntax
 target_link_libraries(${MAIN_LIB_TARGET} Boost::graph)
 
 add_executable(${MAIN_EXE_TARGET} ${MAIN_SRC_FILE})
