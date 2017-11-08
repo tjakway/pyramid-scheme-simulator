@@ -10,7 +10,7 @@
 namespace pyramid_scheme_simulator {
 
 /**
- * return a sales function that is totally random and not dependent 
+ * return a sales function that is totally random
  */
 Distributor::SalesFunction mkRandomSalesFunction(const unsigned int productCost,
         rd_ptr randomGen) {
