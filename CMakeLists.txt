@@ -11,10 +11,15 @@ set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 
+#set up dependencies
+
+#crossguid, used for generating uuids
 set(CROSSGUID_DIR "${CMAKE_SOURCE_DIR}/lib/crossguid")
 
 add_subdirectory(${CROSSGUID_DIR} ${CMAKE_BINARY_DIR}/crossguid-bin)
 include_directories(${CROSSGUID_DIR})
+
+find_package(Boost 1.61 COMPONENTS graph REQUIRED)
 
 #WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
 FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
@@ -25,8 +30,9 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
-#link crossguid lib
+#link dependencies
 target_link_libraries(${MAIN_LIB_TARGET} xg)
+target_link_libraries(${MAIN_LIB_TARGET} Boost::graph)
 
 add_executable(${MAIN_EXE_TARGET} ${MAIN_SRC_FILE})
 target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
