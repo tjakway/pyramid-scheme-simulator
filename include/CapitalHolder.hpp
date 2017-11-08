@@ -19,7 +19,7 @@ class CapitalHolder : public Uniqueable
 
 protected:
     void setMoney(unsigned int);
-    bool canPurchase(unsigned int cost) {
+    virtual bool canPurchase(const CapitalHolder const& from, unsigned int cost) {
         return money >= cost;
     }
 
@@ -46,20 +46,12 @@ public:
 
 class Distributor : protected Consumer
 {
-    using SalesFunction = std::function<double(const CapitalHolder const&)>
-
-    /**
-     * describes the chance of making a sale to the passed target
-     */
-    const SalesFunction saleChance;
-
 public:
     /**
      * chance of making a sale to the other node
      */
-    double getSalesChance(const CapitalHolder const& x) = saleChance(x);
-
-    Distributor(SalesFunction f) : saleChance(f)
+    virtual double getSalesChance(const CapitalHolder const& x) = 0;
+    virtual bool canPurchase(const CapitalHolder const& from, unsigned int cost);
 };
 
 } //pyramid_scheme_simulator
