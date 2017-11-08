@@ -1,8 +1,10 @@
 #pragma once
 
 #include <set>
+#include <vector>
 
 #include "Unique.hpp"
+#include "Simulation.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -21,14 +23,6 @@ public:
     CapitalHolder() : Uniqueable() {}
 };
 
-/**
- * someone who hasn't been converted
- */
-class Person : protected CapitalHolder
-{
-
-};
-
 class Company : protected CapitalHolder
 {
     /**
@@ -38,9 +32,17 @@ class Company : protected CapitalHolder
 };
 
 
+class Sale
+{
+    const Simulation::tick when;
+    const std::shared_ptr<Distributor> boughtFrom;
+};
+
 //TODO
 class Consumer : protected CapitalHolder
 {
+    std::set<Sale> purchases;
+
 };
 
 

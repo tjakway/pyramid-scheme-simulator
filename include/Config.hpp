@@ -9,7 +9,6 @@
 
 namespace pyramid_scheme_simulator {
 
-
 /**
  * simulation parameters
  * see doc for explanation
