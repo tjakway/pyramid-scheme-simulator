@@ -10,6 +10,12 @@ set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
 #see http://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake for proper ways to enable C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+
+set(CROSSGUID_DIR "${CMAKE_SOURCE_DIR}/lib/crossguid")
+
+add_subdirectory(${CROSSGUID_DIR} ${CMAKE_BINARY_DIR}/crossguid-bin)
+include_directories(${CROSSGUID_DIR})
+
 #WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
 FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
 LIST(REMOVE_ITEM MAIN_LIB_SRC ${MAIN_SRC_FILE})
