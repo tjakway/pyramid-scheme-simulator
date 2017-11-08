@@ -28,8 +28,6 @@ public:
 
     const rd_ptr randomGen;
 
-    const std::shared_ptr<UniqueGen> uniqueGen;
-
     const unsigned long graphSize;
 
     //how likely are people to have connections to other people?

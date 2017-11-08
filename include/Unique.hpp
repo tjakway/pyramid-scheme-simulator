@@ -16,7 +16,7 @@ class Uniqueable
 {
 public:
     const Unique id;
-    Uniqueable::Uniqueable() : id(xg::newGuid()) {}
+    Uniqueable() : id(xg::newGuid()) {}
 };
 
 }
