@@ -25,6 +25,8 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
+#link crossguid lib
+target_link_libraries(${MAIN_LIB_TARGET} xg)
 
 add_executable(${MAIN_EXE_TARGET} ${MAIN_SRC_FILE})
 target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
