@@ -41,8 +41,6 @@ class Company : protected CapitalHolder
 //TODO
 class Consumer : protected CapitalHolder
 {
-public:
-    double getBuyingChance();
 };
 
 
