@@ -25,6 +25,8 @@ class Config
 //public config values
 public:
 
+    const unsigned int productCost;
+
     const rd_ptr randomGen;
 
     const unsigned long graphSize;
@@ -68,5 +70,7 @@ public:
     //const ??? capitalizationChange;
 
 };
+
+
 
 }
