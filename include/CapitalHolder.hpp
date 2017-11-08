@@ -16,6 +16,9 @@ class CapitalHolder : public Uniqueable
 
 protected:
     void setMoney(double);
+
+public:
+    CapitalHolder() : Uniqueable() {}
 };
 
 /**
@@ -34,7 +37,16 @@ class Company : protected CapitalHolder
     std::set<Distributor> distributors;
 };
 
-class Distributor : protected CapitalHolder
+
+//TODO
+class Consumer : protected CapitalHolder
+{
+public:
+    double getBuyingChance();
+};
+
+
+class Distributor : protected Consumer
 {
 public:
     /**
