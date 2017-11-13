@@ -16,12 +16,12 @@ class Distributor;
 class CapitalHolder : public Uniqueable
 {
 protected:
-    unsigned int money;
-    unsigned int productCost;
+    Money money;
+    Money productCost;
 
     double getMoneyToProductCostRatio();
 
-    void setMoney(unsigned int);
+    void setMoney(Money);
     virtual bool canPurchase(const Distributor& from) {
         return money >= productCost;
     }
