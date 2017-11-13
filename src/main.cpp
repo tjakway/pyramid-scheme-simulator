@@ -1,9 +1,10 @@
 #include <iostream>
 
 #include "CapitalHolder.hpp"
-#include "Config.hpp"
+#include "Sales.hpp"
 #include "Unique.hpp"
 #include "Graph.hpp"
+#include "Config.hpp"
 
 int main(int argc, char** argv)
 {
