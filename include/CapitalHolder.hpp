@@ -46,6 +46,12 @@ public:
 
 class Distributor : protected Consumer
 {
+private:
+    /**
+     * who this distributor was recruited by
+     * nullptr if they directly bought in to the company
+     */
+    std::shared_ptr<Distributor> recruitedBy;
 protected:
     /**
      * chance of making a sale to the other node
@@ -54,6 +60,8 @@ protected:
      */
     virtual double getSalesChance(const CapitalHolder& x) = 0;
     virtual bool canPurchase(const CapitalHolder& from, Money cost);
+
+    bool isSubDistributor() { return recruitedBy.get() != nullptr; }
 };
 
 
