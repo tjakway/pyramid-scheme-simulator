@@ -26,6 +26,10 @@ protected:
     void setRange(std::pair<T, T> r) { range = r; }
 
 public:
+    bool hasOption() { return option.get() == nullptr; };
+    virtual T getOption() { return *option; }
+
+
     class BoundedOptionException : public std::exception
     { };
 
@@ -37,26 +41,29 @@ public:
     {
         std::string msg;
     public:
-        OptionNotInRangeException()
+        /**
+         * C++ doesn't implicitly pass a reference to the outer class
+         */
+        OptionNotInRangeException(BoundedOption* outer)
         {
             std::ostringstream ss;
-            ss << "Option " << getOption() << " not in range " <<
-                range.first() << " to " << range.second() << std::endl;
+            ss << "Option " << outer->getOption() << " not in range " <<
+                outer->range.first << " to " << outer->range.second << std::endl;
             msg = ss.str();
         }
 
-        const char* what() override
+        virtual const char* what() const throw() override
         {
             return msg.c_str();
         }
     };
 
     BoundedOption(T opt, std::pair<T, T> range)
-        : option(opt)
+        : option(new T(opt))
     {
-        if(!(opt <= range.first() && opt >= range.second()))
-        {
-            throw OptionNotInRangeException(range);
+        if(!(opt <= range.first && opt >= range.second))
+        {   
+            throw BoundedOption::OptionNotInRangeException(this);
         }
     }
 
@@ -66,9 +73,6 @@ public:
     BoundedOption(std::pair<T, T> r)
         : range(r)
     { }
-
-    bool hasOption() { return option.get() == nullptr; };
-    virtual T getOption() { return *option; }
 };
 
 class PercentOption : BoundedOption<double>
