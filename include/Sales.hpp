@@ -18,7 +18,7 @@ public:
         UNKNOWN,
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
-        SUCCESS;
+        SUCCESS
     } reason;
 
     const bool success;
@@ -27,7 +27,7 @@ public:
         return success;
     }
 
-    explicit bool operator!() const {
+    bool operator!() const {
         return !success;
     }
 };
