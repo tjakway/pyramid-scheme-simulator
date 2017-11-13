@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Types.hpp"
+
 #include <memory>
 #include <set>
 
@@ -32,7 +34,10 @@ public:
 
 class Expenditure
 {
-    const fundsBefore;
+public:
+    const Money fundsBefore;
+    const Money fundsAfter;
+    Expenditure(Money, Money);
 };
 
 class Sale
