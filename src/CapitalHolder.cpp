@@ -26,6 +26,10 @@ bool Distributor::canPurchase(const CapitalHolder& from, Money cost)
     {
         return false;
     }
+    else
+    {
+        //XXX
+    }
 }
 
 }
