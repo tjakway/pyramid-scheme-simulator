@@ -10,6 +10,7 @@ namespace pyramid_scheme_simulator {
 template<typename T>
 class BoundedOption
 {
+private:
     T option;
     //no need to store the range since it's only used in the constructor
 
@@ -28,7 +29,7 @@ public:
         OptionNotInRangeException(std::pair<T, T> range)
         {
             std::ostringstream ss;
-            ss << "Option " << option << " not in range " <<
+            ss << "Option " << getOption() << " not in range " <<
                 range.first() << " to " << range.second() << std::endl;
             msg = ss.str();
         }
@@ -48,7 +49,22 @@ public:
         }
     }
 
-    T getOption() { return option; }
+    virtual T getOption() { return option; }
+};
+
+class PercentOption : BoundedOption<double>
+{
+private:
+    double option;
+
+public:
+    PercentOption(double pc) : BoundedOption(pc, std::pair<double, double>(0.0, 1.0)),
+        option(pc) {}
+
+    double getOption() override
+    {
+        return option;
+    }
 };
 
 }
