@@ -2,9 +2,27 @@
 
 namespace pyramid_scheme_simulator {
 
-bool Distributor::canPurchase(const CapitalHolder const& from, unsigned int cost)
+double CapitalHolder::getMoneyToProductCostRatio()
 {
-    if(from != this)
+    return money / productCost;
+}
+
+/**
+ * compare unique IDs
+ */
+bool CapitalHolder::operator==(const CapitalHolder& other)
+{
+    return this->id == other.id;
+}
+
+bool CapitalHolder::operator!=(const CapitalHolder& other)
+{
+    return this->id != other.id;
+}
+
+bool Distributor::canPurchase(const CapitalHolder& from, unsigned int cost)
+{
+    if(*this != from)
     {
         return false;
     }

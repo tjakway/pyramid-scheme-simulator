@@ -10,48 +10,51 @@
 namespace pyramid_scheme_simulator {
 
 class CapitalHolder;
-class Company;
+class Consumer;
 class Distributor;
 
 class CapitalHolder : public Uniqueable
 {
-    unsigned int money;
-
 protected:
+    unsigned int money;
+    unsigned int productCost;
+
+    double getMoneyToProductCostRatio();
+
     void setMoney(unsigned int);
-    virtual bool canPurchase(const CapitalHolder const& from, unsigned int cost) {
-        return money >= cost;
+    virtual bool canPurchase(const Distributor& from) {
+        return money >= productCost;
     }
 
-public:
-    CapitalHolder() : Uniqueable() {}
-};
+    virtual bool willPurchase(const Distributor& from) = 0;
 
+    CapitalHolder(unsigned int cost) : Uniqueable(), productCost(cost) {}
 
-class Sale
-{
-    const SimulationTick when;
-    const std::shared_ptr<Distributor> boughtFrom;
+    bool operator==(const CapitalHolder&);
+    bool operator!=(const CapitalHolder&);
 };
 
 //TODO
 class Consumer : protected CapitalHolder
 {
-    std::set<Sale> purchases;
-
+protected:
+    Consumer(unsigned int cost): CapitalHolder(cost) {}
 public:
-    void buy(const Distributor const& from, SimulationTick when);
-};
+    void onBuy(const Distributor& from, SimulationTick when);
 
+};
 
 class Distributor : protected Consumer
 {
-public:
+protected:
     /**
      * chance of making a sale to the other node
+     * TODO: probably make this a static method that takes both the Consumer and Distributor
+     * objects as parameters since the chance of a sale depends on factors from both
      */
-    virtual double getSalesChance(const CapitalHolder const& x) = 0;
-    virtual bool canPurchase(const CapitalHolder const& from, unsigned int cost);
+    virtual double getSalesChance(const CapitalHolder& x) = 0;
+    virtual bool canPurchase(const CapitalHolder& from, unsigned int cost);
 };
+
 
 } //pyramid_scheme_simulator
