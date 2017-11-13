@@ -9,12 +9,15 @@ namespace pyramid_scheme_simulator {
 
 class Simulation
 {
+private:
     const std::shared_ptr<const Config> config;
+    std::unique_ptr<PopulationGraph> graph;
 
-    std::unique_ptr<PopulationGraph> buildGraph(const std::shared_ptr<Config>);
+    std::unique_ptr<PopulationGraph> buildGraph(const std::shared_ptr<const Config>);
+    void tick();
 
 public:
-    Simulation(const Config* const c) : config(std::shared_ptr<const Config>(c)) {}
+    Simulation(const Config* const c);
 };
 
 } //namespace pyramid_scheme_simulator

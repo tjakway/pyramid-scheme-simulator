@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -14,7 +15,7 @@ using PopulationGraph =
         boost::vecS,
         boost::vecS, 
         boost::undirectedS,
-        CapitalHolder>;
+        std::shared_ptr<CapitalHolder>>;
 
 using PopDescriptor = 
     boost::graph_traits<PopulationGraph>::vertex_descriptor;

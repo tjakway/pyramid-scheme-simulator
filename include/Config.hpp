@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "Types.hpp"
+#include "Tick.hpp"
 #include "Unique.hpp"
 #include "BoundedOption.hpp"
 
@@ -25,6 +26,8 @@ class Config
 
 //public config values
 public:
+
+    const SimulationTick maxTicks;
 
     const unsigned int productCost;
 
