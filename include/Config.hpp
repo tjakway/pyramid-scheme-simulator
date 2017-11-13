@@ -3,12 +3,13 @@
 #include <memory>
 #include <random>
 #include <functional>
+#include <utility>
 
 #include "Types.hpp"
 #include "Unique.hpp"
+#include "BoundedOption.hpp"
 
 namespace pyramid_scheme_simulator {
-
 /**
  * simulation parameters
  * see doc for explanation
@@ -28,18 +29,6 @@ public:
     const unsigned int productCost;
 
     const rd_ptr randomGen;
-
-    const unsigned long graphSize;
-
-    //how likely are people to have connections to other people?
-    const double graphConnectedness;
-
-    const bool allowUnconnectedSubgraphs;
-
-    //corresponding to the maximum number of people someone
-    //can maintain social relationships with
-    //(hard to have 1000 best friends)
-    const unsigned int maxEdgesPerNode;
 
     //how are sales skills distributed throughout the population?
     //random guess: normal distribution?
@@ -63,12 +52,34 @@ public:
     //const ??? salesFunction;
     
     //how much does a distributor get from converting someone else into a distributor?
-    //const ??? downstreamEffects;
+    //bounded to 99% because it doesn't make sense if a distributor gets all of the
+    //earnings of a subdistributor
+    const BoundedOption downstreamPercent = 
+        BoundedOption(std::pair<double, double>(0.0, 0.99))
     
 
     //capitalization change per tick
     //const ??? capitalizationChange;
 
+
+    class GraphGenerationOptions
+    {
+        const bool allowUnconnectedSubgraphs = true;
+
+        const unsigned long graphSize;
+
+        /**
+         * how likely are people to have connections to other people?
+         * AKA link chance
+         */
+        const PercentOption graphConnectedness;
+
+
+        //corresponding to the maximum number of people someone
+        //can maintain social relationships with
+        //(hard to have 1000 best friends)
+        const unsigned int maxEdgesPerNode;
+    };
 };
 
 
