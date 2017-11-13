@@ -20,7 +20,7 @@ bool CapitalHolder::operator!=(const CapitalHolder& other)
     return this->id != other.id;
 }
 
-bool Distributor::canPurchase(const CapitalHolder& from, unsigned int cost)
+bool Distributor::canPurchase(const CapitalHolder& from, Money cost)
 {
     if(*this != from)
     {

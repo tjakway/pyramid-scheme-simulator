@@ -28,7 +28,7 @@ protected:
 
     virtual bool willPurchase(const Distributor& from) = 0;
 
-    CapitalHolder(unsigned int cost) : Uniqueable(), productCost(cost) {}
+    CapitalHolder(Money cost) : Uniqueable(), productCost(cost) {}
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
@@ -38,7 +38,7 @@ protected:
 class Consumer : protected CapitalHolder
 {
 protected:
-    Consumer(unsigned int cost): CapitalHolder(cost) {}
+    Consumer(Money cost): CapitalHolder(cost) {}
 public:
     void onBuy(const Distributor& from, SimulationTick when);
 
@@ -53,7 +53,7 @@ protected:
      * objects as parameters since the chance of a sale depends on factors from both
      */
     virtual double getSalesChance(const CapitalHolder& x) = 0;
-    virtual bool canPurchase(const CapitalHolder& from, unsigned int cost);
+    virtual bool canPurchase(const CapitalHolder& from, Money cost);
 };
 
 

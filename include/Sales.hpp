@@ -30,10 +30,16 @@ public:
     }
 };
 
+class Expenditure
+{
+    const fundsBefore;
+};
+
 class Sale
 {
 public:
     const SimulationTick when;
+
     const std::shared_ptr<Distributor> seller;
     const std::shared_ptr<Consumer> buyer;
 };
