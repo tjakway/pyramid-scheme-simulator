@@ -4,7 +4,7 @@
 #include <random>
 #include <functional>
 
-#include "RDType.hpp"
+#include "Types.hpp"
 #include "Unique.hpp"
 
 namespace pyramid_scheme_simulator {
