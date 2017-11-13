@@ -24,7 +24,7 @@ bool Util::sampleFrom(rd_ptr rng, double probability)
         static auto dist = std::uniform_real_distribution<double>(0.0, 
                 std::nextafter(1.0, std::numeric_limits<double>::max()));
 
-        return dist(rng) <= probability;
+        return dist(*rng) <= probability;
     }
 }
 
