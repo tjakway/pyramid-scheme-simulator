@@ -33,9 +33,14 @@ public:
 
     const rd_ptr randomGen;
 
-    //how are sales skills distributed throughout the population?
-    //random guess: normal distribution?
-    const std::function<double()> salesSkillDistribution;
+    class SimulationOptions
+    {
+        /**
+         * chance of a Consumer spontaneously becoming a Distributor
+         * (i.e. being recruited directly by the company)
+         */
+        const double onboardingChance;
+    } simulationOptions;
     
     /**
      * Distribution of funds among the general population
@@ -86,11 +91,23 @@ public:
         //corresponding to the maximum number of people someone
         //can maintain social relationships with
         //(hard to have 1000 best friends)
-        const BoundedOption<unsigned long> maxEdgesPerNode =
+        const BoundedOption<unsigned long> maxEdgesPerVertex =
             BoundedOption<unsigned long>(
                 std::pair<unsigned long, unsigned long>(2,
                     std::limits>unsigned long>::max()));
-    };
+
+
+        //how are sales skills distributed throughout the population?
+        //random guess: normal distribution?
+        const std::function<double()> salesSkillDistribution;
+
+
+        /**
+         * no spontaneous conversions: parentless Distributors will only be created
+         * during graph generation
+         */
+        const bool onlyInitialOnboarding
+    } graphGenerationOptions;
 };
 
 
