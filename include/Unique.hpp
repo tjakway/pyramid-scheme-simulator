@@ -9,6 +9,8 @@ class Uniqueable;
 
 using Unique = xg::Guid;
 
+Unique newUnique() { return xg::newGuid(); }
+
 /**
  * a trait for classes with Unique IDs
  */
