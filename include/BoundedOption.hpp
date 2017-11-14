@@ -92,32 +92,32 @@ public:
     bool hasOption() { return option.get() == nullptr; };
     virtual T getOption() { return checkOption(); }
 
-
-    /**
-    * constructor to pass the range in ahead of time
-    */
-    BoundedOption(std::pair<T, T> r)
-        : range(r)
-    { }
-
-
-
-    BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range, optionNotInRangeMsg(onErrorMsg))
-    { }
-
-
-    BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range), option(new T(opt))
+    BoundedOption(T* opt, std::pair<T, T> range, std::string onErrorMsg)
+        : option(std::unique_ptr<T>(opt)), range(range), optionNotInRangeMsg(onErrorMsg)
     {
-        if(!(opt <= range.first && opt >= range.second))
+        if(opt != nullptr && !(opt <= range.first && opt >= range.second))
         {   
             throw BoundedOption::OptionNotInRangeException(onErrorMsg);
         }
     }
 
+    /**
+    * constructor to pass the range in ahead of time
+    */
+    BoundedOption(std::pair<T, T> range)
+        : BoundedOption(nullptr, range, defaultErrorMessage())
+    { }
 
-    BoundedOption(T opt, std::pair<T, T> range)
+
+
+    BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
+        : BoundedOption(nullptr, range, onErrorMsg)
+    { }
+
+
+
+
+    BoundedOption(T* opt, std::pair<T, T> range)
         : BoundedOption(opt, range, defaultErrorMessage())
     { }
 };
@@ -125,7 +125,8 @@ public:
 class PercentOption : BoundedOption<double>
 {
 public:
-    PercentOption(double pc) : BoundedOption(pc, std::pair<double, double>(0.0, 1.0))
+    PercentOption(double pc) : BoundedOption(new double(pc),
+            std::pair<double, double>(0.0, 1.0))
         {}
 };
 
