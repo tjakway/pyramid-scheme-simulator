@@ -105,7 +105,7 @@ public:
          * no spontaneous conversions: parentless Distributors will only be created
          * during graph generation
          */
-        const bool onlyInitialOnboarding
+        const bool onlyInitialOnboarding;
     } graphGenerationOptions;
 };
 
