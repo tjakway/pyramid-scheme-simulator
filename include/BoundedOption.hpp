@@ -11,38 +11,10 @@ namespace pyramid_scheme_simulator {
 template<typename T>
 class BoundedOption
 {
-private:
-    std::unique_ptr<T> option;
-    std::pair<T, T> range;
-
-protected:
-    void setOption(T opt) 
-    {
-        option = std::unique_ptr<T>(opt);
-    }
-
-    std::pair<T, T> getRange() { return range; }
-
-    void setRange(std::pair<T, T> r) { range = r; }
-
-    std::string defaultErrorMessage();
-    std::string optionNotInRangeMsg = defaultErrorMessage();
-
 public:
-    class OptionNotSetException;
-
-    bool hasOption() { return option.get() == nullptr; };
-    virtual T getOption() 
-    { 
-        if(option == nullptr)
-        {
-            throw OptionNotSetException();
-        }
-        else
-        {
-            return *option;
-        }
-    }
+    /**
+     * ERROR CLASSES
+     */
 
     class BoundedOptionException : public std::exception
     { };
@@ -73,6 +45,53 @@ public:
             return "BoundedOption was only given a range.";
         }
     };
+private:
+    std::unique_ptr<T> option;
+    std::pair<T, T> range;
+
+protected:
+    void setOption(T opt) 
+    {
+        option = std::unique_ptr<T>(opt);
+        checkOption();
+    }
+
+    std::pair<T, T> getRange() { return range; }
+
+    void setRange(std::pair<T, T> r) { range = r; }
+
+    std::string defaultErrorMessage()
+    {
+        std::ostringstream ss;
+        ss << "Option " << getOption() << " not in range " <<
+            range.first << " to " << range.second << 
+            std::endl;
+        return ss.str();
+    }
+
+    std::string optionNotInRangeMsg = defaultErrorMessage();
+
+    T checkOption()
+    {
+        if(option == nullptr)
+        {
+            throw OptionNotSetException();
+        }
+        else if(!(*option <= range.first && *option >= range.second))
+        {
+            throw OptionNotInRangeException();
+        }
+        else
+        {
+            return *option;
+        }
+    }
+
+public:
+
+    bool hasOption() { return option.get() == nullptr; };
+    virtual T getOption() { return checkOption(); }
+
 
     /**
     * constructor to pass the range in ahead of time
@@ -83,12 +102,12 @@ public:
 
 
     BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range), optionNotInRangeMsg(onErrorMsg)
+        : BoundedOption(range, optionNotInRangeMsg(onErrorMsg))
     { }
 
 
     BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range), option(new T(opt))
+        : BoundedOption(range, option(new T(opt)))
     {
         if(!(opt <= range.first && opt >= range.second))
         {   
