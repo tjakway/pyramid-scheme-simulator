@@ -122,7 +122,7 @@ public:
     { }
 };
 
-class PercentOption : BoundedOption<double>
+class PercentOption : public BoundedOption<double>
 {
 public:
     PercentOption(double pc) : BoundedOption(new double(pc),
