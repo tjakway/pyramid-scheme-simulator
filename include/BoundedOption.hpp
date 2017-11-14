@@ -95,7 +95,7 @@ public:
     BoundedOption(T* opt, std::pair<T, T> range, std::string onErrorMsg)
         : option(std::unique_ptr<T>(opt)), range(range), optionNotInRangeMsg(onErrorMsg)
     {
-        if(opt != nullptr && !(opt <= range.first && opt >= range.second))
+        if(opt != nullptr && !(*opt <= range.first && *opt >= range.second))
         {   
             throw BoundedOption::OptionNotInRangeException(onErrorMsg);
         }
