@@ -59,7 +59,7 @@ PopulationGraph* PopulationGraphGenerator::
             auto secondElem = std::find(begin, end, v2);
             checkFind(&v2, secondElem);
 
-            return std::make_pair(begin - firstElem, begin - secondElem);
+            return std::make_pair(firstElem - begin, secondElem - begin);
         }
     };
 
