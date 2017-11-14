@@ -20,6 +20,29 @@ using PopulationGraph =
 using PopDescriptor = 
     boost::graph_traits<PopulationGraph>::vertex_descriptor;
 
+class PopulationGraphGenerator
+{
+private:
+    //TODO: *maybe* make this a GraphGenerationOptions field
+    unsigned int maxTries;
+
+    bool checkGraph(const PopulationGraph&);
+
+    
+
+    PopulationGraph* buildGraph(rd_ptr, const Config::GraphGenerationOptions&);
+
+    /**
+     * TODO:
+     * need this step to create Distributors during graph generation
+     *  -need to check that all disconnected subgraphs have at least 1 distributor
+     */
+    PopulationGraph applyOnlyInitialOnboardingTransformation(PopulationGraph&);
+
+public:
+    PopulationGraphGenerator(const Config::GraphGenerationOptions&);
+};
+
 enum TransformationType
 {
     BOUGHT_PRODUCT=2,
