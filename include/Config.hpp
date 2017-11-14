@@ -4,6 +4,7 @@
 #include <random>
 #include <functional>
 #include <utility>
+#include <limits>
 
 #include "Types.hpp"
 #include "Tick.hpp"
@@ -78,7 +79,7 @@ public:
         const BoundedOption<unsigned long> graphSize =
             BoundedOption<unsigned long>(
                 std::pair<unsigned long, unsigned long>(2,
-                    std::limits<unsigned long>::max()),
+                    std::numeric_limits<unsigned long>::max()),
                 "Cannot have a graph with <2 vertices.");
 
         /**
@@ -92,8 +93,8 @@ public:
         //(hard to have 1000 best friends)
         const BoundedOption<unsigned long> maxEdgesPerVertex =
             BoundedOption<unsigned long>(
-                std::pair<unsigned long, unsigned long>(2,
-                    std::limits>unsigned long>::max()));
+                std::make_pair(2,
+                    std::numeric_limits<unsigned long>::max()));
 
 
         //how are sales skills distributed throughout the population?
