@@ -1,6 +1,7 @@
 #include "Config.hpp"
 #include "Unique.hpp"
 #include "Graph.hpp"
+#include "Util.hpp"
 
 #include <set>
 #include <array>
@@ -64,7 +65,8 @@ PopulationGraph* PopulationGraphGenerator::
     };
 
     //check if link chance procs
-    auto testEdge = [rd]() -> bool { return Util::sampleFrom(rd, options.linkChance); }
+    auto testEdge = [rd, options]() -> bool { return Util::sampleFrom(rd, 
+            options.linkChance.getOption()); }
 
     std::set<UndirectedEdge> edges;
     std::unique_ptr<Unique> vertices;
