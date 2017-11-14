@@ -62,26 +62,18 @@ public:
 
 
     BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range), option(new T(opt)),
-            optionNotInRangeException(new OptionNotInRangeException(onErrorMsg))
+        : BoundedOption(range), option(new T(opt))
     {
         if(!(opt <= range.first && opt >= range.second))
         {   
-            throw *optionNotInRangeException;
+            throw BoundedOption::OptionNotInRangeException(onErrorMsg);
         }
     }
 
 
     BoundedOption(T opt, std::pair<T, T> range)
-    {
-
-    }
-
-private:
-    /**
-     * can't forward declare templated classes
-     */
-    std::unique_ptr<OptionNotInRangeException> optionNotInRangeException;
+        : BoundedOption(opt, range, defaultErrorMessage())
+    { }
 };
 
 class PercentOption : BoundedOption<double>
