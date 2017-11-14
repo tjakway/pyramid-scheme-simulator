@@ -83,9 +83,8 @@ public:
 
         /**
          * how likely are people to have connections to other people?
-         * AKA link chance
          */
-        const PercentOption graphConnectedness;
+        const PercentOption linkChance;
 
 
         //corresponding to the maximum number of people someone
