@@ -26,10 +26,23 @@ protected:
     void setRange(std::pair<T, T> r) { range = r; }
 
     std::string defaultErrorMessage();
+    std::string optionNotInRangeMsg = defaultErrorMessage();
 
 public:
+    class OptionNotSetException;
+
     bool hasOption() { return option.get() == nullptr; };
-    virtual T getOption() { return *option; }
+    virtual T getOption() 
+    { 
+        if(option == nullptr)
+        {
+            throw OptionNotSetException();
+        }
+        else
+        {
+            return *option;
+        }
+    }
 
     class BoundedOptionException : public std::exception
     { };
@@ -52,6 +65,15 @@ public:
         }
     };
 
+    class OptionNotSetException 
+        : public BoundedOptionException
+    {
+        virtual const char* what() const throw() override
+        {
+            return "BoundedOption was only given a range.";
+        }
+    };
+
     /**
     * constructor to pass the range in ahead of time
     */
@@ -59,6 +81,10 @@ public:
         : range(r)
     { }
 
+
+    BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
+        : BoundedOption(range), optionNotInRangeMsg(onErrorMsg)
+    { }
 
 
     BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
