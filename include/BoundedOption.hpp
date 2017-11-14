@@ -25,10 +25,11 @@ protected:
 
     void setRange(std::pair<T, T> r) { range = r; }
 
+    std::string defaultErrorMessage();
+
 public:
     bool hasOption() { return option.get() == nullptr; };
     virtual T getOption() { return *option; }
-
 
     class BoundedOptionException : public std::exception
     { };
@@ -41,16 +42,9 @@ public:
     {
         std::string msg;
     public:
-        /**
-         * C++ doesn't implicitly pass a reference to the outer class
-         */
-        OptionNotInRangeException(BoundedOption* outer)
-        {
-            std::ostringstream ss;
-            ss << "Option " << outer->getOption() << " not in range " <<
-                outer->range.first << " to " << outer->range.second << std::endl;
-            msg = ss.str();
-        }
+        OptionNotInRangeException(std::string explicitMsg)
+            : msg(explicitMsg)
+        { }
 
         virtual const char* what() const throw() override
         {
@@ -58,21 +52,36 @@ public:
         }
     };
 
-    BoundedOption(T opt, std::pair<T, T> range)
-        : option(new T(opt))
-    {
-        if(!(opt <= range.first && opt >= range.second))
-        {   
-            throw BoundedOption::OptionNotInRangeException(this);
-        }
-    }
-
     /**
-     * constructor to pass the range in ahead of time
-     */
+    * constructor to pass the range in ahead of time
+    */
     BoundedOption(std::pair<T, T> r)
         : range(r)
     { }
+
+
+
+    BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
+        : BoundedOption(range), option(new T(opt)),
+            optionNotInRangeException(new OptionNotInRangeException(onErrorMsg))
+    {
+        if(!(opt <= range.first && opt >= range.second))
+        {   
+            throw *optionNotInRangeException;
+        }
+    }
+
+
+    BoundedOption(T opt, std::pair<T, T> range)
+    {
+
+    }
+
+private:
+    /**
+     * can't forward declare templated classes
+     */
+    std::unique_ptr<OptionNotInRangeException> optionNotInRangeException;
 };
 
 class PercentOption : BoundedOption<double>
