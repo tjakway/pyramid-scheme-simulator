@@ -79,7 +79,7 @@ protected:
         }
         else if(!(*option <= range.first && *option >= range.second))
         {
-            throw OptionNotInRangeException();
+            throw OptionNotInRangeException(optionNotInRangeMsg);
         }
         else
         {
@@ -101,13 +101,14 @@ public:
     { }
 
 
+
     BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
         : BoundedOption(range, optionNotInRangeMsg(onErrorMsg))
     { }
 
 
     BoundedOption(T opt, std::pair<T, T> range, std::string onErrorMsg)
-        : BoundedOption(range, option(new T(opt)))
+        : BoundedOption(range), option(new T(opt))
     {
         if(!(opt <= range.first && opt >= range.second))
         {   
@@ -123,17 +124,9 @@ public:
 
 class PercentOption : BoundedOption<double>
 {
-private:
-    double option;
-
 public:
-    PercentOption(double pc) : BoundedOption(pc, std::pair<double, double>(0.0, 1.0)),
-        option(pc) {}
-
-    double getOption() override
-    {
-        return option;
-    }
+    PercentOption(double pc) : BoundedOption(pc, std::pair<double, double>(0.0, 1.0))
+        {}
 };
 
 }
