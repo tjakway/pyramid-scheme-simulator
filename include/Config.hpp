@@ -67,13 +67,14 @@ public:
 
     class GraphGenerationOptions
     {
+    public:
         const bool allowUnconnectedSubgraphs = true;
 
         const BoundedOption<unsigned long> graphSize =
-            BoundedOption(
+            BoundedOption<unsigned long>(
                 std::pair<unsigned long, unsigned long>(2,
                     std::limits<unsigned long>::max()),
-                "Cannot have a graph <2.");
+                "Cannot have a graph with <2 vertices.");
 
         /**
          * how likely are people to have connections to other people?
@@ -85,7 +86,10 @@ public:
         //corresponding to the maximum number of people someone
         //can maintain social relationships with
         //(hard to have 1000 best friends)
-        const unsigned int maxEdgesPerNode;
+        const BoundedOption<unsigned long> maxEdgesPerNode =
+            BoundedOption<unsigned long>(
+                std::pair<unsigned long, unsigned long>(2,
+                    std::limits>unsigned long>::max()));
     };
 };
 
