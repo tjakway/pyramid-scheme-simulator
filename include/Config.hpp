@@ -69,7 +69,11 @@ public:
     {
         const bool allowUnconnectedSubgraphs = true;
 
-        const unsigned long graphSize;
+        const BoundedOption<unsigned long> graphSize =
+            BoundedOption(
+                std::pair<unsigned long, unsigned long>(2,
+                    std::limits<unsigned long>::max()),
+                "Cannot have a graph <2.");
 
         /**
          * how likely are people to have connections to other people?
