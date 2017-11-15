@@ -135,38 +135,38 @@ PopulationGraph* PopulationGraphGenerator::
 
     //TODO: check for unconnected subgraphs
     
-    //convert the set of undirected edges
-    //to Consumer objects
-    std::vector<PopEdge> consumers;
-    //map an integer index -> a BGL vertex property (i.e. a Pop)
-    std::unordered_map<int, Pop> popIndices;
 
-    int currentPopIndex = 0;
+    //build the boost graph
+    BGLPopulationGraph g;
 
-    auto insertPopIndex = [&currentPopIndex, &popIndices](Pop p){
-        //make sure we're not overwriting anything
-        assert(popIndices.find(currentPopIndex) == popIndices.end());
-        //insert & increment the counter
-        popIndices.insert(currentPopIndex, p);
-        currentPopIndex++;
+    //map a Pop's Unique -> that Pop's vertex descriptor
+    std::unordered_map<Unique, BGLPopulationGraph::vertex_descriptor> popDescriptors;
+
+    auto insertPop = [&g, &popDescriptors](Pop p){
+        //add it to the graph
+        auto v = boost::add_vertex(p, g);
+        //then use its id as the key
+        popDescriptors.insert(p.id, v);
     }
 
-    //the unordered_set<UndirectedEdge> guarantees that each
-    //vertex is unique
-    for(auto e: edges)
+    auto startingFunds = options.simulationOptions.startingFunds;
+
+    //add vertices to the boost graph and save the descriptors
+    for(auto i : vertices)
     {
-        //create Consumers from each of our vertices
-        auto startingFunds = options.simulationOptions.startingFunds;
-
-        Pop c1(new Consumer(e.v1, startingFunds()));
-        Pop c2(new Consumer(e.v2, startingFunds()));
-
-        insertPopIndex(c1);
-        insertPopIndex(c2);
-
-        consumers.push_back(std::make_pair(c1, c2));
+        insertPop(std::make_shared(i, startingFunds()));
     }
 
+    for(auto e : edges)
+    {
+        //get the vertex descriptors for this edge
+        auto u = popDescriptors[e.v1];
+        auto v = popDescriptors[e.v2];
+
+        boost::add_edge(u, v, g);
+    }
+    
+    return g;
 }
 
 

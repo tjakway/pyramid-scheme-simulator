@@ -12,19 +12,25 @@
 
 namespace pyramid_scheme_simulator {
 
-//vertex type
-using Pop = std::shared_ptr<CapitalHolder>;
-using PopEdge = std::pair<Pop, Pop>;
 
-using PopulationGraph = 
-    boost::adjacency_list<
-        boost::vecS,
-        boost::vecS, 
-        boost::undirectedS,
-        Pop>;
 
-using PopDescriptor = 
-    boost::graph_traits<PopulationGraph>::vertex_descriptor;
+class PopulationGraph
+{
+    //vertex type
+    using Pop = std::shared_ptr<CapitalHolder>;
+    using PopEdge = std::pair<Pop, Pop>;
+
+    using BGLPopulationGraph = 
+        boost::adjacency_list<
+            boost::vecS,
+            boost::vecS, 
+            boost::undirectedS,
+            Pop,
+            PopEdge>;
+
+    using PopDescriptor = 
+        boost::graph_traits<PopulationGraph>::vertex_descriptor;
+};
 
 class PopulationGraphGenerator
 {
@@ -61,23 +67,5 @@ public:
     PopulationGraphGenerator(const Config::GraphGenerationOptions&);
 };
 
-enum TransformationType
-{
-    BOUGHT_PRODUCT=2,
-    BECAME_DISTRIBUTOR=3
-};
-
-class Transformation
-{
-    //XXX
-    virtual void transform(PopulationGraph* graph, 
-            PopDescriptor to,
-            PopDescriptor from) = 0;
-    virtual TransformationType getTransformationType() = 0;
-};
-
-//a step in the simulator is a set of transformations
-//XXX: should each step also return a graph?
-using Step = std::vector<Transformation>;
 
 } //pyramid_scheme_simulator
