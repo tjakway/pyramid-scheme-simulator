@@ -16,6 +16,8 @@ namespace pyramid_scheme_simulator {
 
 class PopulationGraph
 {
+    /** Type synonyms */
+
     //vertex type
     using Pop = std::shared_ptr<CapitalHolder>;
     using PopEdge = std::pair<Pop, Pop>;
@@ -29,16 +31,17 @@ class PopulationGraph
             PopEdge>;
 
     using PopDescriptor = 
-        boost::graph_traits<PopulationGraph>::vertex_descriptor;
-};
+        boost::graph_traits<BGLPopulationGraph>::vertex_descriptor;
 
-class PopulationGraphGenerator
-{
-private:
+    /*****************/
+
     //TODO: *maybe* make this a GraphGenerationOptions field
     unsigned int maxTries;
 
-    bool checkGraph(const PopulationGraph&);
+    bool checkGraph(const BGLPopulationGraph&);
+
+    BGLPopulationGraph graph;
+
 
     /**
      * std::vector<std::unordered_set<Pop>> maps the vector index to the 
@@ -52,19 +55,18 @@ private:
      * ret[1]     // <-- subgraph #2
      *            // and so on
      */
-    std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const PopulationGraph&);
-
-    PopulationGraph* buildGraph(rd_ptr, Config&);
+    std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const BGLPopulationGraph&);
 
     /**
      * TODO:
      * need this step to create Distributors during graph generation
      *  -need to check that all disconnected subgraphs have at least 1 distributor
      */
-    PopulationGraph applyOnlyInitialOnboardingTransformation(PopulationGraph&);
+    BGLPopulationGraph applyOnlyInitialOnboardingTransformation(BGLPopulationGraph&);
 
+    BGLPopulationGraph buildGraph(rd_ptr, Config&);
 public:
-    PopulationGraphGenerator(const Config::GraphGenerationOptions&);
+    PopulationGraph(Config&);
 };
 
 

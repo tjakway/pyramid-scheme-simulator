@@ -101,8 +101,8 @@ namespace std {
 
 namespace pyramid_scheme_simulator {
 
-PopulationGraph* PopulationGraphGenerator::
-    buildGraph(rd_ptr rd, Config& options)
+PopulationGraph::BGLPopulationGraph 
+    PopulationGraph::buildGraph(rd_ptr rd, Config& options)
 {
 
     //check if link chance procs
@@ -146,7 +146,7 @@ PopulationGraph* PopulationGraphGenerator::
         //add it to the graph
         auto v = boost::add_vertex(p, g);
         //then use its id as the key
-        popDescriptors.insert(p.id, v);
+        popDescriptors.emplace(p->id, v);
     }
 
     auto startingFunds = options.simulationOptions.startingFunds;
@@ -170,7 +170,8 @@ PopulationGraph* PopulationGraphGenerator::
 }
 
 
-std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const PopulationGraph& g)
+std::vector<std::unordered_set<Pop>> 
+    PopulationGraph::getDisconnectedSubgraphs(const BGLPopulationGraph& g)
 {
     //see http://www.boost.org/doc/libs/1_53_0/libs/graph/example/connected_components.cpp
     //and http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/connected_components.html
