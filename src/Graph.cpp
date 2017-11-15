@@ -198,4 +198,9 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     return subgraphs;
 }
 
+PopulationGraph::PopulationGraph(Config& config)
+{
+    graph = buildGraph(config.randomGen, config);
+}
+
 }
