@@ -13,7 +13,7 @@
 namespace pyramid_scheme_simulator {
 
 PopulationGraph* PopulationGraphGenerator::
-    buildGraph(rd_ptr rd, Config::GraphGenerationOptions& options)
+    buildGraph(rd_ptr rd, Config& options)
 {
     struct UndirectedEdge
     {
@@ -104,11 +104,11 @@ PopulationGraph* PopulationGraphGenerator::
     //check if link chance procs
     auto testEdge = [&rd, &options]() -> bool { 
         return Util::sampleFrom(rd, 
-            options.linkChance.getOption()); };
+            options.graphGenerationOptions.linkChance.getOption()); };
 
-    const auto graphSize = options.graphSize.getOption();
+    const auto graphSize = options.graphGenerationOptions.graphSize.getOption();
 
-    std::set<UndirectedEdge> edges;
+    std::unordered_set<UndirectedEdge> edges;
     std::vector<Unique> vertices(graphSize);
     
     //generate vertices with random ids
@@ -131,7 +131,10 @@ PopulationGraph* PopulationGraphGenerator::
 
     //TODO: check for unconnected subgraphs
     
-    //
+    //convert the set of undirected edges
+    //to Consumer objects
+    auto consumers = std::<
+
 
 }
 
