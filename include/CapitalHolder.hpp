@@ -29,7 +29,9 @@ protected:
 
     virtual bool willPurchase(const Distributor& from) = 0;
 
-    CapitalHolder(Money cost) : Uniqueable(), productCost(cost) {}
+    CapitalHolder(Unique id, Money cost) : Uniqueable(id), productCost(cost) {}
+
+    CapitalHolder(Money cost) : CapitalHolder(emptyUnique, cost) {}
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);

@@ -6,11 +6,15 @@
 #include <unordered_set>
 #include <string>
 #include <functional>
+#include <algorithm>
 #include <array>
 #include <utility>
 #include <memory>
 #include <iterator>
 #include <exception>
+
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/connected_components.hpp>
 
 namespace {
     using namespace pyramid_scheme_simulator;
@@ -107,7 +111,7 @@ PopulationGraph* PopulationGraphGenerator::
 
     const auto graphSize = options.graphGenerationOptions.graphSize.getOption();
 
-    std::unordered_set<UndirectedEdge> edges = std::unordered_set<UndirectedEdge>();
+    std::unordered_set<UndirectedEdge> edges();
     std::vector<Unique> vertices(graphSize);
     
     //generate vertices with random ids
@@ -132,9 +136,52 @@ PopulationGraph* PopulationGraphGenerator::
     
     //convert the set of undirected edges
     //to Consumer objects
-    //auto consumers = std::<
+    std::unordered_set<PopEdge> consumers();
+
+    //the unordered_set<UndirectedEdge> guarantees that each
+    //vertex is unique
+    for(auto e: edges)
+    {
+        //make a consumer for each vertex in each edge
+        for(auto v: e)
+        {
+            consumers.insert(std::)
+        }
+    }
+    std::transform(edges.begin(), edges.end(), consumers.begin(),
+            [&options](Unique thisId){
+                return CapitalHolder(thisId, options.simulationOptions.productCost);
+            });
 
 
+}
+
+
+std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const PopulationGraph& g)
+{
+    //see http://www.boost.org/doc/libs/1_53_0/libs/graph/example/connected_components.cpp
+    //and http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/connected_components.html
+    std::vector<int> components(boost::num_vertices(g));
+    int numSubgraphs = boost::connected_components(g, &components[0]);
+    
+    //initialize the vector of subgraphs and fill it with enough empty sets
+    std::vector<std::unordered_set<Pop>> subgraphs(numSubgraphs);
+    for(int i = 0; i < numSubgraphs; i++)
+    {
+        subgraphs.emplace_back();
+    }
+
+
+    //check that every vertex has been assigned to a subgraph
+    assert(components.size() == boost::num_vertices(g));
+
+    for(std::vector<int>::size_type i = 0;
+            i < components.size(); ++i)
+    {
+        subgraphs[components[i]].insert(g[i]);
+    }
+    
+    return subgraphs;
 }
 
 }
