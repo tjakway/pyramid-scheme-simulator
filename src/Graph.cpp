@@ -142,17 +142,14 @@ PopulationGraph* PopulationGraphGenerator::
     //vertex is unique
     for(auto e: edges)
     {
-        //make a consumer for each vertex in each edge
-        for(auto v: e)
-        {
-            consumers.insert(std::)
-        }
-    }
-    std::transform(edges.begin(), edges.end(), consumers.begin(),
-            [&options](Unique thisId){
-                return CapitalHolder(thisId, options.simulationOptions.productCost);
-            });
+        auto startingFunds = options.simulationOptions.startingFunds;
 
+        Pop c1(new Consumer(e.v1, startingFunds));
+        Pop c2(new Consumer(e.v2, startingFunds));
+
+        //create 
+        consumers.emplace(std::make_pair(c1, c2));
+    }
 
 }
 

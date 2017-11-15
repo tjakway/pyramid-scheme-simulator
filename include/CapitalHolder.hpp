@@ -14,24 +14,26 @@ class CapitalHolder;
 class Consumer;
 class Distributor;
 
+//XXX: TODO: determine starting funds
 class CapitalHolder : public Uniqueable
 {
 protected:
     Money money;
-    Money productCost;
 
     double getMoneyToProductCostRatio();
 
     void setMoney(Money);
-    virtual bool canPurchase(const Distributor& from) {
+    virtual bool canPurchase(Money productCost, const CapitalHolder& from) {
         return money >= productCost;
     }
 
     virtual bool willPurchase(const Distributor& from) = 0;
 
-    CapitalHolder(Unique id, Money cost) : Uniqueable(id), productCost(cost) {}
+    CapitalHolder(Unique id, Money startingFunds) 
+        : Uniqueable(id), money(startingFunds) {}
 
-    CapitalHolder(Money cost) : CapitalHolder(emptyUnique, cost) {}
+    CapitalHolder(Money startingFunds) 
+        : CapitalHolder(emptyUnique, startingFunds) {}
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
@@ -40,9 +42,8 @@ protected:
 //TODO
 class Consumer : protected CapitalHolder
 {
-protected:
-    Consumer(Money cost): CapitalHolder(cost) {}
 public:
+    Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
     void onBuy(const Distributor& from, SimulationTick when);
 
 };
@@ -62,7 +63,7 @@ protected:
      * objects as parameters since the chance of a sale depends on factors from both
      */
     virtual double getSalesChance(const CapitalHolder& x) = 0;
-    virtual bool canPurchase(const CapitalHolder& from, Money cost);
+    virtual bool canPurchase(Money cost, const CapitalHolder& from);
 
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
 };

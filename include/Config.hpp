@@ -42,8 +42,11 @@ public:
         const double onboardingChance;
         const unsigned int productCost;
 
+
+        const std::function<Money()> startingFunds;
     } simulationOptions;
     
+
     /**
      * Distribution of funds among the general population
      * reflecting “capitalization”: how much capital can someone wield, i.e. assets + loans
