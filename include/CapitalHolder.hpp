@@ -40,12 +40,14 @@ protected:
 };
 
 //TODO
-class Consumer : protected CapitalHolder
+class Consumer : public CapitalHolder
 {
 public:
     Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
     void onBuy(const Distributor& from, SimulationTick when);
 
+    //TODO: implement or make virtual
+    virtual bool willPurchase(const Distributor& from);
 };
 
 class Distributor : protected Consumer
