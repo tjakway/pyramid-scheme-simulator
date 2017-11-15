@@ -32,6 +32,7 @@ public:
 
     class SimulationOptions
     {
+    public:
         const SimulationTick maxTicks;
 
         /**
