@@ -111,7 +111,7 @@ PopulationGraph* PopulationGraphGenerator::
 
     const auto graphSize = options.graphGenerationOptions.graphSize.getOption();
 
-    std::unordered_set<UndirectedEdge> edges();
+    std::unordered_set<UndirectedEdge> edges;
     std::vector<Unique> vertices(graphSize);
     
     //generate vertices with random ids
@@ -127,7 +127,7 @@ PopulationGraph* PopulationGraphGenerator::
         {
             if(testEdge())
             {
-                edges.insert(UndirectedEdge(i, j));
+                edges.emplace(i, j);
             }
         }
     }
@@ -136,7 +136,7 @@ PopulationGraph* PopulationGraphGenerator::
     
     //convert the set of undirected edges
     //to Consumer objects
-    std::unordered_set<PopEdge> consumers();
+    std::vector<PopEdge> consumers;
 
     //the unordered_set<UndirectedEdge> guarantees that each
     //vertex is unique
@@ -144,11 +144,11 @@ PopulationGraph* PopulationGraphGenerator::
     {
         auto startingFunds = options.simulationOptions.startingFunds;
 
-        Pop c1(new Consumer(e.v1, startingFunds));
-        Pop c2(new Consumer(e.v2, startingFunds));
+        Pop c1(new Consumer(e.v1, startingFunds()));
+        Pop c2(new Consumer(e.v2, startingFunds()));
 
         //create 
-        consumers.emplace(std::make_pair(c1, c2));
+        consumers.push_back(std::make_pair(c1, c2));
     }
 
 }
