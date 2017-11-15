@@ -12,9 +12,11 @@ Simulation::Simulation(const Config* const c) : config(std::shared_ptr<const Con
     graph = buildGraph(config);
 }
 
-std::unique_ptr<PopulationGraph> buildGraph(const std::shared_ptr<const Config> config)
+std::unique_ptr<PopulationGraph> buildGraph(const std::shared_ptr<Config> config)
 {
-    //TODO
+    return std::unique_ptr<PopulationGraph>(new PopulationGraph(*config));
 }
+
+
 
 }
