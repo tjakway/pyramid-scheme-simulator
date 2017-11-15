@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_set>
 #include <memory>
+#include <functional>
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -54,6 +55,11 @@ class PopulationGraph
      * ret[0]     // <-- subgraph #1
      * ret[1]     // <-- subgraph #2
      *            // and so on
+     *
+     * ******************************************
+     *
+     * should handle this either by retrying graph generation or by generating edges
+     * between the disconnected subgraphs
      */
     std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const BGLPopulationGraph&);
 
@@ -65,7 +71,26 @@ class PopulationGraph
     BGLPopulationGraph applyOnlyInitialOnboardingTransformation(BGLPopulationGraph&);
 
     BGLPopulationGraph buildGraph(rd_ptr, Config&);
+
 public:
+    template <class T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
+    {
+        std::vector<T> results;
+
+        //see http://www.boost.org/doc/libs/1_65_1/libs/graph/doc/quick_tour.html
+        boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
+
+        for (std::tie(ei, ei_end) = boost::edges(graph); ei != ei_end; ++ei)
+        {
+            auto arg1 = source(*ei, graph);
+            auto arg2 = target(*ei, graph);
+
+            results.push_back(f(arg1, arg2));
+        }
+
+        return results;
+    }
+
     PopulationGraph(Config&);
 };
 
