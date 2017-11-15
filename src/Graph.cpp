@@ -132,10 +132,7 @@ PopulationGraph::BGLPopulationGraph
             }
         }
     }
-
-    //TODO: check for unconnected subgraphs
     
-
     //build the boost graph
     BGLPopulationGraph g;
 
@@ -157,6 +154,7 @@ PopulationGraph::BGLPopulationGraph
         insertPop(std::shared_ptr<CapitalHolder>(new Consumer(i, startingFunds())));
     }
 
+    //add edges using the saved vertex descriptors
     for(auto e : edges)
     {
         //get the vertex descriptors for this edge
@@ -165,6 +163,8 @@ PopulationGraph::BGLPopulationGraph
 
         boost::add_edge(u, v, g);
     }
+
+    //TODO: check for disconnected subgraphs
     
     return g;
 }
