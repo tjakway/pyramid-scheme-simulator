@@ -142,12 +142,12 @@ PopulationGraph* PopulationGraphGenerator::
     //vertex is unique
     for(auto e: edges)
     {
+        //create Consumers from each of our vertices
         auto startingFunds = options.simulationOptions.startingFunds;
 
         Pop c1(new Consumer(e.v1, startingFunds()));
         Pop c2(new Consumer(e.v2, startingFunds()));
 
-        //create 
         consumers.push_back(std::make_pair(c1, c2));
     }
 
