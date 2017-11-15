@@ -31,7 +31,7 @@ private:
 
     
 
-    PopulationGraph* buildGraph(rd_ptr, Config::GraphGenerationOptions&);
+    PopulationGraph* buildGraph(rd_ptr, Config&);
 
     /**
      * TODO:

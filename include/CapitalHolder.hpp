@@ -6,6 +6,7 @@
 
 #include "Unique.hpp"
 #include "Tick.hpp"
+#include "Config.hpp"
 
 namespace pyramid_scheme_simulator {
 

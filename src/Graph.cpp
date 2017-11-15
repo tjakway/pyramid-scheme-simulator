@@ -3,18 +3,17 @@
 #include "Graph.hpp"
 #include "Util.hpp"
 
-#include <set>
+#include <unordered_set>
+#include <string>
+#include <functional>
 #include <array>
 #include <utility>
 #include <memory>
 #include <iterator>
 #include <exception>
 
-namespace pyramid_scheme_simulator {
-
-PopulationGraph* PopulationGraphGenerator::
-    buildGraph(rd_ptr rd, Config& options)
-{
+namespace {
+    using namespace pyramid_scheme_simulator;
     struct UndirectedEdge
     {
         const Unique v1, v2;
@@ -34,39 +33,20 @@ PopulationGraph* PopulationGraphGenerator::
             return !this->operator==(other);
         }
 
-        bool operator<(const UndirectedEdge& other) const
+        Unique getLt() const
         {
-            //if other is the same object then we're not less than
-            if(this->operator==(other)) {
-                return false;
-            }
-
-            bool firstEq = v1 == other.v1;
-            if(!firstEq) {
-                return v1.str() < other.v1.str();
-            }
-            //check the second members if the first are equal
-            else {
-                return v2.str() < other.v2.str();
-            }
+            if(v1.str() < v2.str())
+                return v1;
+            else
+                return v2;
         }
 
-        //implemented in terms of < and ==
-        bool operator<=(const UndirectedEdge& other) const
+        Unique getGt() const
         {
-            return this->operator==(other) || this->operator<(other);
-        }
-
-        bool operator>(const UndirectedEdge& other) const
-        {
-            //greater than means not less than and not equal to
-            return (!this->operator==(other)) && (!this->operator<(other));
-        }
-
-        //implemented in terms of > and ==
-        bool operator>=(const UndirectedEdge& other) const
-        {
-            return this->operator==(other) || this->operator>(other);
+            if(v2.str() > v1.str())
+                return v2;
+            else
+                return v1;
         }
 
         std::pair<int, int> toIndicesPair(Unique* vertices, int length) const {
@@ -100,6 +80,25 @@ PopulationGraph* PopulationGraphGenerator::
             return std::make_pair(firstElem - begin, secondElem - begin);
         }
     };
+}
+
+//see https://stackoverflow.com/questions/8157937/how-to-specialize-stdhashkeyoperator-for-user-defined-type-in-unordered
+namespace std {
+  template <> struct hash<UndirectedEdge>
+  {
+    size_t operator()(const UndirectedEdge & x) const
+    {
+        return hash<std::string>{}(x.getLt().str() + x.getGt().str());
+    }
+  };
+}
+
+
+namespace pyramid_scheme_simulator {
+
+PopulationGraph* PopulationGraphGenerator::
+    buildGraph(rd_ptr rd, Config& options)
+{
 
     //check if link chance procs
     auto testEdge = [&rd, &options]() -> bool { 
@@ -108,7 +107,7 @@ PopulationGraph* PopulationGraphGenerator::
 
     const auto graphSize = options.graphGenerationOptions.graphSize.getOption();
 
-    std::unordered_set<UndirectedEdge> edges;
+    std::unordered_set<UndirectedEdge> edges = std::unordered_set<UndirectedEdge>();
     std::vector<Unique> vertices(graphSize);
     
     //generate vertices with random ids
@@ -133,7 +132,7 @@ PopulationGraph* PopulationGraphGenerator::
     
     //convert the set of undirected edges
     //to Consumer objects
-    auto consumers = std::<
+    //auto consumers = std::<
 
 
 }
