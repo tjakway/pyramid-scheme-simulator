@@ -147,14 +147,14 @@ PopulationGraph::BGLPopulationGraph
         auto v = boost::add_vertex(p, g);
         //then use its id as the key
         popDescriptors.emplace(p->id, v);
-    }
+    };
 
     auto startingFunds = options.simulationOptions.startingFunds;
 
     //add vertices to the boost graph and save the descriptors
     for(auto i : vertices)
     {
-        insertPop(std::make_shared(i, startingFunds()));
+        insertPop(std::make_shared<CapitalHolder>(i, startingFunds()));
     }
 
     for(auto e : edges)
