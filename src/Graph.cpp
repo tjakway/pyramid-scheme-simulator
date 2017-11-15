@@ -43,11 +43,11 @@ PopulationGraph* PopulationGraphGenerator::
 
             bool firstEq = v1 == other.v1;
             if(!firstEq) {
-                return v1 < other.v1;
+                return v1.str() < other.v1.str();
             }
             //check the second members if the first are equal
             else {
-                return v2 == other.v2;
+                return v2.str() < other.v2.str();
             }
         }
 

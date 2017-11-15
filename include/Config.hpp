@@ -63,7 +63,7 @@ public:
     //how much does a distributor get from converting someone else into a distributor?
     //bounded to 99% because it doesn't make sense if a distributor gets all of the
     //earnings of a subdistributor
-    const BoundedOption<double> downstreamPercent = 
+    BoundedOption<double> downstreamPercent = 
         BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
     
 
@@ -76,7 +76,7 @@ public:
     public:
         const bool allowUnconnectedSubgraphs = true;
 
-        const BoundedOption<unsigned long> graphSize =
+        BoundedOption<unsigned long> graphSize =
             BoundedOption<unsigned long>(
                 std::pair<unsigned long, unsigned long>(2,
                     std::numeric_limits<unsigned long>::max()),
@@ -85,13 +85,13 @@ public:
         /**
          * how likely are people to have connections to other people?
          */
-        const PercentOption linkChance;
+        PercentOption linkChance;
 
 
         //corresponding to the maximum number of people someone
         //can maintain social relationships with
         //(hard to have 1000 best friends)
-        const BoundedOption<unsigned long> maxEdgesPerVertex =
+        BoundedOption<unsigned long> maxEdgesPerVertex =
             BoundedOption<unsigned long>(
                 std::make_pair(2,
                     std::numeric_limits<unsigned long>::max()));

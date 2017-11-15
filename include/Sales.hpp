@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types.hpp"
+#include "Tick.hpp"
+#include "CapitalHolder.hpp"
 
 #include <memory>
 #include <set>
@@ -57,7 +59,7 @@ class Transactions
     std::set<Sale> sales;
 
 public:
-    SalesResult sell(const CapitalHolder const& seller, const CapitalHolder const& buyer);
+    SalesResult sell(const CapitalHolder& seller, const CapitalHolder& buyer);
 };
 
 }

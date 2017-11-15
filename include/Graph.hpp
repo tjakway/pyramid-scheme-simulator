@@ -6,6 +6,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
+#include "Config.hpp"
 #include "CapitalHolder.hpp"
 
 namespace pyramid_scheme_simulator {
@@ -30,7 +31,7 @@ private:
 
     
 
-    PopulationGraph* buildGraph(rd_ptr, const Config::GraphGenerationOptions&);
+    PopulationGraph* buildGraph(rd_ptr, Config::GraphGenerationOptions&);
 
     /**
      * TODO:
