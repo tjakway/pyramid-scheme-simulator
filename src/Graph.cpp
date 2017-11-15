@@ -3,6 +3,7 @@
 #include "Graph.hpp"
 #include "Util.hpp"
 
+#include <unordered_map>
 #include <unordered_set>
 #include <string>
 #include <functional>
@@ -137,6 +138,18 @@ PopulationGraph* PopulationGraphGenerator::
     //convert the set of undirected edges
     //to Consumer objects
     std::vector<PopEdge> consumers;
+    //map an integer index -> a BGL vertex property (i.e. a Pop)
+    std::unordered_map<int, Pop> popIndices;
+
+    int currentPopIndex = 0;
+
+    auto insertPopIndex = [&currentPopIndex, &popIndices](Pop p){
+        //make sure we're not overwriting anything
+        assert(popIndices.find(currentPopIndex) == popIndices.end());
+        //insert & increment the counter
+        popIndices.insert(currentPopIndex, p);
+        currentPopIndex++;
+    }
 
     //the unordered_set<UndirectedEdge> guarantees that each
     //vertex is unique
@@ -147,6 +160,9 @@ PopulationGraph* PopulationGraphGenerator::
 
         Pop c1(new Consumer(e.v1, startingFunds()));
         Pop c2(new Consumer(e.v2, startingFunds()));
+
+        insertPopIndex(c1);
+        insertPopIndex(c2);
 
         consumers.push_back(std::make_pair(c1, c2));
     }
