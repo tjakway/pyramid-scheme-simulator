@@ -30,8 +30,6 @@ public:
 
     const SimulationTick maxTicks;
 
-    const unsigned int productCost;
-
     const rd_ptr randomGen;
 
     class SimulationOptions
@@ -41,6 +39,8 @@ public:
          * (i.e. being recruited directly by the company)
          */
         const double onboardingChance;
+        const unsigned int productCost;
+
     } simulationOptions;
     
     /**
