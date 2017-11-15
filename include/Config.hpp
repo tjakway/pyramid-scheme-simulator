@@ -28,12 +28,12 @@ class Config
 //public config values
 public:
 
-    const SimulationTick maxTicks;
-
     const rd_ptr randomGen;
 
     class SimulationOptions
     {
+        const SimulationTick maxTicks;
+
         /**
          * chance of a Consumer spontaneously becoming a Distributor
          * (i.e. being recruited directly by the company)
