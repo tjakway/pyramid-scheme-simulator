@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <unordered_set>
 #include <memory>
 
 #include <boost/graph/graph_traits.hpp>
@@ -11,12 +12,16 @@
 
 namespace pyramid_scheme_simulator {
 
+//vertex type
+using Pop = std::shared_ptr<CapitalHolder>;
+using PopEdge = std::pair<Pop, Pop>;
+
 using PopulationGraph = 
     boost::adjacency_list<
         boost::vecS,
         boost::vecS, 
         boost::undirectedS,
-        std::shared_ptr<CapitalHolder>>;
+        Pop>;
 
 using PopDescriptor = 
     boost::graph_traits<PopulationGraph>::vertex_descriptor;
@@ -29,7 +34,19 @@ private:
 
     bool checkGraph(const PopulationGraph&);
 
-    
+    /**
+     * std::vector<std::unordered_set<Pop>> maps the vector index to the 
+     * subgraph containing those vertices
+     * so:
+     *
+     * auto ret = getDisconnectedSubgraphs(g);
+     * ret.size() // <-- number of disconnected subgraphs
+     *            //     (1 if the whole graph is connected)
+     * ret[0]     // <-- subgraph #1
+     * ret[1]     // <-- subgraph #2
+     *            // and so on
+     */
+    std::vector<std::unordered_set<Pop>> getDisconnectedSubgraphs(const PopulationGraph&);
 
     PopulationGraph* buildGraph(rd_ptr, Config&);
 
