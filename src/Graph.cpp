@@ -154,7 +154,7 @@ PopulationGraph::BGLPopulationGraph
     //add vertices to the boost graph and save the descriptors
     for(auto i : vertices)
     {
-        insertPop(std::make_shared<CapitalHolder>(i, startingFunds()));
+        insertPop(std::shared_ptr<CapitalHolder>(new Consumer(i, startingFunds())));
     }
 
     for(auto e : edges)
