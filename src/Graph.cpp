@@ -170,7 +170,7 @@ PopulationGraph::BGLPopulationGraph
 }
 
 
-std::vector<std::unordered_set<Pop>> 
+std::vector<std::unordered_set<PopulationGraph::Pop>> 
     PopulationGraph::getDisconnectedSubgraphs(const BGLPopulationGraph& g)
 {
     //see http://www.boost.org/doc/libs/1_53_0/libs/graph/example/connected_components.cpp
