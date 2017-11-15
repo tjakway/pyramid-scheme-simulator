@@ -13,11 +13,13 @@
 namespace pyramid_scheme_simulator {
 
 PopulationGraph* PopulationGraphGenerator::
-    buildGraph(rd_ptr rd, const Config::GraphGenerationOptions& options)
+    buildGraph(rd_ptr rd, Config::GraphGenerationOptions& options)
 {
     struct UndirectedEdge
     {
         const Unique v1, v2;
+
+        UndirectedEdge(Unique a, Unique b) : v1(a), v2(b) {}
 
         bool operator==(const UndirectedEdge& other) const
         {
@@ -30,6 +32,41 @@ PopulationGraph* PopulationGraphGenerator::
         bool operator!=(const UndirectedEdge& other) const
         {
             return !this->operator==(other);
+        }
+
+        bool operator<(const UndirectedEdge& other) const
+        {
+            //if other is the same object then we're not less than
+            if(this->operator==(other)) {
+                return false;
+            }
+
+            bool firstEq = v1 == other.v1;
+            if(!firstEq) {
+                return v1 < other.v1;
+            }
+            //check the second members if the first are equal
+            else {
+                return v2 == other.v2;
+            }
+        }
+
+        //implemented in terms of < and ==
+        bool operator<=(const UndirectedEdge& other) const
+        {
+            return this->operator==(other) || this->operator<(other);
+        }
+
+        bool operator>(const UndirectedEdge& other) const
+        {
+            //greater than means not less than and not equal to
+            return (!this->operator==(other)) && (!this->operator<(other));
+        }
+
+        //implemented in terms of > and ==
+        bool operator>=(const UndirectedEdge& other) const
+        {
+            return this->operator==(other) || this->operator>(other);
         }
 
         std::pair<int, int> toIndicesPair(Unique* vertices, int length) const {
@@ -65,29 +102,36 @@ PopulationGraph* PopulationGraphGenerator::
     };
 
     //check if link chance procs
-    auto testEdge = [rd, options]() -> bool { return Util::sampleFrom(rd, 
-            options.linkChance.getOption()); }
+    auto testEdge = [&rd, &options]() -> bool { 
+        return Util::sampleFrom(rd, 
+            options.linkChance.getOption()); };
+
+    const auto graphSize = options.graphSize.getOption();
 
     std::set<UndirectedEdge> edges;
-    std::unique_ptr<Unique> vertices;
+    std::vector<Unique> vertices(graphSize);
     
     //generate vertices with random ids
-    for(unsigned long i = 0; i < options.graphSize; i++)
+    for(unsigned long i = 0; i < graphSize; i++)
     {
-        vertices.insert(newUnique());
+        vertices.push_back(newUnique());
     }
 
+    //generate edges
     for(auto i : vertices)
     {
         for(auto j : vertices)
         {
             if(testEdge())
             {
-                edges.insert({ i, j });
+                edges.insert(UndirectedEdge(i, j));
             }
         }
     }
 
+    //TODO: check for unconnected subgraphs
+    
+    //
 
 }
 
