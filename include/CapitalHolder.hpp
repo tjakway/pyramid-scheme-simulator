@@ -24,6 +24,8 @@ protected:
     double getMoneyToProductCostRatio();
 
     void setMoney(Money);
+    Money getMoney();
+
     virtual bool canPurchase(Money productCost, const CapitalHolder& from) {
         return money >= productCost;
     }
@@ -52,6 +54,8 @@ class Consumer : public CapitalHolder
 public:
     Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
 
+    void deductMoney(Money);
+
     virtual std::unique_ptr<Distributor> 
         becomeDistributor(Config::SimulationOptions::DistributorOptions&,
                 Distributor* convertedBy);
@@ -75,6 +79,9 @@ protected:
     virtual bool canPurchase(Money cost, const CapitalHolder& from);
 
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
+
+public:
+    void addMoney(Money);
 };
 
 
