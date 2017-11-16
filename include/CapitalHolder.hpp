@@ -30,8 +30,6 @@ protected:
         return money >= productCost;
     }
 
-    virtual bool willPurchase(const Distributor& from) = 0;
-
     CapitalHolder(Unique id, Money startingFunds) 
         : Uniqueable(id), money(startingFunds) {}
 
