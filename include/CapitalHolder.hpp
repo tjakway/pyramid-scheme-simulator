@@ -37,6 +37,9 @@ protected:
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
+
+public:
+    virtual ~CapitalHolder() {}
 };
 
 //TODO
@@ -48,6 +51,10 @@ public:
 
     //TODO: implement or make virtual
     virtual bool willPurchase(const Distributor& from);
+
+    virtual std::unique_ptr<Distributor> 
+        becomeDistributor(Config::SimulationOptions::DistributorOptions&,
+                Distributor* convertedBy);
 };
 
 class Distributor : protected Consumer
