@@ -18,11 +18,13 @@ public:
      */
     enum Reason {
         UNKNOWN,
+        NEITHER_DISTRIBUTOR,
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
         SUCCESS
     } reason;
 
+    /** whether or not a sale occurred */
     const bool success;
 
     explicit operator bool() const {
@@ -46,8 +48,6 @@ class Sale
 {
 public:
     const SimulationTick when;
-
-
 
     const std::shared_ptr<Distributor> seller;
     const std::shared_ptr<Consumer> buyer;

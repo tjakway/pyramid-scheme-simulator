@@ -47,6 +47,8 @@ public:
 
     virtual ChanceContributor*
         getDistributorConversionChanceContributor();
+
+    virtual bool isDistributor() { return false; }
 };
 
 //TODO
@@ -84,6 +86,8 @@ protected:
 
 public:
     void addMoney(Money);
+
+    virtual bool isDistributor() override { return true; }
 };
 
 
