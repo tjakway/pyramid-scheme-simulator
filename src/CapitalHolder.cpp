@@ -11,7 +11,7 @@ void CapitalHolder::setMoney(Money m)
     money = m;
 }
 
-Money CapitalHolder::getMoney()
+Money CapitalHolder::getMoney() const
 {
     return money;
 }
