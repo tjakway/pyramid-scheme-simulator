@@ -44,8 +44,11 @@ protected:
 public:
     virtual ~CapitalHolder() {}
 
-    virtual ChanceContributor getSalesChanceContribution();
-    virtual ChanceContributor getBecomeDistributorChanceContributor();
+    virtual ChanceContributor*
+        getSalesChanceContribution();
+
+    virtual ChanceContributor*
+        getDistributorConversionChanceContributor();
 };
 
 //TODO

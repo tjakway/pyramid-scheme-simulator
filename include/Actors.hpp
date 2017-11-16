@@ -1,21 +1,26 @@
 #pragma once
 
+#include "Unique.hpp"
+#include "ChanceContributor.hpp"
 #include "CapitalHolder.hpp"
+
+#include <memory>
 
 namespace pyramid_scheme_simulator {
 
 class StaticConsumer : public Consumer
 {
-    bool willBuy;
+    const std::unique_ptr<ChanceContributor> salesChance;
+    const std::unique_ptr<ChanceContributor> conversionChance;
 public:
-    StaticConsumer(bool willBuy): willBuy(willBuy) {}
+    StaticConsumer(Unique, Money, 
+            const double salesChance, const double conversionChance);
 
-    /**
-     * StaticConsumer ignores whoever we might be purchasing from
-     */
-    virtual bool willPurchase(const CapitalHolder& from) {
-        return willBuy;
-    }
+    virtual ChanceContributor*
+        getSalesChanceContribution() override;
+
+    virtual ChanceContributor*
+        getDistributorConversionChanceContributor() override;
 };
 
 class ExpConsumer : public Consumer {

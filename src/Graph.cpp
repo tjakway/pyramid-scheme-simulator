@@ -2,6 +2,7 @@
 #include "Unique.hpp"
 #include "Graph.hpp"
 #include "Util.hpp"
+#include "Defaults.hpp"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -151,7 +152,7 @@ PopulationGraph::BGLPopulationGraph
     //add vertices to the boost graph and save the descriptors
     for(auto i : vertices)
     {
-        insertPop(std::shared_ptr<CapitalHolder>(new Consumer(i, startingFunds())));
+        insertPop(std::shared_ptr<CapitalHolder>(Defaults::mkDefaultConsumer()));
     }
 
     //add edges using the saved vertex descriptors

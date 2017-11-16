@@ -1,6 +1,8 @@
 #pragma once
 
 #include "CapitalHolder.hpp"
+#include "Types.hpp"
+#include "Unique.hpp"
 
 #include <memory>
 #include <functional>
@@ -14,7 +16,11 @@ private:
     Defaults() = delete;
 
 public:
-    static const std::function<std::shared_ptr<Consumer>()>> mkDefaultConsumer;
+    /**
+     * Consumer factory
+     */
+    static const std::function<std::shared_ptr<Consumer>(Unique, Money)> 
+        mkDefaultConsumer;
 };
 
 }

@@ -12,4 +12,16 @@ public:
     static bool sampleFrom(rd_ptr, ChanceContributor&, ChanceContributor&);
 };
 
+/**
+ * a ChanceContributor that doesn't select from any distribution
+ * but just uses the chance passed to its constructor
+ */
+class StaticChanceContributor : ChanceContributor
+{
+public:
+    StaticChanceContributor(double staticChance);
+
+    virtual double getChance(rd_ptr);
+};
+
 }
