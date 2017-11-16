@@ -69,6 +69,7 @@ private:
      * nullptr if they directly bought in from the company
      */
     std::shared_ptr<Distributor> recruitedBy;
+    //TODO: add downstreamPercent field
 protected:
     /**
      * chance of making a sale to the other node
