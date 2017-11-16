@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CapitalHolder.hpp"
+
 namespace pyramid_scheme_simulator {
 
 class StaticConsumer : public Consumer
@@ -11,7 +13,7 @@ public:
     /**
      * StaticConsumer ignores whoever we might be purchasing from
      */
-    virtual bool willPurchase(const CapitalHolder const& from) {
+    virtual bool willPurchase(const CapitalHolder& from) {
         return willBuy;
     }
 };
