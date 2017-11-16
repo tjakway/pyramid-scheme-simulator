@@ -47,6 +47,8 @@ class Sale
 public:
     const SimulationTick when;
 
+
+
     const std::shared_ptr<Distributor> seller;
     const std::shared_ptr<Consumer> buyer;
 };
@@ -58,8 +60,10 @@ class Transactions
 {
     std::set<Sale> sales;
 
+    SalesResult sell(CapitalHolder& seller, CapitalHolder& buyer);
 public:
-    SalesResult sell(const CapitalHolder& seller, const CapitalHolder& buyer);
+    SalesResult processSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
+     
 };
 
 }
