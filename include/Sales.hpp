@@ -3,6 +3,7 @@
 #include "Types.hpp"
 #include "Tick.hpp"
 #include "CapitalHolder.hpp"
+#include "Unique.hpp"
 
 #include <memory>
 #include <set>
@@ -36,13 +37,28 @@ public:
     }
 };
 
+class MoneyChangeRecord
+{
+public:
+    const Unique who;
+    const Money fundsBefore;
+    const Money fundsAfter;
+    MoneyChangeRecord(Money price, const std::shared_ptr<CapitalHolder>);
+};
+
 class Sale
 {
 public:
     const SimulationTick when;
 
-    const std::shared_ptr<Distributor> seller;
-    const std::shared_ptr<Consumer> buyer;
+    const Money price;
+    const MoneyChangeRecord sellerRecord;
+    const MoneyChangeRecord buyerRecord;
+
+    Sale(SimulationTick, 
+            Money price, 
+            const std::shared_ptr<Distributor>, 
+            const std::shared_ptr<Consumer>);
 };
 
 /**
