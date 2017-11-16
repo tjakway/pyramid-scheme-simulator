@@ -23,14 +23,4 @@ public:
         getDistributorConversionChanceContributor() override;
 };
 
-class ExpConsumer : public Consumer {
-    /**
-     * constant factor from 0-1 reflecting how much this consumer likes
-     * the product in question
-     */
-    double innateLikelihood;
-public:
-
-};
-
 }
