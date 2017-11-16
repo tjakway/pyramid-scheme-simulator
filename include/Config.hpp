@@ -44,6 +44,17 @@ public:
 
 
         const std::function<Money()> startingFunds;
+
+        class DistributorOptions
+        {
+            //how much does a distributor get from converting someone else 
+            //into a distributor?
+            //bounded to 99% because it doesn't make sense 
+            //if a distributor gets all of the
+            //earnings of a subdistributor
+            BoundedOption<double> downstreamPercent = 
+                BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
+        } distributorOptions;
     } simulationOptions;
     
 
@@ -64,11 +75,6 @@ public:
      */
     //const ??? salesFunction;
     
-    //how much does a distributor get from converting someone else into a distributor?
-    //bounded to 99% because it doesn't make sense if a distributor gets all of the
-    //earnings of a subdistributor
-    BoundedOption<double> downstreamPercent = 
-        BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
     
 
     //capitalization change per tick
