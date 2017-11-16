@@ -1,7 +1,7 @@
 #include "CapitalHolder.hpp"
 
 #include <string>
-#include <sstring>
+#include <sstream>
 #include <exception>
 
 namespace pyramid_scheme_simulator {
