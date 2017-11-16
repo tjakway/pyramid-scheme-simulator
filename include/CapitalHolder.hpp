@@ -7,6 +7,7 @@
 #include "Unique.hpp"
 #include "Tick.hpp"
 #include "Config.hpp"
+#include "ChanceContributor.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -40,6 +41,9 @@ protected:
 
 public:
     virtual ~CapitalHolder() {}
+
+    virtual ChanceContributor getSalesChanceContribution();
+    virtual ChanceContributor getBecomeDistributorChanceContributor();
 };
 
 //TODO
@@ -47,10 +51,6 @@ class Consumer : public CapitalHolder
 {
 public:
     Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
-    void onBuy(const Distributor& from, SimulationTick when);
-
-    //TODO: implement or make virtual
-    virtual bool willPurchase(const Distributor& from);
 
     virtual std::unique_ptr<Distributor> 
         becomeDistributor(Config::SimulationOptions::DistributorOptions&,
@@ -62,7 +62,7 @@ class Distributor : protected Consumer
 private:
     /**
      * who this distributor was recruited by
-     * nullptr if they directly bought in to the company
+     * nullptr if they directly bought in from the company
      */
     std::shared_ptr<Distributor> recruitedBy;
 protected:
