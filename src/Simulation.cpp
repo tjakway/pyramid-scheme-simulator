@@ -7,16 +7,21 @@
 
 namespace pyramid_scheme_simulator {
 
-Simulation::Simulation(const Config* const c) : config(std::shared_ptr<const Config>(c)) 
+Simulation::Simulation(Config* c) : config(std::shared_ptr<Config>(c)) 
 {
     graph = buildGraph(config);
 }
 
-std::unique_ptr<PopulationGraph> buildGraph(const std::shared_ptr<Config> config)
+std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
 {
     return std::unique_ptr<PopulationGraph>(new PopulationGraph(*config));
 }
 
 
+void Simulation::tick()
+{
+    //for each edge,
+    //add the SalesResult if success or if we need it for logging
+}
 
 }
