@@ -10,5 +10,5 @@ namespace pyramid_scheme_simulator {
 using rd_ptr  = std::shared_ptr<std::mt19937_64>;
 using rd_type = decltype(std::mt19937_64()());
 
-using Money = const unsigned int;
+using Money = unsigned int;
 }
