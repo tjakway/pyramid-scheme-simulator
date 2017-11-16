@@ -15,6 +15,9 @@ private:
     //static class
     Defaults() = delete;
 
+    static const double defaultSalesChance;
+    static const double defaultConversionChance;
+
 public:
     /**
      * Consumer factory
