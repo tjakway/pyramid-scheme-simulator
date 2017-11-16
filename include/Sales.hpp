@@ -36,14 +36,6 @@ public:
     }
 };
 
-class Expenditure
-{
-public:
-    const Money fundsBefore;
-    const Money fundsAfter;
-    Expenditure(Money, Money);
-};
-
 class Sale
 {
 public:
