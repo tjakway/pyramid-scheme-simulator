@@ -21,7 +21,6 @@ protected:
     double getMoneyToProductCostRatio();
 
     void setMoney(Money);
-    Money getMoney() const;
 
     virtual bool canPurchase(Money productCost, const CapitalHolder& from) {
         return money >= productCost;
@@ -33,9 +32,6 @@ protected:
     CapitalHolder(Money startingFunds) 
         : CapitalHolder(emptyUnique, startingFunds) {}
 
-    bool operator==(const CapitalHolder&);
-    bool operator!=(const CapitalHolder&);
-
 public:
     virtual ~CapitalHolder() {}
 
@@ -46,6 +42,11 @@ public:
         getDistributorConversionChanceContribution();
 
     virtual bool isDistributor() { return false; }
+
+    Money getMoney() const;
+
+    bool operator==(const CapitalHolder&);
+    bool operator!=(const CapitalHolder&);
 };
 
 //TODO
@@ -61,7 +62,7 @@ public:
                 Distributor* convertedBy);
 };
 
-class Distributor : protected Consumer
+class Distributor : public Consumer
 {
 private:
     /**
