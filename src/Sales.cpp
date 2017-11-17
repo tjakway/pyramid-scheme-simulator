@@ -76,8 +76,9 @@ SalesResult Transactions::sell(CapitalHolder& seller, CapitalHolder& buyer)
 
 SalesResult Transactions::processSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHolder& buyer)
 {
-    if((*seller.getSalesChanceContribution() + 
-                *buyer.getSalesChanceContribution())->sampleFrom(rd))
+    const bool saleOccurred = (seller.getSalesChanceContribution() + 
+                buyer.getSalesChanceContribution())->sampleFrom(rd);
+    if(saleOccurred)
     {
         //TODO
     }

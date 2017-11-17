@@ -37,13 +37,13 @@ StaticConsumer::StaticConsumer(StaticConsumer& c)
             conversionChance->clone().get())
 { }
 
-ChanceContributor* StaticConsumer::getSalesChanceContribution()
+ChanceContributor& StaticConsumer::getSalesChanceContribution()
 {
-    return salesChance.get();
+    return *salesChance.get();
 }
-ChanceContributor* StaticConsumer::getDistributorConversionChanceContribution()
+ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution()
 {
-    return conversionChance.get();
+    return *conversionChance.get();
 }
 
 }

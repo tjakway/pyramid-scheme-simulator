@@ -29,10 +29,10 @@ public:
 
     virtual ~StaticConsumer() {}
 
-    virtual ChanceContributor*
+    virtual ChanceContributor&
         getSalesChanceContribution() override;
 
-    virtual ChanceContributor*
+    virtual ChanceContributor&
         getDistributorConversionChanceContribution() override;
 };
 
