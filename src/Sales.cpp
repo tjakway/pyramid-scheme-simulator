@@ -132,6 +132,19 @@ const std::shared_ptr<Consumer>
     }
 }
 
+void processPotentialRestocking(SimulationTick when,
+        Money price,
+        CapitalHolder& holder)
+{
+    if(holder.isDistributor())
+    {
+        Distributor& d = dynamic_cast<Distributor&>(holder);
+        const auto desiredRestock = d.getDesiredRestockAmount();
+
+        //TODO: process the sale but without sampling random chance
+        //since the distributor has to restock
+    }
+}
 
 SalesResult Transactions::processPotentialSale(
         SimulationTick when, 
@@ -146,10 +159,9 @@ SalesResult Transactions::processPotentialSale(
         auto chanceProc = sampleSalesChance(rd, seller, buyer);
         if(chanceProc)
         {
-            return Sale(when, 
-                    price, 
-                    seller, 
-                    buyer);
+            Sale s(when, price, seller, buyer);
+            sales.insert(s);
+            return s;
         }
         else
         {

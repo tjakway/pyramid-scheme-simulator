@@ -43,6 +43,14 @@ class Transactions
     void auditRecords();
 public:
 
+    /**
+     * parameterized with price to allow for cheaper wholesale purchases from the company
+     */
+    void processPotentialRestocking(SimulationTick, Money, CapitalHolder&);
+    void processPotentialConversion(CapitalHolder&);
+
+    
+
 
     SalesResult processPotentialSale(SimulationTick,
             Money price,

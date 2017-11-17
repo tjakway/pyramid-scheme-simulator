@@ -83,6 +83,7 @@ public:
 
     virtual bool isDistributor() override { return true; }
 
+    virtual unsigned int getDesiredRestockAmount();
     virtual unsigned int getInventory();
 };
 
