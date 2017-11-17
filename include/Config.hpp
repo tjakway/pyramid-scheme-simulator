@@ -7,6 +7,8 @@
 #include <limits>
 
 #include "Types.hpp"
+#include "CapitalHolderClassDecls.hpp"
+#include "Util.hpp"
 #include "Tick.hpp"
 #include "Unique.hpp"
 #include "BoundedOption.hpp"
@@ -118,6 +120,25 @@ public:
          */
         const bool onlyInitialOnboarding;
     } graphGenerationOptions;
+
+
+    class Defaults
+    {
+    private:
+        static const double defaultSalesChance;
+        static const double defaultConversionChance;
+
+    protected:
+        Defaults(Config* config);
+
+    public:
+        /**
+        * Consumer factory
+        */
+        static const std::function<std::shared_ptr<Consumer>(Unique, Money)> 
+            mkDefaultConsumer;
+    };
+    std::unique_ptr<Config::Defaults> defaults = make_unique<Config::Defaults>(this);
 };
 
 
