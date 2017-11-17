@@ -234,4 +234,14 @@ bool Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHo
     return saleOccurred;
 }
 
+
+
+SaleIsPossibleResult Transaction::saleIsPossible(
+        CapitalHolder& seller, CapitalHolder& buyer)
+{
+
+}
+
+
+
 }
