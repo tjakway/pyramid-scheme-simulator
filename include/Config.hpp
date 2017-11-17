@@ -60,8 +60,9 @@ public:
             BoundedOption<double> downstreamPercent = 
                 BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
 
-            //how much does it cost to become a distributor?
-            const Money buyIn;
+            //how much inventory do you need to buy from the company to become
+            //a distributor?
+            const unsigned int buyIn;
         } distributorOptions;
     } simulationOptions;
     

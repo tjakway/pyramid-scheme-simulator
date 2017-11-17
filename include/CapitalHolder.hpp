@@ -72,13 +72,7 @@ private:
      * nullptr if they directly bought in from the company
      */
     std::shared_ptr<Distributor> recruitedBy;
-    //TODO: add downstreamPercent field
 protected:
-    /**
-     * chance of making a sale to the other node
-     * TODO: probably make this a static method that takes both the Consumer and Distributor
-     * objects as parameters since the chance of a sale depends on factors from both
-     */
     virtual bool canPurchase(Money cost, const CapitalHolder& from) override;
 
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
