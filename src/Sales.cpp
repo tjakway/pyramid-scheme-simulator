@@ -122,8 +122,18 @@ public:
     const bool success;
 
 
-    const std::shared_ptr<Distributor> checkSellerPointer();
-    const std::shared_ptr<Consumer> checkBuyerPointer();
+    static const std::shared_ptr<Distributor> 
+        checkSellerPointer(std::shared_ptr<Distributor>);
+    static const std::shared_ptr<Consumer> checkBuyerPointer(std::shared_ptr<Consumer>);
+
+
+    //thin wrappers over the static methods
+    const std::shared_ptr<Distributor> checkSellerPointer() {
+        SaleIsPossibleResult::checkSellerPointer(seller);
+    }
+    const std::shared_ptr<Consumer> checkBuyerPointer() {
+        SaleIsPossibleResult::checkBuyerPointer(buyer);
+    }
 
     static SaleIsPossibleResult good(SalesResult r, 
             const std::shared_ptr<Distributor> seller,
@@ -132,14 +142,14 @@ public:
         if(!r)
         {
             throw SaleIsPossibleResultException(
-                    "SalesResult passed to Transactions::SaleIsPossibleResult::good" +
-                    " was not SUCCESS");
+                    "SalesResult passed to Transactions::SaleIsPossibleResult::good \
+                     was not SUCCESS");
         }
         else
         {
             return SaleIsPossibleResult(r, 
-                    checkSellerPointer(), 
-                    checkBuyerPointer());
+                    checkSellerPointer(seller), 
+                    checkBuyerPointer(buyer));
         }
     }
 
@@ -158,7 +168,7 @@ public:
 
 };
 
-const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer()
+const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
 
 {
     if(!seller)
@@ -172,7 +182,7 @@ const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSell
     }
 }
 
-const std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer()
+const std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer(std::shared_ptr<Consumer> buyer)
 {
     if(!buyer)
     {
