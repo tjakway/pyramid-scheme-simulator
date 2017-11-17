@@ -59,6 +59,9 @@ public:
             //earnings of a subdistributor
             BoundedOption<double> downstreamPercent = 
                 BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
+
+            //how much does it cost to become a distributor?
+            const Money buyIn;
         } distributorOptions;
     } simulationOptions;
     
