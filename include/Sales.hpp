@@ -25,6 +25,12 @@ class Transactions
      */
     std::set<Conversion> conversions;
 
+    /**
+     * unique Distributor instance that has unlimited inventory and from which
+     * all other Distributors are forced to buy
+     */
+    const std::unique_ptr<Distributor> companyDistributor;
+
     class SaleIsPossibleResult;
 
     /**
@@ -36,6 +42,7 @@ class Transactions
 
     void auditRecords();
 public:
+
 
     SalesResult processPotentialSale(SimulationTick,
             Money price,
