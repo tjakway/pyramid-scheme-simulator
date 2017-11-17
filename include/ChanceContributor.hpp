@@ -10,6 +10,8 @@ public:
     virtual double getChance(rd_ptr) = 0;
 
     static bool sampleFrom(rd_ptr, ChanceContributor&, ChanceContributor&);
+
+    virtual std::unique_ptr<ChanceContributor> clone() = 0;
 };
 
 /**
@@ -18,10 +20,12 @@ public:
  */
 class StaticChanceContributor : public ChanceContributor
 {
+    double chance;
 public:
     StaticChanceContributor(double staticChance);
 
-    virtual double getChance(rd_ptr);
+    virtual double getChance(rd_ptr) override;
+    virtual std::unique_ptr<ChanceContributor> clone() override;
 };
 
 }

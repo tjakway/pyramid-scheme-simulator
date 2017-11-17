@@ -15,4 +15,21 @@ bool ChanceContributor::sampleFrom(rd_ptr rd,
     return Util::sampleFrom(rd, chance);
 }
 
+StaticChanceContributor::StaticChanceContributor(double staticChance)
+    : chance(staticChance) {}
+
+/**
+ * ignore the passed random device and return the chance we got in the CTOR
+ */
+double StaticChanceContributor::getChance(rd_ptr)
+{
+    return chance;
+}
+
+std::unique_ptr<ChanceContributor> StaticChanceContributor::clone()
+{
+    return make_unique<StaticChanceContributor>(chance);
+}
+
+
 }
