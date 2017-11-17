@@ -73,12 +73,7 @@ public:
 };
 
 
-std::ostream& operator<<(std::ostream& os, const SalesResult& res)
-{
-    os << res.str();
-    return os;
-}
-
+std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 
 class MoneyChangeRecord
 {
