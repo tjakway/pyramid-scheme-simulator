@@ -32,6 +32,8 @@ public:
 
     const rd_ptr randomGen;
 
+    using ChanceDistribution = std::function<std::unique_ptr<ChanceContributor>(rd_ptr)>;
+
     class SimulationOptions
     {
     public:
@@ -111,7 +113,9 @@ public:
 
         //how are sales skills distributed throughout the population?
         //random guess: normal distribution?
-        const std::function<double()> salesSkillDistribution;
+        const ChanceDistribution salesSkillDistribution;
+
+        const ChanceDistribution conversionChanceDistribution;
 
 
         /**
@@ -125,8 +129,7 @@ public:
     class Defaults
     {
     private:
-        static const double defaultSalesChance;
-        static const double defaultConversionChance;
+        std::shared_ptr<Config> config;
 
     protected:
         Defaults(Config* config);
@@ -135,8 +138,7 @@ public:
         /**
         * Consumer factory
         */
-        static const std::function<std::shared_ptr<Consumer>(Unique, Money)> 
-            mkDefaultConsumer;
+        std::shared_ptr<Consumer> mkConsumer(rd_ptr, Unique);
     };
     std::unique_ptr<Config::Defaults> defaults = make_unique<Config::Defaults>(this);
 };
