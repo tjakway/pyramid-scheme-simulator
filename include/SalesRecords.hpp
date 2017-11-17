@@ -21,7 +21,7 @@ class SalesResult
 {
 public:
     /**
-     * TODO
+     * TODO: add categories as needed
      */
     enum Reason {
         UNKNOWN,
