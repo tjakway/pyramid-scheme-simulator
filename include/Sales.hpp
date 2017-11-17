@@ -23,7 +23,8 @@ public:
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
         SUCCESS
-    } reason;
+    };
+    const Reason reason;
 
     /** whether or not a sale occurred */
     const bool success;
@@ -35,6 +36,14 @@ public:
     bool operator!() const {
         return !success;
     }
+
+    std::ostream& operator<<(std::ostream& os, const T& obj)
+    {
+        // write obj to stream
+        return os;
+    }
+
+    SalesResult(Reason);
 };
 
 class MoneyChangeRecord
@@ -68,9 +77,23 @@ class Transactions
 {
     std::set<Sale> sales;
 
-    SalesResult sell(CapitalHolder& seller, CapitalHolder& buyer);
+    class SaleIsPossibleResult;
+
+    /**
+     * return SalesResult objects to give more information about why the sale
+     * didn't go through
+     */
+    SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
+    SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
+
+    void auditSales();
 public:
-    SalesResult processSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
+
+    SalesResult processPotentialSale(SimulationTick,
+            Money price,
+            rd_ptr,
+            CapitalHolder& seller,
+            CapitalHolder& buyer);
      
 };
 

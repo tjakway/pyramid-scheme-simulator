@@ -87,11 +87,8 @@ private:
 
     SalesResult result;
 
-    std::shared_ptr<Distributor> checkSellerPointer();
-    std::shared_ptr<Consumer> checkBuyerPointer();
 
-
-    Transactions::SaleIsPossibleResult(SalesResult r, 
+    SaleIsPossibleResult(SalesResult r, 
             const std::shared_ptr<Distributor> seller,
             const std::shared_ptr<Consumer> buyer)
         : result(r), success(r.success), seller(seller), buyer(buyer)
@@ -102,7 +99,7 @@ public:
         std::string msg;
     public:
         SaleIsPossibleResultException(SalesResult res) {
-            ostringstream ss;
+            std::ostringstream ss;
             ss << "Tried to access downcasted pointers in SaleIsPossibleResult"
                 << " when SalesResult was " << res << std::endl; 
             msg = ss.str();
@@ -124,14 +121,9 @@ public:
 
     const bool success;
 
-    /** don't need to check the pointers here because they 
-     * were checked in the factory methods*/
-    const std::shared_ptr<Distributor> getSeller() const nothrow {
-        return seller;
-    }
-    const std::shared_ptr<Consumer> getBuyer() const nothrow {
-        return buyer;
-    }
+
+    const std::shared_ptr<Distributor> checkSellerPointer();
+    const std::shared_ptr<Consumer> checkBuyerPointer();
 
     static SaleIsPossibleResult good(SalesResult r, 
             const std::shared_ptr<Distributor> seller,
@@ -166,7 +158,7 @@ public:
 
 };
 
-std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer()
+const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer()
 
 {
     if(!seller)
@@ -180,7 +172,7 @@ std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPoin
     }
 }
 
-std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer()
+const std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer()
 {
     if(!buyer)
     {
