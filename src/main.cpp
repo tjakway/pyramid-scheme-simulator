@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include "Defaults.hpp"
-#include "Actors.hpp"
 #include "CapitalHolder.hpp"
 #include "Sales.hpp"
 #include "Unique.hpp"

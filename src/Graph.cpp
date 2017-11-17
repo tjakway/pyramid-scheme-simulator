@@ -2,7 +2,6 @@
 #include "Unique.hpp"
 #include "Graph.hpp"
 #include "Util.hpp"
-#include "Defaults.hpp"
 
 #include <unordered_map>
 #include <unordered_set>
