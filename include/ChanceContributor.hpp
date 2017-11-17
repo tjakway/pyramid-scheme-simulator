@@ -11,7 +11,7 @@ public:
 
     static bool sampleFrom(rd_ptr, ChanceContributor&, ChanceContributor&);
 
-    virtual std::unique_ptr<ChanceContributor> clone() = 0;
+    virtual std::unique_ptr<ChanceContributor> clone() const = 0;
 
     std::unique_ptr<ChanceContributor> operator+(const ChanceContributor& other);
 
@@ -34,7 +34,7 @@ public:
         : firstSource(std::move(a)), secondSource(std::move(b)) {}
 
     virtual double getChance(rd_ptr) override;
-    virtual std::unique_ptr<ChanceContributor> clone() override;
+    virtual std::unique_ptr<ChanceContributor> clone() const override;
 };
 
 /**
@@ -48,7 +48,7 @@ public:
     StaticChanceContributor(double staticChance);
 
     virtual double getChance(rd_ptr) override;
-    virtual std::unique_ptr<ChanceContributor> clone() override;
+    virtual std::unique_ptr<ChanceContributor> clone() const override;
 };
 
 }
