@@ -43,7 +43,7 @@ public:
         getSalesChanceContribution();
 
     virtual ChanceContributor*
-        getDistributorConversionChanceContributor();
+        getDistributorConversionChanceContribution();
 
     virtual bool isDistributor() { return false; }
 };

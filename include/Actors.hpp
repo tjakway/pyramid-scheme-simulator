@@ -24,7 +24,7 @@ public:
         getSalesChanceContribution() override;
 
     virtual ChanceContributor*
-        getDistributorConversionChanceContributor() override;
+        getDistributorConversionChanceContribution() override;
 };
 
 }

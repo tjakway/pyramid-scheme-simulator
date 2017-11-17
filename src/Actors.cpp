@@ -22,11 +22,11 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
             new StaticChanceContributor(conversionChance))
 {}
 
-virtual ChanceContributor* getSalesChanceContribution() override
+virtual ChanceContributor* StaticConsumer::getSalesChanceContribution() override
 {
     return salesChance.get();
 }
-virtual ChanceContributor* getDistributorConversionChanceContributor() override
+virtual ChanceContributor* StaticConsumer::getDistributorConversionChanceContribution() override
 {
     return conversionChance.get();
 }
