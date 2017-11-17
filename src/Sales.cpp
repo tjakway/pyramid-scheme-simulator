@@ -168,7 +168,8 @@ public:
 
 };
 
-const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
+const std::shared_ptr<Distributor> 
+    Transactions::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
 
 {
     if(!seller)
@@ -182,7 +183,8 @@ const std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSell
     }
 }
 
-const std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer(std::shared_ptr<Consumer> buyer)
+const std::shared_ptr<Consumer> 
+    Transactions::SaleIsPossibleResult::checkBuyerPointer(std::shared_ptr<Consumer> buyer)
 {
     if(!buyer)
     {
