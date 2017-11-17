@@ -9,7 +9,7 @@ class ChanceContributor
 public:
     virtual double getChance(rd_ptr) = 0;
 
-    static bool sampleFrom(rd_ptr, ChanceContributor&, ChanceContributor&);
+    bool sampleFrom(rd_ptr);
 
     virtual std::unique_ptr<ChanceContributor> clone() const = 0;
 

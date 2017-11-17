@@ -25,13 +25,9 @@ std::unique_ptr<ChanceContributor> ChanceContributor::Intersection::clone() cons
             std::move(secondSource->clone()));
 }
 
-bool ChanceContributor::sampleFrom(rd_ptr rd,
-        ChanceContributor& lhs,
-        ChanceContributor& rhs)
+bool ChanceContributor::sampleFrom(rd_ptr rd)
 {
-    //intersection of both chances
-    const auto chance = lhs.getChance(rd) * rhs.getChance(rd);
-    return Util::sampleFrom(rd, chance);
+    return Util::sampleFrom(rd, getChance(rd));
 }
 
 StaticChanceContributor::StaticChanceContributor(double staticChance)
