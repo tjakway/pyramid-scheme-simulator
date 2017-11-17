@@ -7,6 +7,7 @@
 #include <limits>
 
 #include "Types.hpp"
+#include "ChanceContributor.hpp"
 #include "CapitalHolderClassDecls.hpp"
 #include "Util.hpp"
 #include "Tick.hpp"
