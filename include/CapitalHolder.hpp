@@ -12,7 +12,6 @@
 
 namespace pyramid_scheme_simulator {
 
-//XXX: TODO: determine starting funds
 class CapitalHolder : public Uniqueable
 {
 protected:
