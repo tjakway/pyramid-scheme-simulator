@@ -15,7 +15,7 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
     : Consumer(u, m),
     salesChance(std::move(sChance->clone())),
     conversionChance(std::move(cChance->clone()))
-{ }
+{}
 
 StaticConsumer::StaticConsumer(Unique u, Money m,
         std::unique_ptr<ChanceContributor>& s,
@@ -36,7 +36,7 @@ StaticConsumer::StaticConsumer(StaticConsumer& c)
             //copy pointer referands
             salesChance->clone().get(),
             conversionChance->clone().get())
-{ }
+{}
 
 ChanceContributor& StaticConsumer::getSalesChanceContribution()
 {
