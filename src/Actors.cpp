@@ -64,4 +64,10 @@ unsigned int Company::getInventory()
     return std::numeric_limits<unsigned int>::max();
 }
 
+/**
+ * no-op because the company never buys anything
+ */
+void Company::deductMoney(Money m)
+{ return; }
+
 }

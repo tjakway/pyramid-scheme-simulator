@@ -55,7 +55,7 @@ class Consumer : public CapitalHolder
 public:
     Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
 
-    void deductMoney(Money);
+    virtual void deductMoney(Money);
 
     virtual std::unique_ptr<Distributor> 
         becomeDistributor(Config::SimulationOptions::DistributorOptions&,
@@ -80,8 +80,11 @@ protected:
 public:
     void addMoney(Money);
 
+    virtual bool canBecomeDistributor(Money buyIn) override { return false; }
+
     virtual bool isDistributor() override { return true; }
 
+    virtual unsigned int getInventory();
 };
 
 

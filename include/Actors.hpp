@@ -41,6 +41,7 @@ class Company : public Distributor
 protected:
     virtual bool canPurchase(Money, const CapitalHolder&) override;
 public:
+    virtual void deductMoney(Money) override;
     virtual unsigned int getInventory() override;
 };
 
