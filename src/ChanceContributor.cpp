@@ -6,6 +6,18 @@
 namespace pyramid_scheme_simulator {
 
 
+double ChanceContributor::Intersection::getChance(rd_ptr rd)
+{
+    return firstSource->getChance(rd) * secondSource->getChance(rd);
+}
+
+std::unique_ptr<ChanceContributor> ChanceContributor::Intersection::clone()
+{
+    return make_unique<Intersection>(
+            std::move(firstSource->clone()), 
+            std::move(secondSource->clone()));
+}
+
 bool ChanceContributor::sampleFrom(rd_ptr rd,
         ChanceContributor& lhs,
         ChanceContributor& rhs)
