@@ -1,5 +1,6 @@
 #include "Actors.hpp"
 #include "Unique.hpp"
+#include "Util.hpp"
 
 #include <memory>
 
@@ -7,26 +8,26 @@ namespace pyramid_scheme_simulator {
 
 
 StaticConsumer::StaticConsumer(Unique u, Money m,
-        const std::unique_ptr<ChanceContributor> sChance,
-        const std::unique_ptr<ChanceContributor> cChance)
+        std::unique_ptr<ChanceContributor> sChance,
+        std::unique_ptr<ChanceContributor> cChance)
     : Consumer(u, m),
-      salesChance(sChance),
-      conversionChance(cChance)
+      salesChance(std::move(sChance)),
+      conversionChance(std::move(cChance))
 { }
 
 
 StaticConsumer::StaticConsumer(Unique u, Money m, 
         const double salesChance, const double conversionChance)
     : StaticConsumer(u, m,
-            new StaticChanceContributor(salesChance),
-            new StaticChanceContributor(conversionChance))
+            make_unique<StaticChanceContributor>(salesChance),
+            make_unique<StaticChanceContributor>(conversionChance))
 {}
 
-virtual ChanceContributor* StaticConsumer::getSalesChanceContribution() override
+ChanceContributor* StaticConsumer::getSalesChanceContribution()
 {
     return salesChance.get();
 }
-virtual ChanceContributor* StaticConsumer::getDistributorConversionChanceContribution() override
+ChanceContributor* StaticConsumer::getDistributorConversionChanceContribution()
 {
     return conversionChance.get();
 }
