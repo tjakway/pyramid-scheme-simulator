@@ -4,12 +4,12 @@
 #include "Tick.hpp"
 #include "CapitalHolder.hpp"
 #include "Unique.hpp"
-#include "SalesRecords.hpp"
 
 #include <memory>
 #include <set>
 #include <string>
 #include <unordered_set>
+#include <initializer_list>
 
 namespace pyramid_scheme_simulator {
 
@@ -75,27 +75,32 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 
-class MoneyChangeRecord
-{
-public:
-    const Unique who;
-    const Money fundsBefore;
-    const Money fundsAfter;
-    MoneyChangeRecord(Money price, const std::shared_ptr<CapitalHolder>);
-};
 
+/**
+ * doesn't inherit from Uniqueable because it might have >1 id
+ */
 class CapitalHolderRecord
 {
+private:
+    std::unordered_set<Unique> who;
 public:
     const SimulationTick when;
-    const std::unordered_set<Unique> who;
 
-    CapitalHolderRecord(const SimulationTick, const Unique...);
-    const Unique getWho();
-    const SimulationTick getWhen();
+    CapitalHolderRecord(const SimulationTick, std::initializer_list<Unique>);
+    std::unordered_set<Unique> getWho();
+    SimulationTick getWhen();
 };
 
-class Sale
+class MoneyChangeRecord : public CapitalHolderRecord
+{
+public:
+    const Money fundsBefore;
+    const Money fundsAfter;
+    MoneyChangeRecord(SimulationTick, Money price, const std::shared_ptr<CapitalHolder>);
+};
+
+
+class Sale : public CapitalHolderRecord
 {
 public:
     const SimulationTick when;
