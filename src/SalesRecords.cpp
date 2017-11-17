@@ -96,13 +96,18 @@ SalesResult::SalesResult(Reason r)
 
 MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
         const std::shared_ptr<CapitalHolder> p)
-    : who(p->id), fundsBefore(p->getMoney()), fundsAfter(p->getMoney() - price)
+    : CapitalHolderRecord(when, p->id),
+      fundsBefore(p->getMoney()), 
+      fundsAfter(p->getMoney() - price)
 { }
 
 Sale::Sale(SimulationTick when, Money price, 
         const std::shared_ptr<Distributor> seller, 
         const std::shared_ptr<Consumer> buyer) 
-    : when(when), price(price), 
+    : CapitalHolderRecord(when,
+            {checkSellerRecord(price, seller, buyer)->id,
+             checkBuyerRecord(price, buyer)->id})
+      price(price), 
       sellerRecord(checkSellerRecord(price, seller, buyer)),
       buyerRecord(checkBuyerRecord(price, buyer))
 { }

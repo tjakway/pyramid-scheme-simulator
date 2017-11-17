@@ -103,8 +103,6 @@ public:
 class Sale : public CapitalHolderRecord
 {
 public:
-    const SimulationTick when;
-
     const Money price;
     const MoneyChangeRecord sellerRecord;
     const MoneyChangeRecord buyerRecord;
@@ -115,10 +113,9 @@ public:
             const std::shared_ptr<Consumer>);
 };
 
-class Conversion
-{
-    const SimulationTick when;
-    const Unique who;
+class Conversion : public CapitalHolderRecord
+{ 
+    const std::shared_ptr<Distributor> convertedBy;
 };
 
 }
