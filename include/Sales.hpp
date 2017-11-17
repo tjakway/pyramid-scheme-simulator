@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <set>
+#include <string>
 
 
 namespace pyramid_scheme_simulator {
@@ -24,6 +25,30 @@ public:
         CHANCE_FAILED,
         SUCCESS
     };
+
+    /**
+     * very frustrating that C++ can't do this automatically...
+     */
+    const char* reasonToString(Reason r) const
+    {
+        switch(r)
+        {
+            case UNKNOWN:
+                return "UNKNOWN";
+            case NEITHER_DISTRIBUTOR:
+                return "NEITHER_DISTRIBUTOR";
+            case CONSUMER_INSUFFICIENT_FUNDS:
+                return "CONSUMER_INSUFFICIENT_FUNDS";
+            case CHANCE_FAILED:
+                return "CHANCE_FAILED";
+            case SUCCESS:
+                return "SUCCESS";
+        }
+        //keep it outside the switch so the compiler can warn us about
+        //omitted cases when there isn't a default
+        return "ERROR IN reasonToString--NO ENUM DEFINITION";
+    }
+
     const Reason reason;
 
     /** whether or not a sale occurred */
@@ -37,14 +62,18 @@ public:
         return !success;
     }
 
-    std::ostream& operator<<(std::ostream& os, const T& obj)
-    {
-        // write obj to stream
-        return os;
-    }
+    std::string str() const { return std::string(reasonToString(reason)); }
 
     SalesResult(Reason);
 };
+
+
+std::ostream& operator<<(std::ostream& os, const SalesResult& res)
+{
+    os << res.str();
+    return os;
+}
+
 
 class MoneyChangeRecord
 {
