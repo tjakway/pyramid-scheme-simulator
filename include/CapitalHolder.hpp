@@ -60,6 +60,8 @@ public:
     virtual std::unique_ptr<Distributor> 
         becomeDistributor(Config::SimulationOptions::DistributorOptions&,
                 Distributor* convertedBy);
+
+    virtual bool canBecomeDistributor(Money buyIn);
 };
 
 class Distributor : public Consumer
@@ -85,6 +87,7 @@ public:
     void addMoney(Money);
 
     virtual bool isDistributor() override { return true; }
+
 };
 
 
