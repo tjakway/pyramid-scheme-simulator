@@ -181,7 +181,8 @@ SalesResult Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, Ca
 Transactions::SaleIsPossibleResult Transactions::saleIsPossible(
         CapitalHolder& seller, CapitalHolder& buyer)
 {
-
+    //TODO: more checks
+    return buyer.getInventory() > 0;
 }
 
 
