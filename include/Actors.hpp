@@ -16,6 +16,10 @@ public:
     StaticConsumer(Unique, Money, 
             const double salesChance, const double conversionChance);
 
+    StaticConsumer(Unique, Money,
+            const std::unique_ptr<ChanceContributor>,
+            const std::unique_ptr<ChanceContributor>);
+
     virtual ChanceContributor*
         getSalesChanceContribution() override;
 
