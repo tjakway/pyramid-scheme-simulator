@@ -16,7 +16,7 @@ public:
  * a ChanceContributor that doesn't select from any distribution
  * but just uses the chance passed to its constructor
  */
-class StaticChanceContributor : ChanceContributor
+class StaticChanceContributor : public ChanceContributor
 {
 public:
     StaticChanceContributor(double staticChance);
