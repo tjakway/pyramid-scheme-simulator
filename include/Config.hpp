@@ -131,10 +131,9 @@ public:
     private:
         std::shared_ptr<Config> config;
 
-    protected:
+    public:
         Defaults(Config* config);
 
-    public:
         /**
         * Consumer factory
         */
