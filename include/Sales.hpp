@@ -20,7 +20,10 @@ namespace pyramid_scheme_simulator {
 class Transactions
 {
     std::set<Sale> sales;
-
+    /**
+     * Consumers who were turned into Distributors
+     */
+    std::set<Conversion> conversions;
 
     class SaleIsPossibleResult;
 
@@ -31,7 +34,7 @@ class Transactions
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
 
-    void auditSales();
+    void auditRecords();
 public:
 
     SalesResult processPotentialSale(SimulationTick,
