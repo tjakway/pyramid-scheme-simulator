@@ -4,16 +4,13 @@
 #include <vector>
 #include <functional>
 
+#include "CapitalHolderClassDecls.hpp"
 #include "Unique.hpp"
 #include "Tick.hpp"
 #include "Config.hpp"
 #include "ChanceContributor.hpp"
 
 namespace pyramid_scheme_simulator {
-
-class CapitalHolder;
-class Consumer;
-class Distributor;
 
 //XXX: TODO: determine starting funds
 class CapitalHolder : public Uniqueable
