@@ -4,6 +4,7 @@
 
 #include <utility>
 #include <memory>
+#include <limits>
 
 namespace pyramid_scheme_simulator {
 
@@ -44,6 +45,23 @@ ChanceContributor& StaticConsumer::getSalesChanceContribution()
 ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution()
 {
     return *conversionChance.get();
+}
+
+/**
+ * the company would never buy from one of its own distributors that it sold
+ * its product to
+ */
+bool Company::canPurchase(Money cost, const CapitalHolder& from)
+{
+    return false;
+}
+
+/**
+ * the company will never run out of its products
+ */
+unsigned int Company::getInventory()
+{
+    return std::numeric_limits<unsigned int>::max();
 }
 
 }

@@ -36,4 +36,12 @@ public:
         getDistributorConversionChanceContribution() override;
 };
 
+class Company : public Distributor
+{
+protected:
+    virtual bool canPurchase(Money, const CapitalHolder&) override;
+public:
+    virtual unsigned int getInventory() override;
+};
+
 }
