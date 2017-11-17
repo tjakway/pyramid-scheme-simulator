@@ -56,6 +56,10 @@ MoneyChangeRecord checkSellerRecord(Money price,
 
 namespace pyramid_scheme_simulator {
 
+SalesResult::SalesResult(Reason r)
+    : reason(r), success(r == SUCCESS) 
+{}
+
 MoneyChangeRecord::MoneyChangeRecord(Money price, 
         const std::shared_ptr<CapitalHolder> p)
     : who(p->id), fundsBefore(p->getMoney()), fundsAfter(p->getMoney() - price)
@@ -69,23 +73,161 @@ Sale::Sale(SimulationTick when, Money price,
       buyerRecord(checkBuyerRecord(price, buyer))
 { }
 
-SalesResult Transactions::sell(CapitalHolder& seller, CapitalHolder& buyer)
-{
 
-}
-
-SalesResult Transactions::processSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHolder& buyer)
+/**
+ * this class exists to prevent dynamic_cast'ing twice
+ * if the sale failed it just returns SalesResult,
+ * otherwise it will return the downcasted pointers
+ */
+class Transactions::SaleIsPossibleResult
 {
-    const bool saleOccurred = (seller.getSalesChanceContribution() + 
-                buyer.getSalesChanceContribution())->sampleFrom(rd);
-    if(saleOccurred)
+private:
+    const std::shared_ptr<Distributor> seller;
+    const std::shared_ptr<Consumer> buyer;
+
+    SalesResult result;
+
+    std::shared_ptr<Distributor> checkSellerPointer();
+    std::shared_ptr<Consumer> checkBuyerPointer();
+
+
+    Transactions::SaleIsPossibleResult(SalesResult r, 
+            const std::shared_ptr<Distributor> seller,
+            const std::shared_ptr<Consumer> buyer)
+        : result(r), success(r.success), seller(seller), buyer(buyer)
+    {}
+
+public:
+    class SaleIsPossibleResultException :  public std::exception {
+        std::string msg;
+    public:
+        SaleIsPossibleResultException(SalesResult res) {
+            ostringstream ss;
+            ss << "Tried to access downcasted pointers in SaleIsPossibleResult"
+                << " when SalesResult was " << res << std::endl; 
+            msg = ss.str();
+        }
+        SaleIsPossibleResultException(std::string msg) : msg(msg) {}
+
+        virtual const char* what() const throw() override { 
+            return msg.c_str();
+        }
+    };
+
+    explicit operator bool() const {
+        return result.success;
+    }
+
+    bool operator!() const {
+        return !result.success;
+    }
+
+    const bool success;
+
+    /** don't need to check the pointers here because they 
+     * were checked in the factory methods*/
+    const std::shared_ptr<Distributor> getSeller() const nothrow {
+        return seller;
+    }
+    const std::shared_ptr<Consumer> getBuyer() const nothrow {
+        return buyer;
+    }
+
+    static SaleIsPossibleResult good(SalesResult r, 
+            const std::shared_ptr<Distributor> seller,
+            const std::shared_ptr<Consumer> buyer)
     {
-        //TODO
+        if(!r)
+        {
+            throw SaleIsPossibleResultException(
+                    "SalesResult passed to Transactions::SaleIsPossibleResult::good" +
+                    " was not SUCCESS");
+        }
+        else
+        {
+            return SaleIsPossibleResult(r, 
+                    checkSellerPointer(), 
+                    checkBuyerPointer());
+        }
+    }
+
+    static SaleIsPossibleResult bad(SalesResult r)
+    {
+        if(r)
+        {
+            throw SaleIsPossibleResultException(
+                    "SUCCESS was passed to Transactions::SaleIsPossibleResult::bad");
+        }
+        else
+        {
+            return SaleIsPossibleResult(r, nullptr, nullptr);
+        }
+    }
+
+};
+
+std::shared_ptr<Distributor> Transactions::SaleIsPossibleResult::checkSellerPointer()
+
+{
+    if(!seller)
+    {
+        throw SaleIsPossibleResultException(
+                "Passed null Distributor pointer to SaleIsPossibleResult::good");
     }
     else
     {
-        //TODO
+        return seller;
     }
+}
+
+std::shared_ptr<Consumer> Transactions::SaleIsPossibleResult::checkBuyerPointer()
+{
+    if(!buyer)
+    {
+        throw SaleIsPossibleResultException(
+                "Passed null Consumer pointer to SaleIsPossibleResult::good");
+    }
+    else
+    {
+        return buyer;
+    }
+}
+
+
+SalesResult Transactions::processPotentialSale(
+        SimulationTick when, 
+        Money price,
+        rd_ptr rd,
+        CapitalHolder& seller,
+        CapitalHolder& buyer)
+{
+    auto isSalePossible = saleIsPossible(seller, buyer);
+    if(isSalePossible)
+    {
+        auto chanceProc = sampleSalesChance(rd, seller, buyer);
+        if(chanceProc)
+        {
+            return Sale(when, 
+                    price, 
+                    seller, 
+                    buyer);
+        }
+        else
+        {
+            return chanceProc;
+        }
+    }
+    else
+    {
+        return isSalePossible;
+    }
+}
+
+bool Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHolder& buyer)
+{
+    const bool saleOccurred = (seller.getSalesChanceContribution() + 
+                buyer.getSalesChanceContribution())->sampleFrom(rd);
+    return saleOccurred;
 }
 
 }
