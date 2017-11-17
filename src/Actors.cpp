@@ -9,8 +9,8 @@ namespace pyramid_scheme_simulator {
 
 
 StaticConsumer::StaticConsumer(Unique u, Money m,
-        const std::unique_ptr<ChanceContributor> sChance,
-        const std::unique_ptr<ChanceContributor> cChance)
+        std::unique_ptr<ChanceContributor> sChance,
+        std::unique_ptr<ChanceContributor> cChance)
     : Consumer(u, m),
       salesChance(std::move(sChance)),
       conversionChance(std::move(cChance))
@@ -30,10 +30,8 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
 StaticConsumer::StaticConsumer(StaticConsumer& c)
     : StaticConsumer(c.id, c.getMoney(),
             //copy pointer referands
-            std::unique_ptr<ChanceContributor>
-                (salesChance->clone()),
-            std::unique_ptr<ChanceContributor>
-                (conversionChance->clone()))
+            salesChance->clone(),
+            conversionChance->clone())
 { }
 
 ChanceContributor* StaticConsumer::getSalesChanceContribution()
