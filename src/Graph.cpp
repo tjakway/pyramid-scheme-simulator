@@ -102,15 +102,15 @@ namespace std {
 namespace pyramid_scheme_simulator {
 
 PopulationGraph::BGLPopulationGraph 
-    PopulationGraph::buildGraph(rd_ptr rd, Config& options)
+    PopulationGraph::buildGraph(rd_ptr rd, Config& config)
 {
 
     //check if link chance procs
-    auto testEdge = [&rd, &options]() -> bool { 
+    auto testEdge = [&rd, &config]() -> bool { 
         return Util::sampleFrom(rd, 
-            options.graphGenerationOptions.linkChance.getOption()); };
+            config.graphGenerationOptions.linkChance.getOption()); };
 
-    const auto graphSize = options.graphGenerationOptions.graphSize.getOption();
+    const auto graphSize = config.graphGenerationOptions.graphSize.getOption();
 
     std::unordered_set<UndirectedEdge> edges;
     std::vector<Unique> vertices(graphSize);
@@ -146,12 +146,13 @@ PopulationGraph::BGLPopulationGraph
         popDescriptors.emplace(p->id, v);
     };
 
-    auto startingFunds = options.simulationOptions.startingFunds;
+    auto startingFunds = config.simulationOptions.startingFunds;
 
     //add vertices to the boost graph and save the descriptors
     for(auto i : vertices)
     {
-        insertPop(std::shared_ptr<CapitalHolder>(Defaults::mkDefaultConsumer(i)));
+        insertPop(std::shared_ptr<CapitalHolder>(
+                    config.defaults->mkConsumer(rd, i)));
     }
 
     //add edges using the saved vertex descriptors
