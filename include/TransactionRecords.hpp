@@ -40,13 +40,16 @@ class UnorderedSetTransactionRecord
 {
     using SelfType = std::unordered_set<std::unique_ptr<T>>;
 
+    virtual SelfType::iterator begin() = 0;
+    virtual SelfType::iterator end() = 0;
+    
+
     virtual SelfType mappend(SelfType& other) override
     {
         SelfType t = Monoid<SelfType>::mempty();
 
         //copy self and other into the new container
-        auto self = getSelf();
-        t.insert(self.begin(), self.end());
+        t.insert(begin(), end());
         t.insert(other.begin(), other.end());
 
         return t;
@@ -57,9 +60,8 @@ class UnorderedSetTransactionRecord
         SelfType t = Monoid<SelfType>::mempty();
 
         //move self and other into the new container
-        auto self = getSelf();
-        t.insert(std::make_move_iterator(self.begin()), 
-                std::make_move_iterator(self.end()));
+        t.insert(std::make_move_iterator(begin()), 
+                std::make_move_iterator(end()));
         t.insert(std::make_move_iterator(other.begin()), 
                 std::make_move_iterator(other.end()));
 
