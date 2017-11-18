@@ -10,13 +10,13 @@ class Monoid
         return x;
     }
 
-    T mappend(T& other);
+    virtual T mappend(T& other) = 0;
 
     /**
      * can be implemented as a performance optimization in cases where
      * the original could be moved instead of copied
      */
-    T mappend_move(T& other) {
+    virtual T mappend_move(T& other) {
         return mappend(other);
     }
 };
