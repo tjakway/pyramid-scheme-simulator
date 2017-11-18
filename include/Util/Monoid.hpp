@@ -11,4 +11,8 @@ class Monoid
     }
 
     T mappend(T& other);
+
+    T mappend_move(T& other) {
+        return mappend(other);
+    }
 };
