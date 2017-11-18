@@ -1,7 +1,7 @@
 #include "Config.hpp"
 #include "Unique.hpp"
 #include "Graph.hpp"
-#include "Util.hpp"
+#include "Util/Util.hpp"
 
 #include <unordered_map>
 #include <unordered_set>

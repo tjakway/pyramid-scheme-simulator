@@ -1,7 +1,7 @@
 #include "ChanceContributor.hpp"
 
 #include "Types.hpp"
-#include "Util.hpp"
+#include "Util/Util.hpp"
 
 namespace pyramid_scheme_simulator {
 
