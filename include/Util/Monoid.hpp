@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 template <typename T>
 class Monoid
 {
@@ -20,3 +22,10 @@ class Monoid
         return mappend(other);
     }
 };
+
+
+template <typename T>
+std::unique_ptr<T> Monoid::mempty<std::unique_ptr<T>>() {
+    return std::unique_ptr<T>(nullptr);
+}
+
