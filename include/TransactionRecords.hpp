@@ -80,7 +80,7 @@ public:
 
 template <typename U>
 class ListTransactionRecord 
-    : public TransactionRecord<std::list<std::unique_ptr<U>>>
+    : public STLTransactionRecord<std::list<std::unique_ptr<U>>>
 {
 protected:
     virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;

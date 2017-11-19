@@ -2,6 +2,7 @@
 
 #include "Types.hpp"
 #include "Tick.hpp"
+#include "TransactionRecords.hpp"
 #include "CapitalHolder.hpp"
 #include "Util/Unique.hpp"
 #include "SalesRecords.hpp"
@@ -50,14 +51,11 @@ public:
     void processPotentialConversion(CapitalHolder&);
 
     
-
-
     SalesResult processPotentialSale(SimulationTick,
             Money price,
             rd_ptr,
             CapitalHolder& seller,
             CapitalHolder& buyer);
-     
 };
 
 }
