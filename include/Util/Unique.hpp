@@ -62,11 +62,11 @@ public:
     }
 
 
-    virtual bool operator==(UniqueSet &other) const
+    virtual bool operator==(const UniqueSet &other) const
     {
         return guids == other.guids;
     }
-    virtual bool operator!=(UniqueSet &other) const
+    virtual bool operator!=(const UniqueSet &other) const
     {
         return guids != other.guids;
     }
@@ -120,9 +120,6 @@ public:
     const Unique id;
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
-    /*Uniqueable(std::initializer_list<Unique> xs)
-        : id(uniqueSetFromUniqueInitializerList(xs))
-    {}*/
 };
 
 }
