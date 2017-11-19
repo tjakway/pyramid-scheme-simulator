@@ -7,11 +7,19 @@ namespace pyramid_scheme_simulator {
 
 class Uniqueable;
 
-using Unique = xg::Guid;
+class Unique
+{
+    xg::Guid guid;
+protected:
+    Unique(xg::Guid guid): guid(guid) {}
 
-Unique newUnique() { return xg::newGuid(); }
+public:
+    static Unique newUnique() { 
+        return Unique(xg::newGuid()); 
+    }
+    static const Unique emptyUnique = xg::Guid();
+};
 
-const static Unique emptyUnique = xg::Guid();
 
 /**
  * a trait for classes with Unique IDs
