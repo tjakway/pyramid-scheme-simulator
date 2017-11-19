@@ -78,6 +78,7 @@ std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 
 class Recordable
 {
+protected:
     Recordable()=delete;
 };
 
