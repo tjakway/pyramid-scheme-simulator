@@ -44,6 +44,10 @@ public:
 
     Money getMoney() const;
 
+    /** both Consumers and Distributors have inventory
+     * but do different things with it */
+    virtual unsigned int getInventory();
+
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
 };
@@ -84,7 +88,8 @@ public:
     virtual bool isDistributor() override { return true; }
 
     virtual unsigned int getDesiredRestockAmount();
-    virtual unsigned int getInventory();
+
+    bool hasInventory() { return getInventory() > 0; }
 };
 
 

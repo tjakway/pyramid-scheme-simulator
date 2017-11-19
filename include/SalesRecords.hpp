@@ -25,7 +25,10 @@ public:
      */
     enum Reason {
         UNKNOWN,
-        NEITHER_DISTRIBUTOR,
+        SELLER_NOT_DISTRIBUTOR,
+        BUYER_NOT_CONSUMER,
+        /** why would distributors sell to each other? */
+        BOTH_DISTRIBUTORS,
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
         SUCCESS
@@ -40,8 +43,12 @@ public:
         {
             case UNKNOWN:
                 return "UNKNOWN";
-            case NEITHER_DISTRIBUTOR:
-                return "NEITHER_DISTRIBUTOR";
+            case SELLER_NOT_DISTRIBUTOR:
+                return "SELLER_NOT_DISTRIBUTOR";
+            case BUYER_NOT_CONSUMER:
+                return "BUYER_NOT_CONSUMER";
+            case BOTH_DISTRIBUTORS:
+                return "BOTH_DISTRIBUTORS";
             case CONSUMER_INSUFFICIENT_FUNDS:
                 return "CONSUMER_INSUFFICIENT_FUNDS";
             case CHANCE_FAILED:

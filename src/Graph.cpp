@@ -63,7 +63,7 @@ namespace {
 
                 const char* what() const throw() override {
                     std::string msg = "Could not find the index of vertex " 
-                        + std::string(*which);
+                        + which->str();
                     return msg.c_str();
                 }
             };
@@ -118,7 +118,7 @@ PopulationGraph::BGLPopulationGraph
     //generate vertices with random ids
     for(unsigned long i = 0; i < graphSize; i++)
     {
-        vertices.push_back(newUnique());
+        vertices.push_back(Unique::newUnique());
     }
 
     //generate edges

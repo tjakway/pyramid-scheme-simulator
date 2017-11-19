@@ -45,7 +45,24 @@ public:
          * (i.e. being recruited directly by the company)
          */
         const double onboardingChance;
-        const unsigned int productCost;
+
+        /**
+         * TODO: if needed can replace these with a function
+         *
+         * unsigned int productCost(CapitalHolder&);
+         *
+         * that returns how much it costs for that Pop to buy it
+         * but that might require a lot of vtable lookups for
+         * almost no benefit
+         *
+         * ********************************************
+         *
+         * could make these the starting values and 
+         * have Transactions dynamically calculate product costs
+         * based on competition (i.e. from the number of edges)
+         */
+        const unsigned int standardProductCost;
+        const unsigned int wholesaleProductCost;
 
 
         const std::function<Money()> startingFunds;

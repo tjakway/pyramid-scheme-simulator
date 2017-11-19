@@ -191,8 +191,28 @@ SalesResult Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, Ca
 
 
 Transactions::SaleIsPossibleResult Transactions::saleIsPossible(
-        CapitalHolder& seller, CapitalHolder& buyer)
+        CapitalHolder& _seller, CapitalHolder& _buyer)
 {
+    Distributor* seller = dynamic_cast<Distributor*>(_seller);
+    if(!seller) {
+        return Transactions::SaleIsPossibleResult::bad(
+                SalesResult::Reason::SELLER_NOT_DISTRIBUTOR);
+    }
+    else {
+        Consumer* buyer = dynamic_cast<Consumer*> (_buyer);
+        if(!buyer) {
+            return Transactions::SaleIsPossibleResult::bad(
+                    SalesResult::Reason::BUYER_NOT_CONSUMER);
+        }
+        //make sure they're not also a distributor
+        else if(buyer->isDistributor()){
+            return Transactions::SaleIsPossibleResult::bad(
+                    SalesResult::Reason::BOTH_DISTRIBUTORS);
+        }
+        else if(){
+
+        }
+    }
     //TODO: more checks
     return buyer.getInventory() > 0;
 }
