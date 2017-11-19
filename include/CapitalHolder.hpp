@@ -46,7 +46,7 @@ public:
 
     /** both Consumers and Distributors have inventory
      * but do different things with it */
-    virtual unsigned int getInventory();
+    virtual unsigned int getInventory() = 0;
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
@@ -89,7 +89,7 @@ public:
 
     virtual unsigned int getDesiredRestockAmount();
 
-    bool hasInventory() { return getInventory() > 0; }
+    virtual bool hasInventory() { return getInventory() > 0; }
 };
 
 

@@ -209,12 +209,14 @@ Transactions::SaleIsPossibleResult Transactions::saleIsPossible(
             return Transactions::SaleIsPossibleResult::bad(
                     SalesResult::Reason::BOTH_DISTRIBUTORS);
         }
-        else if(){
+        else if(!seller->hasInventory()){
+            return Transactions::SaleIsPossibleResult::bad(
+                    SalesResult::Reason::NO_INVENTORY);
+        }
+        else {
 
         }
     }
-    //TODO: more checks
-    return buyer.getInventory() > 0;
 }
 
 

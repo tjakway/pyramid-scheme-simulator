@@ -29,6 +29,8 @@ public:
         BUYER_NOT_CONSUMER,
         /** why would distributors sell to each other? */
         BOTH_DISTRIBUTORS,
+        /** seller is out of inventory */
+        NO_INVENTORY,
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
         SUCCESS
@@ -49,6 +51,8 @@ public:
                 return "BUYER_NOT_CONSUMER";
             case BOTH_DISTRIBUTORS:
                 return "BOTH_DISTRIBUTORS";
+            case NO_INVENTORY:
+                return "NO_INVENTORY";
             case CONSUMER_INSUFFICIENT_FUNDS:
                 return "CONSUMER_INSUFFICIENT_FUNDS";
             case CHANCE_FAILED:
