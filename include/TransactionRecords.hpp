@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Util/Monoid.hpp"
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
+#include "Types.hpp"
+#include "Tick.hpp"
 #include "CapitalHolder.hpp"
 
 #include <functional>
@@ -22,17 +24,22 @@ public:
 
 template <typename T>
 class VertexTransaction
+    : public Transaction<T, SimulationTick, Money, CapitalHolder&>
 {
 public:
-    virtual TransactionRecord<T> operator()(CapitalHolder&) = 0;
+    virtual TransactionRecord<T> operator()(
+            SimulationTick, Money, CapitalHolder&) = 0;
 };
 
 template <typename T>
 class EdgeTransaction
+    : public Transaction<T, SimulationTick, Money, CapitalHolder&, CapitalHolder&>
 {
 public:
-    virtual TransactionRecord<T> operator()(CapitalHolder&,
-                                            CapitalHolder&) = 0;
+    virtual TransactionRecord<T> operator()(SimulationTick,
+            Money, 
+            CapitalHolder&, 
+            CapitalHolder&) = 0;
 };
 
 /************************************/
@@ -42,8 +49,8 @@ class STLTransactionRecord
     : public TransactionRecord<T>
 {
 protected:
-    virtual T::iterator begin() = 0;
-    virtual T::iterator end() = 0;
+    virtual typename T::iterator begin() = 0;
+    virtual typename T::iterator end() = 0;
 public:
 
     virtual T mappend(T& other) override
@@ -83,7 +90,7 @@ private:
 public:
     using SelfType = std::list<std::unique_ptr<U>>;
 
-    SelfType records = Monoid::mempty();
+    SelfType records = Monoid<SelfType>::mempty();
 
 
     virtual SelfType mappend_move(SelfType& other)
