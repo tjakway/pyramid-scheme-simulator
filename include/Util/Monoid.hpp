@@ -1,10 +1,11 @@
 #pragma once
 
-#include <memory>
+#include <list>
 
 template <typename T>
 class Monoid
 {
+public:
     /** default implementation uses no-args CTOR */
     template <typename U> static U mempty()
     {
@@ -25,7 +26,7 @@ class Monoid
 
 
 template <typename T>
-std::unique_ptr<T> Monoid::mempty<std::unique_ptr<T>>() {
-    return std::unique_ptr<T>(nullptr);
+std::list<T> Monoid::mempty<std::list<T>>() {
+    std::list<T> x;
+    return x;
 }
-
