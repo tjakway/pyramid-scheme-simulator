@@ -104,20 +104,24 @@ class Unique : public UniqueSet
 public:
     const xg::Guid id;
 
+    static const Unique emptyUnique;
+    static Unique newUnique() { 
+        return Unique(xg::newGuid()); 
+    }
+
     Unique(xg::Guid guid): UniqueSet(guid), id(guid)
     {}
     
     Unique(const Unique& u): UniqueSet(u.id), id(u.id)
     {}
 
+    Unique(): UniqueSet()
+    {}
+
     std::string str() const {
         return id.str();
     }
 
-    static const Unique emptyUnique;
-    static Unique newUnique() { 
-        return Unique(xg::newGuid()); 
-    }
 };
 
 
