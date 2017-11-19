@@ -5,9 +5,12 @@
 
 #include <set>
 #include <initializer_list>
+#include <vector>
 
 namespace pyramid_scheme_simulator {
 
+class UniqueSet;
+class Unique;
 class Uniqueable;
 
 class UniqueSet
@@ -103,6 +106,21 @@ public:
      * set only has one element*/
 };
 
+namespace {
+
+    UniqueSet uniqueSetFromUniqueInitializerList(
+            std::initializer_list<Unique> us)
+    {
+        std::vector<xg::Guid> ids(us.size());
+        for(auto i : us)
+        {
+            ids.push_back(i.id);
+        }
+
+        return UniqueSet(ids.begin(), ids.end());
+    }
+}
+
 
 /**
  * a trait for classes with Unique IDs
@@ -114,7 +132,7 @@ public:
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
     Uniqueable(std::initializer_list<Unique> xs)
-        : id(xs)
+        : id(uniqueSetFromUniqueInitializerList(xs))
     {}
 };
 
