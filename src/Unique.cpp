@@ -1,8 +1,12 @@
 #pragma once
 
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
+#include "Guid.hpp"
 
 namespace pyramid_scheme_simulator {
 
-const UniqueSet UniqueSet::emptyUniqueSet = UniqueSet(xg::Guid());
+static const Unique emptyUnique = Unique(xg::Guid());
+
+const UniqueSet& UniqueSet::emptyUniqueSet = &Unique::emptyUnique;
+
 }

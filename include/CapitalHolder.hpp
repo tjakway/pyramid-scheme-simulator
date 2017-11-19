@@ -5,7 +5,7 @@
 #include <functional>
 
 #include "CapitalHolderClassDecls.hpp"
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
 #include "Tick.hpp"
 #include "Config.hpp"
 #include "ChanceContributor.hpp"
@@ -29,7 +29,7 @@ protected:
         : Uniqueable(id), money(startingFunds) {}
 
     CapitalHolder(Money startingFunds) 
-        : CapitalHolder(emptyUnique, startingFunds) {}
+        : CapitalHolder(Unique::emptyUnique, startingFunds) {}
 
 public:
     virtual ~CapitalHolder() {}

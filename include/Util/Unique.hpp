@@ -93,7 +93,7 @@ public:
     static UniqueSet newUniqueSet() { 
         return UniqueSet(xg::newGuid()); 
     }
-    static const UniqueSet emptyUniqueSet;
+    static const UniqueSet& emptyUniqueSet;
 };
 
 class Unique : public UniqueSet
@@ -106,6 +106,9 @@ public:
 
     /** the comparison functions will work equally well when the 
      * set only has one element*/
+
+
+    static const Unique emptyUnique;
 };
 
 namespace {

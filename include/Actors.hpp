@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
 #include "ChanceContributor.hpp"
 #include "CapitalHolder.hpp"
 

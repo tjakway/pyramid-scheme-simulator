@@ -11,7 +11,7 @@
 #include "CapitalHolderClassDecls.hpp"
 #include "Util/Util.hpp"
 #include "Tick.hpp"
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
 #include "BoundedOption.hpp"
 
 namespace pyramid_scheme_simulator {
