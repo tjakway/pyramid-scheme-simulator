@@ -23,10 +23,3 @@ public:
         return mappend(other);
     }
 };
-
-
-template <typename T>
-std::list<T> Monoid::mempty<std::list<T>>() {
-    std::list<T> x;
-    return x;
-}
