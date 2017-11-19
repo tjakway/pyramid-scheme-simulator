@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 class Recordable
 {
 protected:
-    Recordable()=delete;
+    Recordable() = default;
 };
 
 class UniqueRecord : public Uniqueable, Recordable
