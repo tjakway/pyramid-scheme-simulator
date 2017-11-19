@@ -62,6 +62,8 @@ public:
     }
 
 
+    /** the comparison functions will work equally well when the 
+     * set only has one element*/
     virtual bool operator==(const UniqueSet &other) const
     {
         return guids == other.guids;
@@ -88,11 +90,14 @@ public:
     Unique(const Unique& u): UniqueSet(u.id), id(u.id)
     {}
 
-    /** the comparison functions will work equally well when the 
-     * set only has one element*/
-
+    std::string str() const {
+        return id.str();
+    }
 
     static const Unique emptyUnique;
+    static Unique newUnique() { 
+        return Unique(xg::newGuid()); 
+    }
 };
 
 namespace {
