@@ -42,8 +42,10 @@ protected:
     {}
 
 public:
-    UniqueSet(std::initializer_list<xg::Guid> us) : guids(us, guidComparator)
-    {}
+    UniqueSet(std::initializer_list<xg::Guid> us) : guids({}, guidComparator)
+    {
+        guids.insert(us.begin(), us.end());
+    }
 
     UniqueSet(std::initializer_list<UniqueSet> us) 
         : guids(transformInitializerList(us))
@@ -91,7 +93,7 @@ public:
     static UniqueSet newUniqueSet() { 
         return UniqueSet(xg::newGuid()); 
     }
-    static const UniqueSet emptyUniqueSet = UniqueSet(xg::Guid());
+    static const UniqueSet emptyUniqueSet;
 };
 
 class Unique : public UniqueSet
