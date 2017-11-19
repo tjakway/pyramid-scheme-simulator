@@ -7,6 +7,19 @@
 #include <initializer_list>
 #include <vector>
 
+namespace std
+{
+    template<>
+    struct less<xg::Guid>
+    {
+    public:
+        bool operator()(const xg::Guid& lhs,  const xg::Guid& rhs) const
+        {
+            return lhs.str() < rhs.str();
+        }
+    };
+}
+
 namespace pyramid_scheme_simulator {
 
 class UniqueSet;
@@ -17,15 +30,25 @@ class UniqueSet
 {
     class GuidComparator
     {
+    public:
         bool operator()(xg::Guid& lhs, xg::Guid& rhs)
         {
             return lhs.str() < rhs.str();
         }
-    } guidComparator;
+        bool operator()(const xg::Guid& lhs, const xg::Guid& rhs)
+        {
+            return lhs.str() < rhs.str();
+        }
+    };
 
-    std::set<xg::Guid> transformInitializerList(std::initializer_list<UniqueSet> us)
+
+
+    using UniqueSetCollection = std::set<xg::Guid>;
+
+
+    UniqueSetCollection transformInitializerList(std::initializer_list<UniqueSet> us)
     {
-        std::set<xg::Guid> acc({}, guidComparator);
+        UniqueSetCollection acc;
         //insert all of the ids from each of the UniqueSets
         for(auto i : us)
         {
@@ -35,15 +58,15 @@ class UniqueSet
     }
 
 protected:
-    std::set<xg::Guid> guids;
+    UniqueSetCollection guids;
 
     //make sure the set is always initialized with the Compare
     //object
-    UniqueSet(): guids({}, guidComparator)
+    UniqueSet(): guids({})
     {}
 
 public:
-    UniqueSet(std::initializer_list<xg::Guid> us) : guids({}, guidComparator)
+    UniqueSet(std::initializer_list<xg::Guid> us) : guids({})
     {
         guids.insert(us.begin(), us.end());
     }
@@ -100,10 +123,13 @@ public:
 class Unique : public UniqueSet
 {
 public:
+    const xg::Guid id;
+
     Unique(xg::Guid guid): UniqueSet(guid), id(guid)
     {}
-
-    const xg::Guid id;
+    
+    Unique(const Unique& u): UniqueSet(u.id), id(u.id)
+    {}
 
     /** the comparison functions will work equally well when the 
      * set only has one element*/
@@ -134,12 +160,12 @@ namespace {
 class Uniqueable 
 {
 public:
-    const UniqueSet id;
+    const Unique id;
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
-    Uniqueable(std::initializer_list<Unique> xs)
+    /*Uniqueable(std::initializer_list<Unique> xs)
         : id(uniqueSetFromUniqueInitializerList(xs))
-    {}
+    {}*/
 };
 
 }
