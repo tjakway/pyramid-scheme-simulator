@@ -40,6 +40,8 @@ public:
     virtual ChanceContributor&
         getDistributorConversionChanceContribution();
 
+    virtual bool isDistributor() { return false; }
+
     Money getMoney() const;
 
     bool operator==(const CapitalHolder&);
@@ -78,6 +80,8 @@ public:
     void addMoney(Money);
 
     virtual bool canBecomeDistributor(Money buyIn) override { return false; }
+
+    virtual bool isDistributor() override { return true; }
 
     virtual unsigned int getDesiredRestockAmount();
     virtual unsigned int getInventory();
