@@ -60,30 +60,6 @@ MoneyChangeRecord checkSellerRecord(Money price,
 
 namespace pyramid_scheme_simulator {
 
-/** CapitalHolderRecord *****/
-
-CapitalHolderRecord::CapitalHolderRecord(const SimulationTick when,
-        std::initializer_list<Unique> uniqs)
-    : when(when)
-{
-    for(auto u: uniqs)
-    {
-        who.insert(u);
-    }
-}
-
-std::unordered_set<Unique> CapitalHolderRecord::getWho()
-{
-    return who;
-}
-
-SimulationTick CapitalHolderRecord::getWhen()
-{
-    return when;
-}
-
-/**************************/
-
 std::ostream& operator<<(std::ostream& os, const SalesResult& res)
 {
     os << res.str();
@@ -96,7 +72,7 @@ SalesResult::SalesResult(Reason r)
 
 MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
         const std::shared_ptr<CapitalHolder> p)
-    : CapitalHolderRecord(when, p->id),
+    : UniqueRecord(when, p->id),
       fundsBefore(p->getMoney()), 
       fundsAfter(p->getMoney() - price)
 { }
