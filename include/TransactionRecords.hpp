@@ -3,8 +3,9 @@
 #include "Util/Monoid.hpp"
 #include "CapitalHolder.hpp"
 
-#include <unordered_set>
+#include <functional>
 #include <memory>
+#include <list>
 
 namespace pyramid_scheme_simulator {
 
@@ -14,18 +15,21 @@ using TransactionRecord = Monoid<T>;
 template <typename T, typename ...Us>
 class Transaction
 {
+public:
     virtual TransactionRecord<T> operator()(Us... args) = 0;
 };
 
 template <typename T>
 class VertexTransaction
 {
+public:
     virtual TransactionRecord<T> operator()(CapitalHolder&) = 0;
 };
 
 template <typename T>
 class EdgeTransaction
 {
+public:
     virtual TransactionRecord<T> operator()(CapitalHolder&,
                                             CapitalHolder&) = 0;
 };
@@ -33,20 +37,17 @@ class EdgeTransaction
 /************************************/
 
 template <typename T>
-class UnorderedSetTransactionRecord 
-    : public TransactionRecord<
-        std::unordered_set<
-         std::unique_ptr<T>>>
+class STLTransactionRecord
+    : public TransactionRecord<T>
 {
-    using SelfType = std::unordered_set<std::unique_ptr<T>>;
+protected:
+    virtual T::iterator begin() = 0;
+    virtual T::iterator end() = 0;
+public:
 
-    virtual SelfType::iterator begin() = 0;
-    virtual SelfType::iterator end() = 0;
-    
-
-    virtual SelfType mappend(SelfType& other) override
+    virtual T mappend(T& other) override
     {
-        SelfType t = Monoid<SelfType>::mempty();
+        T t = Monoid<T>::mempty();
 
         //copy self and other into the new container
         t.insert(begin(), end());
@@ -55,9 +56,9 @@ class UnorderedSetTransactionRecord
         return t;
     }
 
-    virtual SelfType mappend_move(SelfType& other) override
+    virtual T mappend_move(T& other) override
     {
-        SelfType t = Monoid<SelfType>::mempty();
+        T t = Monoid<T>::mempty();
 
         //move self and other into the new container
         t.insert(std::make_move_iterator(begin()), 
@@ -66,6 +67,31 @@ class UnorderedSetTransactionRecord
                 std::make_move_iterator(other.end()));
 
         return t;
+    }
+};
+
+template <typename U>
+class ListTransactionRecord 
+    : public TransactionRecord<std::list<std::unique_ptr<U>>>
+{
+protected:
+    virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
+private:
+    std::function<bool(std::unique_ptr<U>, std::unique_ptr<U>)>
+        comparator = cmp;
+public:
+    using SelfType = std::list<std::unique_ptr<U>>;
+
+    SelfType records = Monoid::mempty();
+
+
+    virtual SelfType mappend_move(SelfType& other)
+    {
+        //TODO: reduce redundant sorting
+        records.sort(comparator);
+        other.sort(comparator);
+
+        records.merge(other, comparator);
     }
 };
 
