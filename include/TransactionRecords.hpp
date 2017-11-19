@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Util/Monoid.hpp"
+#include "Unique.hpp"
 #include "CapitalHolder.hpp"
 
 #include <functional>
@@ -95,5 +96,28 @@ public:
     }
 };
 
+/**
+ * returns true if fst < snd
+ */
+bool compareUniques(std::unique_ptr<Unique> fst, std::unique_ptr<Unique> snd)
+{
+    const bool fstEmpty = fst.get() == nullptr;
+    const bool sndEmpty = snd.get() == nullptr;
+
+    //check for null pointers
+    if(fstEmpty && sndEmpty) {
+        return false;
+    }
+    else if(!fstEmpty && sndEmpty) {
+        return false;
+    }
+    else if(fstEmpty && !sndEmpty) {
+        return true;
+    }
+    //neither pointer is null, dereference & compare
+    else {
+        return fst->str() < snd->str();
+    }
+}
 
 }
