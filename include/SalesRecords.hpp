@@ -76,22 +76,20 @@ public:
 std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 
 
-/**
- * doesn't inherit from Uniqueable because it might have >1 id
- */
-class CapitalHolderRecord
+class Recordable
 {
-private:
-    std::unordered_set<Unique> who;
-public:
-    const SimulationTick when;
-
-    CapitalHolderRecord(const SimulationTick, std::initializer_list<Unique>);
-    std::unordered_set<Unique> getWho();
-    SimulationTick getWhen();
+    Recordable()=delete;
 };
 
-class MoneyChangeRecord : public CapitalHolderRecord
+class UniqueRecord : public Uniqueable, Recordable
+{
+public:
+    const SimulationTick when;
+    UniqueRecord(SimulationTick when, Unique u)
+        : Uniqueable(u), when(when) {}
+};
+
+class MoneyChangeRecord : public UniqueRecord
 {
 public:
     const Money fundsBefore;
@@ -100,7 +98,11 @@ public:
 };
 
 
-class Sale : public CapitalHolderRecord
+/**
+ * don't make this an instance of UniqueRecord because it's a composite of 
+ * a buyer record and a seller record and it's not obvious which id to assign it to
+ */
+class Sale
 {
 public:
     const Money price;
@@ -113,9 +115,16 @@ public:
             const std::shared_ptr<Consumer>);
 };
 
-class Conversion : public CapitalHolderRecord
+class Conversion : public UniqueRecord
 { 
+public:
     const std::shared_ptr<Distributor> convertedBy;
+
+    Conversion(SimulationTick when, 
+            const Unique who, 
+            std::shared_ptr<Distributor> convertedBy)
+        : UniqueRecord(when, who), convertedBy(convertedBy)
+    {}
 };
 
 }
