@@ -25,6 +25,7 @@ flags = [
 'c++',
 '-std=c++11',
 '-I', 'include/',
+'-I', 'lib/crossguid', #stop warning about Uniques
 '-isystem',
 '/usr/include',
 '-isystem',
