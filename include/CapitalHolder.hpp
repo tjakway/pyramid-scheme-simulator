@@ -17,6 +17,8 @@ class CapitalHolder : public Uniqueable
 protected:
     Money money;
 
+    unsigned int inventory = 0;
+
     double getMoneyToProductCostRatio();
 
     void setMoney(Money);
@@ -46,7 +48,9 @@ public:
 
     /** both Consumers and Distributors have inventory
      * but do different things with it */
-    virtual unsigned int getInventory() = 0;
+    virtual unsigned int getInventory() {
+        return inventory;
+    }
 
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
