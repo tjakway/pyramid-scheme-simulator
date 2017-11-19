@@ -31,6 +31,7 @@ class UniqueSet
         {
             acc.insert(i.guids.begin(), i.guids.end());
         }
+        return acc;
     }
 
 protected:
