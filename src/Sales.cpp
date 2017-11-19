@@ -18,11 +18,9 @@ class Transactions::SaleIsPossibleResult
 {
 public:
     const SalesResult result;
-private:
     const std::shared_ptr<Distributor> seller;
     const std::shared_ptr<Consumer> buyer;
-
-
+private:
     SaleIsPossibleResult(SalesResult r, 
             const std::shared_ptr<Distributor> seller,
             const std::shared_ptr<Consumer> buyer)
@@ -107,7 +105,7 @@ const std::shared_ptr<Distributor>
     Transactions::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
 
 {
-    if(!seller)
+    if(seller.get() == nullptr)
     {
         throw SaleIsPossibleResultException(
                 "Passed null Distributor pointer to SaleIsPossibleResult::good");
@@ -121,7 +119,7 @@ const std::shared_ptr<Distributor>
 const std::shared_ptr<Consumer> 
     Transactions::SaleIsPossibleResult::checkBuyerPointer(std::shared_ptr<Consumer> buyer)
 {
-    if(!buyer)
+    if(buyer.get() == nullptr)
     {
         throw SaleIsPossibleResultException(
                 "Passed null Consumer pointer to SaleIsPossibleResult::good");
@@ -153,15 +151,19 @@ SalesResult Transactions::processPotentialSale(
         CapitalHolder& seller,
         CapitalHolder& buyer)
 {
-    auto isSalePossible = saleIsPossible(seller, buyer);
-    if(isSalePossible)
+    auto saleIsPossibleResult = saleIsPossible(seller, buyer);
+    if(saleIsPossibleResult)
     {
         auto chanceProc = sampleSalesChance(rd, seller, buyer);
         if(chanceProc)
         {
-            Sale s(when, price, seller, buyer);
+            
+            Sale s(when, price, 
+                    saleIsPossibleResult.seller,
+                    saleIsPossibleResult.buyer);
+            //TODO: change to return a TransactionRecord
             sales.insert(s);
-            return s;
+            return saleIsPossibleResult.result;
         }
         else
         {
@@ -170,7 +172,7 @@ SalesResult Transactions::processPotentialSale(
     }
     else
     {
-        return isSalePossible.result;
+        return saleIsPossibleResult.result;
     }
 }
 
@@ -193,28 +195,32 @@ SalesResult Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, Ca
 Transactions::SaleIsPossibleResult Transactions::saleIsPossible(
         CapitalHolder& _seller, CapitalHolder& _buyer)
 {
-    Distributor* seller = dynamic_cast<Distributor*>(_seller);
+    Distributor* seller = dynamic_cast<Distributor*>(&_seller);
     if(!seller) {
         return Transactions::SaleIsPossibleResult::bad(
-                SalesResult::Reason::SELLER_NOT_DISTRIBUTOR);
+                SalesResult(SalesResult::Reason::SELLER_NOT_DISTRIBUTOR));
     }
     else {
-        Consumer* buyer = dynamic_cast<Consumer*> (_buyer);
+        Consumer* buyer = dynamic_cast<Consumer*> (&_buyer);
         if(!buyer) {
             return Transactions::SaleIsPossibleResult::bad(
-                    SalesResult::Reason::BUYER_NOT_CONSUMER);
+                    SalesResult(SalesResult::Reason::BUYER_NOT_CONSUMER));
         }
         //make sure they're not also a distributor
         else if(buyer->isDistributor()){
             return Transactions::SaleIsPossibleResult::bad(
-                    SalesResult::Reason::BOTH_DISTRIBUTORS);
+                    SalesResult(SalesResult::Reason::BOTH_DISTRIBUTORS));
         }
         else if(!seller->hasInventory()){
             return Transactions::SaleIsPossibleResult::bad(
                     SalesResult::Reason::NO_INVENTORY);
         }
         else {
-
+            return Transactions::SaleIsPossibleResult::good(
+                    SalesResult(SalesResult::Reason::SUCCESS),
+                    std::shared_ptr<Distributor>(seller),
+                    std::shared_ptr<Consumer>(buyer)
+                    );
         }
     }
 }
