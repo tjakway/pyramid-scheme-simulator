@@ -1,5 +1,5 @@
 #include "Config.hpp"
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
 #include "Graph.hpp"
 #include "Util/Util.hpp"
 
