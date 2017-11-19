@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <initializer_list>
 #include <vector>
+#include <string>
 
 static bool operator<(const xg::Guid& lhs, const xg::Guid& rhs) 
 {
@@ -13,10 +14,29 @@ static bool operator<(const xg::Guid& lhs, const xg::Guid& rhs)
 }
 
 namespace pyramid_scheme_simulator {
-
 class UniqueSet;
 class Unique;
 class Uniqueable;
+}
+
+//forward declare hash template specialization for Unique
+namespace std {
+    template <>
+    class hash<pyramid_scheme_simulator::Unique>
+    {
+    public:
+        size_t operator()(pyramid_scheme_simulator::Unique const &) const;
+    };
+
+    template <>
+    class hash<const pyramid_scheme_simulator::Unique>
+    {
+    public:
+        size_t operator()(const pyramid_scheme_simulator::Unique) const;
+    };
+}
+
+namespace pyramid_scheme_simulator {
 
 class UniqueSet
 {
@@ -100,6 +120,7 @@ public:
     }
 };
 
+
 namespace {
 
     UniqueSet uniqueSetFromUniqueInitializerList(
@@ -126,5 +147,21 @@ public:
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
 };
+
+}
+
+//instantiate template specializations for Unique
+namespace std {
+size_t hash<pyramid_scheme_simulator::Unique>::operator()(pyramid_scheme_simulator::Unique const &  u) const
+{
+    hash<string> hasher;
+    return hasher(u.str());
+}
+
+size_t hash<const pyramid_scheme_simulator::Unique>::operator()(const pyramid_scheme_simulator::Unique u) const
+{
+    hash<string> hasher;
+    return hasher(u.str());
+}
 
 }
