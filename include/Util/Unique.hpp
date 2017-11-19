@@ -3,21 +3,13 @@
 #include "Guid.hpp"
 #include "Types.hpp"
 
-#include <set>
+#include <unordered_set>
 #include <initializer_list>
 #include <vector>
 
-namespace std
+static bool operator<(const xg::Guid& lhs, const xg::Guid& rhs) 
 {
-    template<>
-    struct less<xg::Guid>
-    {
-    public:
-        bool operator()(const xg::Guid& lhs,  const xg::Guid& rhs) const
-        {
-            return lhs.str() < rhs.str();
-        }
-    };
+    return lhs.str() < rhs.str();
 }
 
 namespace pyramid_scheme_simulator {
@@ -28,27 +20,9 @@ class Uniqueable;
 
 class UniqueSet
 {
-    class GuidComparator
+    std::unordered_set<xg::Guid> transformInitializerList(std::initializer_list<UniqueSet> us)
     {
-    public:
-        bool operator()(xg::Guid& lhs, xg::Guid& rhs)
-        {
-            return lhs.str() < rhs.str();
-        }
-        bool operator()(const xg::Guid& lhs, const xg::Guid& rhs)
-        {
-            return lhs.str() < rhs.str();
-        }
-    };
-
-
-
-    using UniqueSetCollection = std::set<xg::Guid>;
-
-
-    UniqueSetCollection transformInitializerList(std::initializer_list<UniqueSet> us)
-    {
-        UniqueSetCollection acc;
+        std::unordered_set<xg::Guid> acc;
         //insert all of the ids from each of the UniqueSets
         for(auto i : us)
         {
@@ -58,7 +32,7 @@ class UniqueSet
     }
 
 protected:
-    UniqueSetCollection guids;
+    std::unordered_set<xg::Guid> guids;
 
     //make sure the set is always initialized with the Compare
     //object
@@ -88,30 +62,13 @@ public:
     }
 
 
-    virtual bool operator==(const UniqueSet &other) const
+    virtual bool operator==(UniqueSet &other) const
     {
         return guids == other.guids;
     }
-    virtual bool operator!=(const UniqueSet &other) const
+    virtual bool operator!=(UniqueSet &other) const
     {
         return guids != other.guids;
-    }
-
-    virtual bool operator<(const UniqueSet &other) const
-    {
-        return guids < other.guids;
-    }
-    virtual bool operator<=(const UniqueSet &other) const
-    {
-        return guids <= other.guids;
-    }
-    virtual bool operator>(const UniqueSet &other) const
-    {
-        return guids > other.guids;
-    }
-    virtual bool operator>=(const UniqueSet &other) const
-    {
-        return guids >= other.guids;
     }
 
     static UniqueSet newUniqueSet() { 
