@@ -4,7 +4,7 @@
 #include "TransactionRecords.hpp"
 #include "CapitalHolder.hpp"
 #include "Sales.hpp"
-#include "Unique.hpp"
+#include "Util/Unique.hpp"
 #include "Graph.hpp"
 #include "Config.hpp"
 
