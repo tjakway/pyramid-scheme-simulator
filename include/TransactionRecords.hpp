@@ -51,7 +51,7 @@ class STLTransactionRecord
 protected:
     //need this to implement mappend and mappend_move in terms of STLTransactionRecord
     //despite this class being abstract
-    virtual STLTransactionRecord* mkNew() = 0;
+    virtual STLTransactionRecord<T>* mkNew() = 0;
 
     virtual typename T::iterator begin() = 0;
     virtual typename T::iterator end() = 0;
@@ -60,8 +60,7 @@ public:
     virtual STLTransactionRecord<T>* mappend(TransactionRecord<T>& other) 
         override
     {
-        std::unique_ptr<STLTransactionRecord<T>> t = 
-            std::unique_ptr<STLTransactionRecord<T>>(mkNew());
+        STLTransactionRecord<T>* t = mkNew();
 
         //copy self and other into the new container
         t->insert(begin(), end());
@@ -72,13 +71,12 @@ public:
 
     virtual STLTransactionRecord<T>* mappend_move(TransactionRecord<T>&& other) override
     {
-        std::unique_ptr<STLTransactionRecord<T>> t = 
-            std::unique_ptr<STLTransactionRecord<T>>(mkNew());
+        STLTransactionRecord<T>* t = mkNew();
 
         //move self and other into the new container
-        t.insert(std::make_move_iterator(begin()), 
+        t->insert(std::make_move_iterator(begin()), 
                 std::make_move_iterator(end()));
-        t.insert(std::make_move_iterator(other.begin()), 
+        t->insert(std::make_move_iterator(other.begin()), 
                 std::make_move_iterator(other.end()));
 
         return t;
@@ -95,6 +93,8 @@ class ListTransactionRecord
 {
 protected:
     virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
+
+    virtual ListTransactionRecord* mkNew() = 0;
 
 private:
     std::function<bool(std::unique_ptr<U>, std::unique_ptr<U>)>
@@ -115,25 +115,32 @@ protected:
     }
 
 
-    ListTransactionRecord(ContainerType&& l) : records(l)
+    ListTransactionRecord(ContainerType&& l) 
+        : STLTransactionRecord<ContainerType>(), records(l)
     { }
 
 public:
     ListTransactionRecord(std::initializer_list<ElementType> initValues)
-        : records(initValues)
+        : STLTransactionRecord<ContainerType>(), records(initValues)
     {
         records.sort(comparator);
     }
 
-    ListTransactionRecord() : records()
+    ListTransactionRecord() 
+        : STLTransactionRecord<ContainerType>(), records()
     { }
 
-    virtual ListTransactionRecord<U>* mappend_move(
-                ListTransactionRecord<U>&& other) override
+    virtual ListTransactionRecord<U>* mappend_move(ListTransactionRecord<U>&& other)
     {
-        records.merge(other, comparator);
+        return mergeListTransactionRecords(other);
+    }
 
-        return make_unique(std::move(records));
+    virtual ListTransactionRecord<U>* mergeListTransactionRecords(ListTransactionRecord<U>&& other)
+    {
+        ListTransactionRecord<U>*  t = mkNew();
+        records.merge(other);
+        t->records = records;
+        return t;
     }
 };
 
