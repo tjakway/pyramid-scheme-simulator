@@ -78,9 +78,13 @@ public:
     }
 };
 
+// Monoid<ListTransactionRecord<U>>::mempty will function as 
+// desired because begin() and end() are protected methods
+// so mempty can be used to create a new ListTransactionRecord
+// but not insert into it unless used within ListTransactionRecord itself
 template <typename U>
 class ListTransactionRecord 
-    : public STLTransactionRecord<std::list<std::unique_ptr<U>>>
+    : public STLTransactionRecord<ListTransactionRecord<std::list<std::unique_ptr<U>>>>
 {
 protected:
     virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
@@ -110,6 +114,9 @@ public:
     {
         records.sort(comparator);
     }
+
+    ListTransactionRecord() : records()
+    { }
 
     virtual std::unique_ptr<ListTransactionRecord<SelfType>> mappend_move(
                 ListTransactionRecord<SelfType>&& other) override
