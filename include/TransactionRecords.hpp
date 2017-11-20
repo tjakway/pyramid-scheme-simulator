@@ -57,7 +57,7 @@ protected:
     virtual typename T::iterator end() = 0;
 public:
 
-    virtual std::unique_ptr<STLTransactionRecord<T>> mappend(TransactionRecord<T>& other) 
+    virtual STLTransactionRecord<T>* mappend(TransactionRecord<T>& other) 
         override
     {
         std::unique_ptr<STLTransactionRecord<T>> t = 
@@ -70,7 +70,7 @@ public:
         return t;
     }
 
-    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(TransactionRecord<T>&& other) override
+    virtual STLTransactionRecord<T>* mappend_move(TransactionRecord<T>&& other) override
     {
         std::unique_ptr<STLTransactionRecord<T>> t = 
             std::unique_ptr<STLTransactionRecord<T>>(mkNew());
@@ -128,7 +128,7 @@ public:
     ListTransactionRecord() : records()
     { }
 
-    virtual std::unique_ptr<ListTransactionRecord<U>> mappend_move(
+    virtual ListTransactionRecord<U>* mappend_move(
                 ListTransactionRecord<U>&& other) override
     {
         records.merge(other, comparator);
