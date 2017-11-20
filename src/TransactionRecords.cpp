@@ -6,11 +6,11 @@ namespace pyramid_scheme_simulator {
 
 
 
-bool compareUniqueables(std::unique_ptr<Uniqueable>& fst,
-        std::unique_ptr<Uniqueable>& snd)
+bool compareUniqueables(Uniqueable* fst,
+        Uniqueable* snd)
 {
-    const bool fstEmpty = fst.get() == nullptr;
-    const bool sndEmpty = snd.get() == nullptr;
+    const bool fstEmpty = fst == nullptr;
+    const bool sndEmpty = snd == nullptr;
 
     //check for null pointers
     if(fstEmpty && sndEmpty) {

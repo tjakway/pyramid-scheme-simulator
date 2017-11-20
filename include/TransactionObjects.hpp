@@ -48,21 +48,24 @@ class ConversionTransaction
         {}
     };
 
+    /**
+     * the container type for Conversion
+     */
     class ConversionRecords : public ListTransactionRecord<Conversion>
     {
     protected:
         virtual bool cmp(std::unique_ptr<Conversion>&, 
-                std::unique_ptr<Conversion>&) override;
+                std::unique_ptr<Conversion>&);
 
         virtual ConversionRecords* mkNew() override;
     };
 
-    class ConversionHandler : public EdgeTransaction<Conversion>
+    class ConversionHandler
     {
         virtual ConversionRecords* operator()(SimulationTick,
                 Money, 
                 CapitalHolder&, 
-                CapitalHolder&) override;
+                CapitalHolder&);
     };
 
 };
