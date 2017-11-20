@@ -49,8 +49,8 @@ class STLTransactionRecord
     : public TransactionRecord<T>
 {
 protected:
-    virtual typename TransactionRecord<T>::iterator begin() = 0;
-    virtual typename TransactionRecord<T>::iterator end() = 0;
+    virtual typename T::iterator begin() = 0;
+    virtual typename T::iterator end() = 0;
 public:
 
     virtual std::unique_ptr<STLTransactionRecord<T>> mappend(TransactionRecord<T>& other) 
@@ -99,10 +99,12 @@ protected:
     using ContainerType = std::list<ElementType>;
     ContainerType records = Monoid<ContainerType>::mempty();
 
-    virtual typename ListTransactionRecord<U>::iterator begin() override {
+    //override begin and end to give STLTransactionRecord access to
+    //this class' underlying container
+    virtual typename ContainerType::iterator begin() override {
         return records.begin();
     }
-    virtual typename ListTransactionRecord<U>::iterator end() override {
+    virtual typename ContainerType::iterator end() override {
         return records.end();
     }
 
