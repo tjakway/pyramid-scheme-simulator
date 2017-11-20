@@ -51,13 +51,15 @@ class ConversionTransaction
     class ConversionRecords : public ListTransactionRecord<Conversion>
     {
     protected:
-        virtual bool cmp(std::unique_ptr<Conversion>, 
-                std::unique_ptr<Conversion>) override;
+        virtual bool cmp(std::unique_ptr<Conversion>&, 
+                std::unique_ptr<Conversion>&) override;
+
+        virtual ConversionRecords* mkNew() override;
     };
 
-    class ConversionTransactionHandler : public EdgeTransaction<Conversion>
+    class ConversionHandler : public EdgeTransaction<Conversion>
     {
-        virtual ConversionRecords operator()(SimulationTick,
+        virtual ConversionRecords* operator()(SimulationTick,
                 Money, 
                 CapitalHolder&, 
                 CapitalHolder&) override;

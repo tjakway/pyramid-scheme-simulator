@@ -19,7 +19,7 @@ template <typename T, typename ...Us>
 class Transaction
 {
 public:
-    virtual TransactionRecord<T> operator()(Us... args) = 0;
+    virtual TransactionRecord<T>* operator()(Us... args) = 0;
 };
 
 template <typename T>
@@ -27,7 +27,7 @@ class VertexTransaction
     : public Transaction<T, SimulationTick, Money, CapitalHolder&>
 {
 public:
-    virtual TransactionRecord<T> operator()(
+    virtual TransactionRecord<T>* operator()(
             SimulationTick, Money, CapitalHolder&) = 0;
 };
 
@@ -36,7 +36,7 @@ class EdgeTransaction
     : public Transaction<T, SimulationTick, Money, CapitalHolder&, CapitalHolder&>
 {
 public:
-    virtual TransactionRecord<T> operator()(SimulationTick,
+    virtual TransactionRecord<T>* operator()(SimulationTick,
             Money, 
             CapitalHolder&, 
             CapitalHolder&) = 0;
@@ -55,6 +55,7 @@ protected:
 
     virtual typename T::iterator begin() = 0;
     virtual typename T::iterator end() = 0;
+    virtual void insert(typename T::iterator, typename T::iterator) = 0;
 public:
 
     virtual STLTransactionRecord<T>* mappend(TransactionRecord<T>& other) 
@@ -92,12 +93,12 @@ class ListTransactionRecord
     : public STLTransactionRecord<std::list<std::unique_ptr<U>>>
 {
 protected:
-    virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
+    virtual bool cmp(std::unique_ptr<U>&, std::unique_ptr<U>&) = 0;
 
     virtual ListTransactionRecord* mkNew() = 0;
 
 private:
-    std::function<bool(std::unique_ptr<U>, std::unique_ptr<U>)>
+    std::function<bool(std::unique_ptr<U>&, std::unique_ptr<U>&)>
         comparator = cmp;
 
 protected:
@@ -114,6 +115,11 @@ protected:
         return records.end();
     }
 
+    virtual void insert(typename ContainerType::iterator b, 
+            typename ContainerType::iterator e) override
+    {
+        records.insert(b, e);
+    }
 
     ListTransactionRecord(ContainerType&& l) 
         : STLTransactionRecord<ContainerType>(), records(l)
