@@ -46,14 +46,14 @@ public:
 
 template <typename T>
 class STLTransactionRecord
-    : public TransactionRecord<T>
+    : public TransactionRecord<STLTransactionRecord<T>>
 {
 protected:
     virtual typename T::iterator begin() = 0;
     virtual typename T::iterator end() = 0;
 public:
 
-    virtual STLTransactionRecord<T> mappend(STLTransactionRecord<T>& other) override
+    virtual std::unique_ptr<STLTransactionRecord<T>> mappend(STLTransactionRecord<T>& other) override
     {
         T t = Monoid<T>::mempty();
 
@@ -64,7 +64,7 @@ public:
         return t;
     }
 
-    virtual STLTransactionRecord<T> mappend_move(STLTransactionRecord<T>& other) override
+    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(STLTransactionRecord<T>&& other) override
     {
         T t = Monoid<T>::mempty();
 
@@ -84,10 +84,12 @@ class ListTransactionRecord
 {
 protected:
     virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
+
 private:
     std::function<bool(std::unique_ptr<U>, std::unique_ptr<U>)>
         comparator = cmp;
 
+protected:
     using SelfType = std::list<std::unique_ptr<U>>;
     SelfType records = Monoid<SelfType>::mempty();
 
@@ -98,6 +100,10 @@ private:
         return records.end();
     }
 
+
+    ListTransactionRecord(SelfType&& l) : records(l)
+    { }
+
 public:
     ListTransactionRecord(std::initializer_list<SelfType> initValues)
         : records(initValues)
@@ -105,11 +111,12 @@ public:
         records.sort(comparator);
     }
 
-    virtual ListTransactionRecord<SelfType> mappend_move(
-                ListTransactionRecord<SelfType>& other) override
+    virtual std::unique_ptr<ListTransactionRecord<SelfType>> mappend_move(
+                ListTransactionRecord<SelfType>&& other) override
     {
         records.merge(other, comparator);
-        return *this;
+
+        return make_unique(std::move(records));
     }
 };
 

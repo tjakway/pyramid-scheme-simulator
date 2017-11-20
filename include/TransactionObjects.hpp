@@ -52,7 +52,7 @@ class ConversionTransaction
     {
     protected:
         virtual bool cmp(std::unique_ptr<Conversion>, 
-                std::unique_ptr<Conversion>);
+                std::unique_ptr<Conversion>) override;
     };
 
     class ConversionTransactionHandler : public EdgeTransaction<Conversion>
