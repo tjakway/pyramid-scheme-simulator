@@ -7,11 +7,7 @@ class Monoid
 {
 public:
     /** default implementation uses no-args CTOR */
-    template <typename U> static U mempty()
-    {
-        U x;
-        return x;
-    }
+    template <typename U> static Monoid<U> mempty();
 
     virtual std::unique_ptr<Monoid<T>> mappend(Monoid<T>& other) = 0;
 

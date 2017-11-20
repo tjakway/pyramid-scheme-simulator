@@ -49,6 +49,10 @@ class STLTransactionRecord
     : public TransactionRecord<T>
 {
 protected:
+    //need this to implement mappend and mappend_move in terms of STLTransactionRecord
+    //despite this class being abstract
+    virtual STLTransactionRecord* mkNew() = 0;
+
     virtual typename T::iterator begin() = 0;
     virtual typename T::iterator end() = 0;
 public:
@@ -56,18 +60,20 @@ public:
     virtual std::unique_ptr<STLTransactionRecord<T>> mappend(TransactionRecord<T>& other) 
         override
     {
-        Monoid<T> t = Monoid<T>::mempty();
+        std::unique_ptr<STLTransactionRecord<T>> t = 
+            std::unique_ptr<STLTransactionRecord<T>>(mkNew());
 
         //copy self and other into the new container
-        t.insert(begin(), end());
-        t.insert(other.begin(), other.end());
+        t->insert(begin(), end());
+        t->insert(other.begin(), other.end());
 
         return t;
     }
 
-    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(T&& other) override
+    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(TransactionRecord<T>&& other) override
     {
-        Monoid<T> t = Monoid<T>::mempty();
+        std::unique_ptr<STLTransactionRecord<T>> t = 
+            std::unique_ptr<STLTransactionRecord<T>>(mkNew());
 
         //move self and other into the new container
         t.insert(std::make_move_iterator(begin()), 
