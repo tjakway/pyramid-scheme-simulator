@@ -46,14 +46,14 @@ public:
 
 template <typename T>
 class STLTransactionRecord
-    : public TransactionRecord<STLTransactionRecord<T>>
+    : public TransactionRecord<T>
 {
 protected:
     virtual typename T::iterator begin() = 0;
     virtual typename T::iterator end() = 0;
 public:
 
-    virtual std::unique_ptr<STLTransactionRecord<T>> mappend(STLTransactionRecord<T>& other) override
+    virtual std::unique_ptr<T> mappend(T& other) override
     {
         T t = Monoid<T>::mempty();
 
@@ -64,7 +64,7 @@ public:
         return t;
     }
 
-    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(STLTransactionRecord<T>&& other) override
+    virtual std::unique_ptr<T> mappend_move(T&& other) override
     {
         T t = Monoid<T>::mempty();
 
