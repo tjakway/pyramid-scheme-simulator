@@ -53,7 +53,7 @@ protected:
     virtual typename T::iterator end() = 0;
 public:
 
-    virtual T mappend(T& other) override
+    virtual STLTransactionRecord<T> mappend(STLTransactionRecord<T>& other) override
     {
         T t = Monoid<T>::mempty();
 
@@ -64,7 +64,7 @@ public:
         return t;
     }
 
-    virtual T mappend_move(T& other) override
+    virtual STLTransactionRecord<T> mappend_move(STLTransactionRecord<T>& other) override
     {
         T t = Monoid<T>::mempty();
 
@@ -87,20 +87,29 @@ protected:
 private:
     std::function<bool(std::unique_ptr<U>, std::unique_ptr<U>)>
         comparator = cmp;
-public:
-    using SelfType = std::list<std::unique_ptr<U>>;
 
+    using SelfType = std::list<std::unique_ptr<U>>;
     SelfType records = Monoid<SelfType>::mempty();
 
-    //TODO: add a ctor that sorts its data then remove the sorts in mappend_move
+    virtual typename SelfType::iterator begin() override {
+        return records.begin();
+    }
+    virtual typename SelfType::iterator end() override {
+        return records.end();
+    }
 
-    virtual SelfType mappend_move(SelfType& other)
+public:
+    ListTransactionRecord(std::initializer_list<SelfType> initValues)
+        : records(initValues)
     {
-        //TODO: reduce redundant sorting
         records.sort(comparator);
-        other.sort(comparator);
+    }
 
+    virtual ListTransactionRecord<SelfType> mappend_move(
+                ListTransactionRecord<SelfType>& other) override
+    {
         records.merge(other, comparator);
+        return *this;
     }
 };
 
