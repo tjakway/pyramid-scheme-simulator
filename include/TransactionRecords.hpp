@@ -49,13 +49,14 @@ class STLTransactionRecord
     : public TransactionRecord<T>
 {
 protected:
-    virtual typename T::iterator begin() = 0;
-    virtual typename T::iterator end() = 0;
+    virtual typename TransactionRecord<T>::iterator begin() = 0;
+    virtual typename TransactionRecord<T>::iterator end() = 0;
 public:
 
-    virtual std::unique_ptr<T> mappend(T& other) override
+    virtual std::unique_ptr<STLTransactionRecord<T>> mappend(TransactionRecord<T>& other) 
+        override
     {
-        T t = Monoid<T>::mempty();
+        Monoid<T> t = Monoid<T>::mempty();
 
         //copy self and other into the new container
         t.insert(begin(), end());
@@ -64,9 +65,9 @@ public:
         return t;
     }
 
-    virtual std::unique_ptr<T> mappend_move(T&& other) override
+    virtual std::unique_ptr<STLTransactionRecord<T>> mappend_move(T&& other) override
     {
-        T t = Monoid<T>::mempty();
+        Monoid<T> t = Monoid<T>::mempty();
 
         //move self and other into the new container
         t.insert(std::make_move_iterator(begin()), 
@@ -84,7 +85,7 @@ public:
 // but not insert into it unless used within ListTransactionRecord itself
 template <typename U>
 class ListTransactionRecord 
-    : public STLTransactionRecord<ListTransactionRecord<std::list<std::unique_ptr<U>>>>
+    : public STLTransactionRecord<std::list<std::unique_ptr<U>>>
 {
 protected:
     virtual bool cmp(std::unique_ptr<U>, std::unique_ptr<U>) = 0;
@@ -94,22 +95,23 @@ private:
         comparator = cmp;
 
 protected:
-    using SelfType = std::list<std::unique_ptr<U>>;
-    SelfType records = Monoid<SelfType>::mempty();
+    using ElementType = std::unique_ptr<U>;
+    using ContainerType = std::list<ElementType>;
+    ContainerType records = Monoid<ContainerType>::mempty();
 
-    virtual typename SelfType::iterator begin() override {
+    virtual typename ListTransactionRecord<U>::iterator begin() override {
         return records.begin();
     }
-    virtual typename SelfType::iterator end() override {
+    virtual typename ListTransactionRecord<U>::iterator end() override {
         return records.end();
     }
 
 
-    ListTransactionRecord(SelfType&& l) : records(l)
+    ListTransactionRecord(ContainerType&& l) : records(l)
     { }
 
 public:
-    ListTransactionRecord(std::initializer_list<SelfType> initValues)
+    ListTransactionRecord(std::initializer_list<ElementType> initValues)
         : records(initValues)
     {
         records.sort(comparator);
@@ -118,8 +120,8 @@ public:
     ListTransactionRecord() : records()
     { }
 
-    virtual std::unique_ptr<ListTransactionRecord<SelfType>> mappend_move(
-                ListTransactionRecord<SelfType>&& other) override
+    virtual std::unique_ptr<ListTransactionRecord<U>> mappend_move(
+                ListTransactionRecord<U>&& other) override
     {
         records.merge(other, comparator);
 

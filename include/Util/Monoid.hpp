@@ -13,13 +13,11 @@ public:
         return x;
     }
 
-    virtual std::unique_ptr<T> mappend(T& other) = 0;
+    virtual std::unique_ptr<Monoid<T>> mappend(Monoid<T>& other) = 0;
 
     /**
      * can be implemented as a performance optimization in cases where
      * the original could be moved instead of copied
      */
-    virtual std::unique_ptr<T> mappend_move(T&& other) {
-        return mappend(other);
-    }
+    virtual std::unique_ptr<Monoid<T>> mappend_move(Monoid<T>&& other) = 0;
 };
