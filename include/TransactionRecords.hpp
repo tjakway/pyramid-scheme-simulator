@@ -92,6 +92,7 @@ public:
 
     SelfType records = Monoid<SelfType>::mempty();
 
+    //TODO: add a ctor that sorts its data then remove the sorts in mappend_move
 
     virtual SelfType mappend_move(SelfType& other)
     {
@@ -103,28 +104,14 @@ public:
     }
 };
 
+
+
 /**
  * returns true if fst < snd
+ *
+ * pass unique_ptrs by reference to prevent moves
  */
-bool compareUniques(std::unique_ptr<Unique> fst, std::unique_ptr<Unique> snd)
-{
-    const bool fstEmpty = fst.get() == nullptr;
-    const bool sndEmpty = snd.get() == nullptr;
-
-    //check for null pointers
-    if(fstEmpty && sndEmpty) {
-        return false;
-    }
-    else if(!fstEmpty && sndEmpty) {
-        return false;
-    }
-    else if(fstEmpty && !sndEmpty) {
-        return true;
-    }
-    //neither pointer is null, dereference & compare
-    else {
-        return fst->str() < snd->str();
-    }
-}
+bool compareUniqueables(std::unique_ptr<Uniqueable>&,
+        std::unique_ptr<Uniqueable>&);
 
 }

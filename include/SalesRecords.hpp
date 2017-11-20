@@ -87,21 +87,8 @@ public:
 std::ostream& operator<<(std::ostream& os, const SalesResult& res);
 
 
-class Recordable
-{
-protected:
-    Recordable() = default;
-};
 
-class UniqueRecord : public Uniqueable, Recordable
-{
-public:
-    const SimulationTick when;
-    UniqueRecord(SimulationTick when, Unique u)
-        : Uniqueable(u), when(when) {}
-};
-
-class MoneyChangeRecord : public UniqueRecord
+/*class MoneyChangeRecord : public UniqueRecord
 {
 public:
     const Money fundsBefore;
@@ -109,12 +96,13 @@ public:
     MoneyChangeRecord(SimulationTick, Money price, const std::shared_ptr<CapitalHolder>);
 };
 
+*/
 
 /**
  * don't make this an instance of UniqueRecord because it's a composite of 
  * a buyer record and a seller record and it's not obvious which id to assign it to
  */
-class Sale
+/*class Sale
 {
 public:
     const Money price;
@@ -126,17 +114,6 @@ public:
             const std::shared_ptr<Distributor>, 
             const std::shared_ptr<Consumer>);
 };
-
-class Conversion : public UniqueRecord
-{ 
-public:
-    const std::shared_ptr<Distributor> convertedBy;
-
-    Conversion(SimulationTick when, 
-            const Unique who, 
-            std::shared_ptr<Distributor> convertedBy)
-        : UniqueRecord(when, who), convertedBy(convertedBy)
-    {}
-};
+*/
 
 }

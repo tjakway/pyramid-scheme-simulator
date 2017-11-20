@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "TransactionObjects.hpp"
 #include "TransactionRecords.hpp"
 #include "CapitalHolder.hpp"
 #include "Sales.hpp"
