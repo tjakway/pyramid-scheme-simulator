@@ -57,14 +57,14 @@ const RestockHandler::ListComparatorType RestockHandler::listComparator =
     };
 
 
-const std::set<RestockHandler::ElemType, RestockHandler::ComparatorType> 
+const std::set<RestockHandler::ElemType, RestockHandler::SetComparatorType> 
     RestockHandler::toSet(RestockHandler::RecordType&& rec)
 {
-    return std::set<RestockHandler::ElemType, 
-           RestockHandler::ComparatorType>
-               (std::make_move_iterator(rec.records.begin()),
-                    std::make_move_iterator(rec.records.end()),
-                RestockHandler::comparator);
+    std::set<RestockHandler::ElemType, 
+            RestockHandler::SetComparatorType>
+                col(RestockHandler::setComparator);
+
+    for(auto x : rec)
 }
 
 
