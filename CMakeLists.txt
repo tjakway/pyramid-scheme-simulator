@@ -22,11 +22,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 function(all_targets_compile_property)
     #see http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags 
     target_compile_options(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
+    target_compile_options(${MAIN_EXE_TARGET} PRIVATE ${ARGN})
     target_compile_options(${TEST_TARGET} PRIVATE ${ARGN})
 endfunction()
 
 function(all_targets_compile_definitions def)
     target_compile_definitions(${MAIN_LIB_TARGET} PRIVATE ${def})
+    target_compile_definitions(${MAIN_EXE_TARGET} PRIVATE ${def})
     target_compile_definitions(${TEST_TARGET} PRIVATE ${def})
 endfunction()
 
@@ -56,6 +58,12 @@ function(EnableDebugWarnings)
     endif()
 endfunction()
 
+#add source files
+#WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
+FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
+LIST(REMOVE_ITEM MAIN_LIB_SRC ${MAIN_SRC_FILE})
+
+FILE(GLOB_RECURSE TESTS_SRC test/*.cpp test/*.c test/*.cxx)
 
 #set up dependencies
 
@@ -64,8 +72,6 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/lib/googletest" ${CMAKE_BINARY_DIR}/gtest-
 set(PYRAMID_GTEST_OPTIONS -Wp,-w -w)
 target_compile_options(gtest PRIVATE ${PYRAMID_GTEST_OPTIONS})
 target_compile_options(gtest_main PRIVATE ${PYRAMID_GTEST_OPTIONS})
-target_include_directories(${TEST_TARGET} SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-target_include_directories(${TEST_TARGET} SYSTEM ${GTEST_INCLUDE_DIRS})
 
 #crossguid, used for generating uuids
 set(CROSSGUID_DIR "${CMAKE_SOURCE_DIR}/lib/crossguid")
@@ -76,12 +82,6 @@ include_directories(${CROSSGUID_DIR})
 find_package(Boost COMPONENTS graph REQUIRED)
 
 
-#add source files
-#WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
-FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
-LIST(REMOVE_ITEM MAIN_LIB_SRC ${MAIN_SRC_FILE})
-
-FILE(GLOB_RECURSE TESTS_SRC test/*.cpp test/*.c test/*.cxx)
 
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -97,6 +97,9 @@ target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
 
 
 add_executable(${TEST_TARGET} ${TESTS_SRC})
+#add google test to the include path for the test target
+target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
 
 all_targets_compile_definitions("-DTESTING")
 
