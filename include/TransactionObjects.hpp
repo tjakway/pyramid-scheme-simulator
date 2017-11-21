@@ -37,15 +37,7 @@ public:
 class ConversionHandler
 {
 public:
-    class Conversion;
 
-private:
-    using ComparatorType = const std::function<bool(const std::unique_ptr<Conversion>&, 
-            const std::unique_ptr<Conversion>&)>;
-
-    static ComparatorType comparator;
-
-public:
     class Conversion : public UniqueRecord
     { 
     public:
@@ -65,6 +57,11 @@ public:
             CapitalHolder&, 
             CapitalHolder&);
 
+
+    using ComparatorType = const std::function<bool(const std::unique_ptr<Conversion>&, 
+            const std::unique_ptr<Conversion>&)>;
+
+    static ComparatorType comparator;
 
     static RecordType reduce(RecordType&&, RecordType&&);
 };

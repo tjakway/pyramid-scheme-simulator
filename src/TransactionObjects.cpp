@@ -1,4 +1,5 @@
 #include "TransactionObjects.hpp"
+#include "TransactionRecords.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -13,7 +14,7 @@ ConversionHandler::RecordType
     ConversionHandler::reduce(ConversionHandler::RecordType&& lhs, 
             ConversionHandler::RecordType&& rhs)
     {
-        return ListTransactionRecord<Conversion>.mergeListTransactionRecords(lhs, 
-                rhs, ConversionHandler::comparator);
+        return mergeListTransactionRecords(std::move(lhs), 
+                std::move(rhs), ConversionHandler::comparator);
     }
 }

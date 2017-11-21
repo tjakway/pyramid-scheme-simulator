@@ -17,30 +17,29 @@ namespace pyramid_scheme_simulator {
 template <typename U>
 class ListTransactionRecord 
 {
-protected:
+public:
     using ElementType = std::unique_ptr<U>;
     using ContainerType = std::list<ElementType>;
     ContainerType records;
 
-public:
     ListTransactionRecord(ContainerType&& l) 
-        : records(std::move(l.records))
+        : records(std::move(l))
     { }
 
-    template <typename X>
-    static ListTransactionRecord<X> mergeListTransactionRecords(
-            ListTransactionRecord<X>&& lhs,
-            ListTransactionRecord<X>&& rhs,
-            std::function<bool(const std::unique_ptr<X>&, const std::unique_ptr<X>&)> 
-                comparator)
-    {
-        std::list<std::unique_ptr<X>> combinedList = std::move(lhs.records);
-        combinedList.merge(std::move(rhs.records), comparator);
-
-        return ListTransactionRecord(combinedList);
-    }
 };
 
+template <typename X>
+ListTransactionRecord<X> mergeListTransactionRecords(
+        ListTransactionRecord<X>&& lhs,
+        ListTransactionRecord<X>&& rhs,
+        std::function<bool(const std::unique_ptr<X>&, const std::unique_ptr<X>&)> 
+            comparator)
+{
+    std::list<std::unique_ptr<X>> combinedList = std::move(lhs.records);
+    combinedList.merge(std::move(rhs.records), comparator);
+
+    return ListTransactionRecord<X>(std::move(combinedList));
+}
 
 
 /**

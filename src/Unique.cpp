@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Util/Unique.hpp"
 #include "Guid.hpp"
 
