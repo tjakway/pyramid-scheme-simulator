@@ -146,9 +146,10 @@ public:
      */
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
-    void SaleHandler::processPotentialRestocking(SimulationTick when,
-            Money price,
-            CapitalHolder& holder);
+
+    void processPotentialRestocking(SimulationTick,
+            Money,
+            CapitalHolder&);
 };
 
 }

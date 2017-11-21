@@ -73,7 +73,7 @@ public:
         if(!r)
         {
             throw SaleIsPossibleResultException(
-                    "SalesResult passed to Transactions::SaleIsPossibleResult::good \
+                    "SalesResult passed to SaleIsPossibleResult::good \
                      was not SUCCESS");
         }
         else
@@ -89,7 +89,7 @@ public:
         if(r)
         {
             throw SaleIsPossibleResultException(
-                    "SUCCESS was passed to Transactions::SaleIsPossibleResult::bad");
+                    "SUCCESS was passed to SaleIsPossibleResult::bad");
         }
         else
         {
@@ -100,7 +100,7 @@ public:
 };
 
 const std::shared_ptr<Distributor> 
-    SalesHandler::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
+    SaleHandler::SaleIsPossibleResult::checkSellerPointer(std::shared_ptr<Distributor> seller)
 
 {
     if(seller.get() == nullptr)
@@ -142,6 +142,7 @@ void SaleHandler::processPotentialRestocking(SimulationTick when,
     }
 }
 
+//TODO: change return type
 SalesResult SaleHandler::processPotentialSale(
         SimulationTick when, 
         Money price,
@@ -174,7 +175,7 @@ SalesResult SaleHandler::processPotentialSale(
     }
 }
 
-SalesResult Transactions::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHolder& buyer)
+SalesResult SaleHandler::sampleSalesChance(rd_ptr rd, CapitalHolder& seller, CapitalHolder& buyer)
 {
     const bool saleOccurred = (seller.getSalesChanceContribution() + 
                 buyer.getSalesChanceContribution())->sampleFrom(rd);
@@ -195,26 +196,26 @@ SaleHandler::SaleIsPossibleResult SaleHandler::saleIsPossible(
 {
     Distributor* seller = dynamic_cast<Distributor*>(&_seller);
     if(!seller) {
-        return Transactions::SaleIsPossibleResult::bad(
+        return SaleHandler::SaleIsPossibleResult::bad(
                 SalesResult(SalesResult::Reason::SELLER_NOT_DISTRIBUTOR));
     }
     else {
         Consumer* buyer = dynamic_cast<Consumer*> (&_buyer);
         if(!buyer) {
-            return Transactions::SaleIsPossibleResult::bad(
+            return SaleHandler::SaleIsPossibleResult::bad(
                     SalesResult(SalesResult::Reason::BUYER_NOT_CONSUMER));
         }
         //make sure they're not also a distributor
         else if(buyer->isDistributor()){
-            return Transactions::SaleIsPossibleResult::bad(
+            return SaleHandler::SaleIsPossibleResult::bad(
                     SalesResult(SalesResult::Reason::BOTH_DISTRIBUTORS));
         }
         else if(!seller->hasInventory()){
-            return Transactions::SaleIsPossibleResult::bad(
+            return SaleHandler::SaleIsPossibleResult::bad(
                     SalesResult::Reason::NO_INVENTORY);
         }
         else {
-            return Transactions::SaleIsPossibleResult::good(
+            return SaleHandler::SaleIsPossibleResult::good(
                     SalesResult(SalesResult::Reason::SUCCESS),
                     std::shared_ptr<Distributor>(seller),
                     std::shared_ptr<Consumer>(buyer)
