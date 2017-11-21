@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <vector>
 #include <string>
+#include <array>
 
 static bool operator<(const xg::Guid& lhs, const xg::Guid& rhs) 
 {
@@ -110,6 +111,9 @@ public:
     }
 
     Unique(xg::Guid guid): UniqueSet(guid), id(guid)
+    {}
+
+    Unique(const std::array<unsigned char, 16> values): id(values)
     {}
     
     Unique(const Unique& u): UniqueSet(u.id), id(u.id)
