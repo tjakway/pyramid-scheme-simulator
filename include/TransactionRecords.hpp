@@ -49,7 +49,7 @@ ListTransactionRecord<X> mergeListTransactionRecords(
 bool compareUniqueables(Uniqueable*,
         Uniqueable*);
 
-bool compareUniques(Unique*, Unique*);
+bool compareUniques(const Unique*, const Unique*);
 
 //data base classes
 class Recordable

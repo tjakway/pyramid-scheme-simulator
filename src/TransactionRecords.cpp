@@ -28,7 +28,7 @@ bool compareUniqueables(Uniqueable* fst,
     }
 }
  
-bool compareUniques(Unique* fst, Unique* snd)
+bool compareUniques(const Unique* fst, const Unique* snd)
 {
     const bool fstEmpty = fst == nullptr;
     const bool sndEmpty = snd == nullptr;
