@@ -3,9 +3,13 @@ project(project_name)
 #target_compile_options and add_compile_options only available since cmake 2.8.12
 cmake_minimum_required(VERSION 2.8.12)
 
+#target definitions
 set(MAIN_LIB_TARGET "pyramid")
 set(MAIN_EXE_TARGET "pyramid-simulator")
 set(TEST_TARGET "test-pyramid-simulator")
+
+
+include("cmake/default_build_type.cmake" OPTIONAL)
 
 #the name of the file containing main() that shouldn't be included in MAIN_LIB_TARGET
 set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
