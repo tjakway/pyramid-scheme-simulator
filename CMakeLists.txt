@@ -1,8 +1,11 @@
 project(project_name)
-cmake_minimum_required(VERSION 2.8.7)
+
+#target_compile_options and add_compile_options only available since cmake 2.8.12
+cmake_minimum_required(VERSION 2.8.12)
 
 set(MAIN_LIB_TARGET "pyramid")
 set(MAIN_EXE_TARGET "pyramid-simulator")
+set(TEST_TARGET "test-pyramid-simulator")
 
 #the name of the file containing main() that shouldn't be included in MAIN_LIB_TARGET
 set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
@@ -11,7 +14,54 @@ set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 
+#add a property to both the main library and the test target
+function(all_targets_compile_property)
+    #see http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags 
+    target_compile_options(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
+    target_compile_options(${TEST_TARGET} PRIVATE ${ARGN})
+endfunction()
+
+function(all_targets_compile_definitions def)
+    target_compile_definitions(${MAIN_LIB_TARGET} PRIVATE ${def})
+    target_compile_definitions(${TEST_TARGET} PRIVATE ${def})
+endfunction()
+
+#divide debug fields into common (i.e. non compiler-specific) debug flags, GCC-specific flags and clang-specific flags
+########################################
+#cmake list of flags
+set(COMMON_DEBUG_FLAGS -g -Wall -Wextra -Wundef -Wcast-qual -Wconversion -Wformat=2 -Wshadow -ftrapv -Wuninitialized -Winit-self -Wcast-align -Wwrite-strings)
+
+#Apple LLVM version 6.1.0 (clang-602.0.53) (based on LLVM 3.6.0svn) doesn't support -faddress=sanitize
+#NOTE THAT VALGRIND WILL NOT WORK WITH -fsanitize=address (the other flags do not seem to pose a problem)
+set(CLANG_SANITIZE_ADDRESS_FLAG "-fsanitize=address")
+set(GCC_OPTIMIZE_DEBUG "-Og")
+########################################
+
+function(EnableDebugWarnings)
+    all_targets_compile_definitions("-DDEBUG") 
+
+    all_targets_compile_property(${COMMON_DEBUG_FLAGS})
+
+    #add clang-specific debugging flags
+    #note: clang with apple modifications is named AppleClang (which will fail STREQUAL "Clang")
+    #use MATCHES "Clang" to check for either kind of clang
+    #see http://stackoverflow.com/questions/10046114/in-cmake-how-can-i-test-if-the-compiler-is-clang
+    if(("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang") AND NOT ${APPLE})
+        message("Building with clang on a non-Apple machine.  Enabling -faddress=sanitize.")
+        all_targets_compile_property("${CLANG_SANITIZE_ADDRESS_FLAG}")
+    endif()
+endfunction()
+
+
 #set up dependencies
+
+#google test
+add_subdirectory("${CMAKE_SOURCE_DIR}/lib/googletest" ${CMAKE_BINARY_DIR}/gtest-bin)
+set(PYRAMID_GTEST_OPTIONS -Wp,-w -w)
+target_compile_options(gtest PRIVATE ${PYRAMID_GTEST_OPTIONS})
+target_compile_options(gtest_main PRIVATE ${PYRAMID_GTEST_OPTIONS})
+target_include_directories(${TEST_TARGET} SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+target_include_directories(${TEST_TARGET} SYSTEM ${GTEST_INCLUDE_DIRS})
 
 #crossguid, used for generating uuids
 set(CROSSGUID_DIR "${CMAKE_SOURCE_DIR}/lib/crossguid")
@@ -21,12 +71,15 @@ include_directories(${CROSSGUID_DIR})
 
 find_package(Boost COMPONENTS graph REQUIRED)
 
+
+#add source files
 #WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
 FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
 LIST(REMOVE_ITEM MAIN_LIB_SRC ${MAIN_SRC_FILE})
 
+FILE(GLOB_RECURSE TESTS_SRC test/*.cpp test/*.c test/*.cxx)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
+
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
