@@ -2,6 +2,7 @@
 
 #include <random>
 #include <iterator>
+#include <array>
 
 #include "Types.hpp"
 
@@ -29,6 +30,9 @@ public:
         std::advance(start, dis(g));
         return start;
     }
+
+
+    std::array<unsigned char, 16> hashToArray(size_t hash);
 };
 
 
