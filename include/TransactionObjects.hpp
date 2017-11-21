@@ -18,6 +18,8 @@ namespace pyramid_scheme_simulator {
 
 
 
+//can't use inheritance for the handler pattern because we're
+//defining static methods
 
 //transaction classes
 class ConversionHandler
@@ -36,7 +38,8 @@ public:
         {}
     };
 
-    using RecordType = ListTransactionRecord<Conversion>;
+    using ElemType = Conversion;
+    using RecordType = ListTransactionRecord<ElemType>;
 
     virtual RecordType operator()(SimulationTick,
             Money, 
@@ -44,8 +47,8 @@ public:
             CapitalHolder&);
 
 
-    using ComparatorType = const std::function<bool(const std::unique_ptr<Conversion>&, 
-            const std::unique_ptr<Conversion>&)>;
+    using ComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&, 
+            const std::unique_ptr<ElemType>&)>;
 
     static ComparatorType comparator;
 
@@ -93,7 +96,20 @@ public:
         Sale(const Sale&) = default;
     };
 
+    using ElemType = Sale;
+    using RecordType = ListTransactionRecord<ElemType>;
 
+    virtual RecordType operator()(SimulationTick,
+            Money, 
+            CapitalHolder&, 
+            CapitalHolder&);
+
+
+    using ComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&, 
+            const std::unique_ptr<ElemType>&)>;
+
+    static ComparatorType comparator;
+    static RecordType reduce(RecordType&&, RecordType&&);
 };
 
 }
