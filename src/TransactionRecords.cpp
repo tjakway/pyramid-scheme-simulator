@@ -93,16 +93,6 @@ std::string hashToStr(T t)
 
 namespace pyramid_scheme_simulator {
 
-std::ostream& operator<<(std::ostream& os, const SalesResult& res)
-{
-    os << res.str();
-    return os;
-}
-
-SalesResult::SalesResult(Reason r)
-    : reason(r), success(r == SUCCESS) 
-{}
-
 MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
         const std::shared_ptr<CapitalHolder> p)
     : UniqueRecord(when, p->id),
