@@ -7,12 +7,14 @@
 #include "CapitalHolder.hpp"
 #include "Util/Unique.hpp"
 #include "TransactionRecords.hpp"
+#include "SalesResult.hpp"
 
 #include <memory>
 #include <set>
 #include <string>
 #include <unordered_set>
 #include <initializer_list>
+#include <functional>
 
 namespace pyramid_scheme_simulator {
 
@@ -52,11 +54,27 @@ public:
 
     static ComparatorType comparator;
 
-    static RecordType reduce(RecordType&&, RecordType&&);
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
+        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
 };
 
 
 
+
+class RestockHandler
+{
+public:
+    using ElemType = std::weak_ptr<Distributor>;
+    using RecordType = ListTransactionRecord<ElemType>;
+
+    //operates on vertices
+    virtual RecordType operator()(SimulationTick,
+            Money, 
+            CapitalHolder&);
+
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
+        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
+};
 
 class SaleHandler
 {
@@ -109,7 +127,18 @@ public:
             const std::unique_ptr<ElemType>&)>;
 
     static ComparatorType comparator;
-    static RecordType reduce(RecordType&&, RecordType&&);
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
+        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
+
+
+    class SaleIsPossibleResult;
+
+    /**
+     * return SalesResult objects to give more information about why the sale
+     * didn't go through
+     */
+    SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
+    SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
 };
 
 }
