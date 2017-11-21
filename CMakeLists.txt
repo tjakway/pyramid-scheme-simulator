@@ -90,3 +90,39 @@ target_link_libraries(${MAIN_LIB_TARGET} Boost::graph)
 
 add_executable(${MAIN_EXE_TARGET} ${MAIN_SRC_FILE})
 target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
+
+
+add_executable(${TEST_TARGET} ${TESTS_SRC})
+
+all_targets_compile_definitions("-DTESTING")
+
+if((${CMAKE_BUILD_TYPE} STREQUAL "DEBUG") OR (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
+    message("Building in debug mode without warnings.")
+    message("To enable warnings, pass -DCMAKE_BUILD_TYPE=DebugWithWarnings")
+    #see http://stackoverflow.com/questions/5352074/how-to-create-a-c-define-for-a-certain-target-using-cmake
+    all_targets_compile_definitions("-DDEBUG") 
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "DebugWithWarnings")
+    message("Building in debug mode with warnings.")
+    message("To disable warnings, pass -DCMAKE_BUILD_TYPE=Debug")
+    EnableDebugWarnings()
+#GCC has an -Og option to enable optimizations that won't interfere with debugging
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "DebugWithWarningsOptimized")
+    EnableDebugWarnings()
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        message("GNU compiler detected, building in optimized debug mode with warnings.")
+        all_targets_compile_property("${GCC_OPTIMIZE_DEBUG}")
+    else()
+        message("WARNING: COMPILER IS NOT GNU" WARNING)
+        message("CANNOT BUILD IN OPTIMIZED DEBUG MODE!" WARNING)
+        message("BUILDING IN DebugWithWarnings MODE!" WARNING)
+    endif()
+else()
+    message("Not building in debug mode.")
+    #disables assertions
+    #see http://stackoverflow.com/questions/5354314/how-to-completely-disable-assertion
+    #mandated by POSIX
+    all_targets_compile_definitions("-DNDEBUG")
+endif()
+
+target_link_libraries(${TEST_TARGET} gtest gtest_main)
+target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
