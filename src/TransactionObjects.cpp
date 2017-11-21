@@ -39,32 +39,24 @@ const std::function<RestockHandler::RecordType(
             std::move(lhs), std::move(rhs), RestockHandler::listComparator);
 };
 
-const RestockHandler::SetComparatorType RestockHandler::setComparator = 
-    [](const RestockHandler::ElemType& lhs, 
-        const RestockHandler::ElemType& rhs)
-    {
-        return compareUniqueables(lhs.lock().get(), 
-                rhs.lock().get());
-    };
-
 
 const RestockHandler::ListComparatorType RestockHandler::listComparator =
     [](const std::unique_ptr<RestockHandler::ElemType>& lhs, 
             const std::unique_ptr<RestockHandler::ElemType>& rhs) -> bool {
-        //yikes
-        return compareUniqueables(lhs.get()->lock().get(), 
-                rhs.get()->lock().get());
+        return compareUniques(lhs.get(), rhs.get());
     };
 
 
-const std::set<RestockHandler::ElemType, RestockHandler::SetComparatorType> 
+const std::set<RestockHandler::ElemType> 
     RestockHandler::toSet(RestockHandler::RecordType&& rec)
 {
-    std::set<RestockHandler::ElemType, 
-            RestockHandler::SetComparatorType>
-                col(RestockHandler::setComparator);
+    std::set<RestockHandler::ElemType> uniques;
 
-    for(auto x : rec)
+    for(std::unique_ptr<Unique>& x : rec.records)
+    {
+        //copy it
+        uniques.emplace<Unique>(std::move(*x));
+    }
 }
 
 

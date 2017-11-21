@@ -63,7 +63,7 @@ public:
 class RestockHandler
 {
 public:
-    using ElemType = std::weak_ptr<Distributor>;
+    using ElemType = Unique;
     using RecordType = ListTransactionRecord<ElemType>;
 
     //operates on vertices
@@ -82,7 +82,7 @@ public:
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
-    static const std::set<ElemType, SetComparatorType> toSet(RecordType&&);
+    static const std::set<ElemType> toSet(RecordType&&);
 };
 
 class SaleHandler

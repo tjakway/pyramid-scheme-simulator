@@ -126,6 +126,7 @@ public:
         return id.str();
     }
 
+    bool operator<(const Unique&) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Unique& res);

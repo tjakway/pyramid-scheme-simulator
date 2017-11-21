@@ -13,4 +13,10 @@ std::ostream& operator<<(std::ostream &os, const Unique &unique)
     return os;
 }
 
+
+bool Unique::operator<(const Unique& other) const
+{
+    return id < other.id;
+}
+
 }
