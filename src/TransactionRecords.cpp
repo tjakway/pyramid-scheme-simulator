@@ -121,7 +121,7 @@ Unique Sale::getUnique(SimulationTick when,
             hashToStr(price) + 
             hashToStr(seller->id) + 
             hashToStr(buyer->id)
-            )));
+    )));
 }
 
 Sale::Sale(SimulationTick when, Money price, 
