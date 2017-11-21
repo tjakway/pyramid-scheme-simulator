@@ -25,14 +25,6 @@ class GraphRecords
      */
     const std::unique_ptr<Distributor> companyDistributor;
 
-//    class SaleIsPossibleResult;
-
-    /**
-     * return SalesResult objects to give more information about why the sale
-     * didn't go through
-     */
-//    SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
-//    SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
 
 //    void auditRecords();
 public:

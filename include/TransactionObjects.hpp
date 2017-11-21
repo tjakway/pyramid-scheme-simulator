@@ -54,8 +54,7 @@ public:
 
     static const ComparatorType comparator;
 
-    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = mergeListTransactionRecords;
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 };
 
 
@@ -72,15 +71,18 @@ public:
             Money, 
             CapitalHolder&);
 
-    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = mergeListTransactionRecords;
-
     
-    using ComparatorType = const std::function<bool(const ElemType&,
+    using SetComparatorType = const std::function<bool(const ElemType&,
             const ElemType&)>;
-    static const ComparatorType comparator;
+    static const SetComparatorType setComparator;
+    
+    using ListComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&,
+            const std::unique_ptr<ElemType>&)>;
+    static const ListComparatorType listComparator;
 
-    static const std::set<ElemType, ComparatorType> toSet(RecordType&&);
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
+
+    static const std::set<ElemType, SetComparatorType> toSet(RecordType&&);
 };
 
 class SaleHandler
@@ -134,8 +136,7 @@ public:
             const std::unique_ptr<ElemType>&)>;
 
     static const ComparatorType comparator;
-    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = mergeListTransactionRecords;
+    static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
 
     class SaleIsPossibleResult;

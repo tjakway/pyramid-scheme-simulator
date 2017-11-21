@@ -17,7 +17,7 @@ class CapitalHolder : public Uniqueable
 protected:
     Money money;
 
-    unsigned int inventory = 0;
+    Inventory inventory = 0;
 
     double getMoneyToProductCostRatio();
 
@@ -48,7 +48,7 @@ public:
 
     /** both Consumers and Distributors have inventory
      * but do different things with it */
-    virtual unsigned int getInventory() {
+    virtual Inventory getInventory() {
         return inventory;
     }
 
@@ -94,6 +94,9 @@ public:
     virtual unsigned int getDesiredRestockAmount();
 
     virtual bool hasInventory() { return getInventory() > 0; }
+
+    virtual Inventory getRestockThreshold();
+    virtual bool needsRestock() { return getInventory() > getRestockThreshold(); }
 };
 
 

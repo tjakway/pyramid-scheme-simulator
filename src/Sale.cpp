@@ -18,7 +18,7 @@ public:
     { return msg.c_str(); }
 };
 
-MoneyChangeRecord checkBuyerRecord(SimulationTick when, 
+SaleHandler::MoneyChangeRecord checkBuyerRecord(SimulationTick when, 
         Money price, 
         Consumer* buyer)
 {
@@ -33,11 +33,11 @@ MoneyChangeRecord checkBuyerRecord(SimulationTick when,
     }
     else
     {
-        return MoneyChangeRecord(when, price, buyer);
+        return SaleHandler::MoneyChangeRecord(when, price, buyer);
     }
 }
 
-MoneyChangeRecord checkSellerRecord(
+SaleHandler::MoneyChangeRecord checkSellerRecord(
         SimulationTick when,
         Money price, 
         Distributor* seller, 
@@ -53,7 +53,7 @@ MoneyChangeRecord checkSellerRecord(
     }
     else
     {
-        return MoneyChangeRecord(when, price, seller);
+        return SaleHandler::MoneyChangeRecord(when, price, seller);
     }
 }
 
@@ -76,14 +76,14 @@ bool UniqueRecord::operator==(const UniqueRecord& other)
     return when == other.when && id == other.id;
 }
 
-MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
+SaleHandler::MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
         CapitalHolder* p)
     : UniqueRecord(when, p->id),
       fundsBefore(p->getMoney()), 
       fundsAfter(p->getMoney() - price)
 { }
 
-Unique Sale::getUnique(SimulationTick when, 
+Unique SaleHandler::Sale::getUnique(SimulationTick when, 
             Money price, 
             Distributor* seller,
             Consumer* buyer)
@@ -97,7 +97,7 @@ Unique Sale::getUnique(SimulationTick when,
     )));
 }
 
-Sale::Sale(SimulationTick when, Money price, 
+SaleHandler::Sale::Sale(SimulationTick when, Money price, 
         const std::shared_ptr<Distributor> seller, 
         const std::shared_ptr<Consumer> buyer) 
 
@@ -111,7 +111,7 @@ Sale::Sale(SimulationTick when, Money price,
 { }
 
 
-bool Sale::operator==(const Sale& other)
+bool SaleHandler::Sale::operator==(const Sale& other)
 {
     return UniqueRecord::operator==(other);
 }

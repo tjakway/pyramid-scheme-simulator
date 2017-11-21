@@ -8,6 +8,7 @@
 #include <functional>
 #include <memory>
 #include <list>
+#include <set>
 
 namespace pyramid_scheme_simulator {
 
