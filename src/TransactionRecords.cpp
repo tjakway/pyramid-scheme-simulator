@@ -1,6 +1,8 @@
 #include "TransactionRecords.hpp"
 
 #include <memory>
+#include <functional>
+#include <string>
 
 namespace pyramid_scheme_simulator {
 
@@ -77,6 +79,14 @@ MoneyChangeRecord checkSellerRecord(Money price,
         return MoneyChangeRecord(price, seller);
     }
 }
+
+template <typename T>
+std::string hashToStr(T t)
+{
+    std::hash<T> hasher;
+    return std::to_string(hasher(t));
+}
+
 } // anonymous namespace
 
 
@@ -100,7 +110,19 @@ MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price,
       fundsAfter(p->getMoney() - price)
 { }
 
-Unique Sale::getUnique()
+Unique Sale::getUnique(SimulationTick when, 
+            Money price, 
+            const std::shared_ptr<Distributor> seller,
+            const std::shared_ptr<Consumer> buyer)
+{
+    std::hash<std::string> hasher;
+    return Unique(Util::hashToArray(hasher(
+            hashToStr(when) + 
+            hashToStr(price) + 
+            hashToStr(seller->id) + 
+            hashToStr(buyer->id)
+            )));
+}
 
 Sale::Sale(SimulationTick when, Money price, 
         const std::shared_ptr<Distributor> seller, 
