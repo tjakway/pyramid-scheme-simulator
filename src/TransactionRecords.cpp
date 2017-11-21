@@ -45,7 +45,9 @@ public:
     { return msg.c_str(); }
 };
 
-MoneyChangeRecord checkBuyerRecord(Money price, const std::shared_ptr<Consumer> buyer)
+MoneyChangeRecord checkBuyerRecord(SimulationTick when, 
+        Money price, 
+        Consumer* buyer)
 {
     if(buyer->getMoney() < price)
     {
@@ -58,13 +60,15 @@ MoneyChangeRecord checkBuyerRecord(Money price, const std::shared_ptr<Consumer> 
     }
     else
     {
-        return MoneyChangeRecord(price, buyer);
+        return MoneyChangeRecord(when, price, buyer);
     }
 }
 
-MoneyChangeRecord checkSellerRecord(Money price, 
-        const std::shared_ptr<Distributor> seller, 
-        const std::shared_ptr<Consumer> buyer)
+MoneyChangeRecord checkSellerRecord(
+        SimulationTick when,
+        Money price, 
+        Distributor* seller, 
+        Consumer* buyer)
 {
     //a distributor can't buy his own products (already paid the buy-in)
     if(*seller == *buyer)
@@ -76,7 +80,7 @@ MoneyChangeRecord checkSellerRecord(Money price,
     }
     else
     {
-        return MoneyChangeRecord(price, seller);
+        return MoneyChangeRecord(when, price, seller);
     }
 }
 
@@ -94,7 +98,7 @@ std::string hashToStr(T t)
 namespace pyramid_scheme_simulator {
 
 MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
-        const std::shared_ptr<CapitalHolder> p)
+        CapitalHolder* p)
     : UniqueRecord(when, p->id),
       fundsBefore(p->getMoney()), 
       fundsAfter(p->getMoney() - price)
@@ -102,8 +106,8 @@ MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price,
 
 Unique Sale::getUnique(SimulationTick when, 
             Money price, 
-            const std::shared_ptr<Distributor> seller,
-            const std::shared_ptr<Consumer> buyer)
+            Distributor* seller,
+            Consumer* buyer)
 {
     std::hash<std::string> hasher;
     return Unique(Util::hashToArray(hasher(
