@@ -96,6 +96,9 @@ public:
             const std::shared_ptr<Consumer>);
 
     bool operator==(const Sale&);
+
+protected:
+    Sale(const Sale&) = default;
 };
 
 }
