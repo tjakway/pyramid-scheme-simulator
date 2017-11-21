@@ -34,8 +34,18 @@ public:
 
 
 //transaction classes
-class ConversionTransaction
+class ConversionHandler
 {
+public:
+    class Conversion;
+
+private:
+    using ComparatorType = const std::function<bool(const std::unique_ptr<Conversion>&, 
+            const std::unique_ptr<Conversion>&)>;
+
+    static ComparatorType comparator;
+
+public:
     class Conversion : public UniqueRecord
     { 
     public:
@@ -48,26 +58,15 @@ class ConversionTransaction
         {}
     };
 
-    /**
-     * the container type for Conversion
-     */
-    class ConversionRecords : public ListTransactionRecord<Conversion>
-    {
-    protected:
-        virtual bool cmp(std::unique_ptr<Conversion>&, 
-                std::unique_ptr<Conversion>&);
+    using RecordType = ListTransactionRecord<Conversion>;
 
-        virtual ConversionRecords* mkNew() override;
-    };
+    virtual RecordType operator()(SimulationTick,
+            Money, 
+            CapitalHolder&, 
+            CapitalHolder&);
 
-    class ConversionHandler
-    {
-        virtual ConversionRecords* operator()(SimulationTick,
-                Money, 
-                CapitalHolder&, 
-                CapitalHolder&);
-    };
 
+    static RecordType reduce(RecordType&&, RecordType&&);
 };
 
 
