@@ -55,7 +55,7 @@ public:
     static const ComparatorType comparator;
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
+        = mergeListTransactionRecords;
 };
 
 
@@ -73,7 +73,7 @@ public:
             CapitalHolder&);
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
+        = mergeListTransactionRecords;
 
     
     using ComparatorType = const std::function<bool(const ElemType&,
@@ -135,7 +135,7 @@ public:
 
     static const ComparatorType comparator;
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce
-        = ListTransactionRecord<RecordType>::mergeListTransactionRecords;
+        = mergeListTransactionRecords;
 
 
     class SaleIsPossibleResult;
