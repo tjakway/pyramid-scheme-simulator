@@ -53,8 +53,46 @@ public:
 };
 
 
+
+
 class SaleHandler
 {
+
+public:
+    class MoneyChangeRecord : public UniqueRecord
+    {
+    public:
+        const Money fundsBefore;
+        const Money fundsAfter;
+        MoneyChangeRecord(SimulationTick, 
+                Money price, 
+                CapitalHolder*);
+    };
+
+    class Sale : public UniqueRecord
+    {
+    private:
+        static Unique getUnique(SimulationTick, 
+                Money price, 
+                Distributor*, 
+                Consumer*);
+    public:
+        const Money price;
+        const MoneyChangeRecord sellerRecord;
+        const MoneyChangeRecord buyerRecord;
+
+
+        Sale(SimulationTick, 
+                Money price, 
+                const std::shared_ptr<Distributor>, 
+                const std::shared_ptr<Consumer>);
+
+        bool operator==(const Sale&);
+
+    protected:
+        Sale(const Sale&) = default;
+    };
+
 
 };
 
