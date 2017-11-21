@@ -7,4 +7,10 @@ static const Unique emptyUnique = Unique(xg::Guid());
 
 const UniqueSet& UniqueSet::emptyUniqueSet = Unique::emptyUnique;
 
+std::ostream& operator<<(std::ostream &os, const Unique &unique)
+{
+    os << unique.id;
+    return os;
+}
+
 }
