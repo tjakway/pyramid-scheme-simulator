@@ -1,5 +1,3 @@
-#pragma once
-
 #include "TransactionObjects.hpp"
 
 namespace pyramid_scheme_simulator {
