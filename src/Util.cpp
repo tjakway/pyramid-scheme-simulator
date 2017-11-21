@@ -33,7 +33,7 @@ bool Util::sampleFrom(rd_ptr rng, double probability)
 std::array<unsigned char, 16> Util::hashToArray(size_t hash)
 {
     std::string hashStr(std::to_string(hash));
-    
+
     //pad the string to size 16
     while(hashStr.length() < 16)
     {

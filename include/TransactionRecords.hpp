@@ -12,8 +12,6 @@
 namespace pyramid_scheme_simulator {
 
 
-/************************************/
-
 template <typename U>
 class ListTransactionRecord 
 {
@@ -49,5 +47,49 @@ ListTransactionRecord<X> mergeListTransactionRecords(
  */
 bool compareUniqueables(Uniqueable*,
         Uniqueable*);
+
+
+//data base classes
+class Recordable
+{
+protected:
+    Recordable() = default;
+};
+
+class UniqueRecord : public Uniqueable, Recordable
+{
+public:
+    const SimulationTick when;
+    UniqueRecord(SimulationTick when, Unique u)
+        : Uniqueable(u), when(when) {}
+};
+
+
+class MoneyChangeRecord : public UniqueRecord
+{
+public:
+    const Money fundsBefore;
+    const Money fundsAfter;
+    MoneyChangeRecord(SimulationTick, Money price, const std::shared_ptr<CapitalHolder>);
+};
+
+class Sale : public UniqueRecord
+{
+private:
+    static Unique getUnique(SimulationTick, 
+            Money price, 
+            const std::shared_ptr<Distributor>, 
+            const std::shared_ptr<Consumer>);
+public:
+    const Money price;
+    const MoneyChangeRecord sellerRecord;
+    const MoneyChangeRecord buyerRecord;
+
+
+    Sale(SimulationTick, 
+            Money price, 
+            const std::shared_ptr<Distributor>, 
+            const std::shared_ptr<Consumer>);
+};
 
 }

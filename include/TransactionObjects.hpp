@@ -16,20 +16,6 @@
 
 namespace pyramid_scheme_simulator {
 
-//data base classes
-class Recordable
-{
-protected:
-    Recordable() = default;
-};
-
-class UniqueRecord : public Uniqueable, Recordable
-{
-public:
-    const SimulationTick when;
-    UniqueRecord(SimulationTick when, Unique u)
-        : Uniqueable(u), when(when) {}
-};
 
 
 
