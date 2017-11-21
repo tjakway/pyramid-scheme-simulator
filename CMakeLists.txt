@@ -19,7 +19,7 @@ set(CROSSGUID_DIR "${CMAKE_SOURCE_DIR}/lib/crossguid")
 add_subdirectory(${CROSSGUID_DIR} ${CMAKE_BINARY_DIR}/crossguid-bin)
 include_directories(${CROSSGUID_DIR})
 
-find_package(Boost 1.61 COMPONENTS graph REQUIRED)
+find_package(Boost COMPONENTS graph REQUIRED)
 
 #WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
 FILE(GLOB_RECURSE MAIN_LIB_SRC src/*.cpp src/*.c src/*.cxx)
