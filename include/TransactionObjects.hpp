@@ -20,10 +20,9 @@ namespace pyramid_scheme_simulator {
 
 
 
-//can't use inheritance for the handler pattern because we're
+//can't use inheritance for the handlers because we're
 //defining static methods
 
-//transaction classes
 class ConversionHandler
 {
 public:
@@ -147,6 +146,9 @@ public:
      */
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
+    void SaleHandler::processPotentialRestocking(SimulationTick when,
+            Money price,
+            CapitalHolder& holder);
 };
 
 }
