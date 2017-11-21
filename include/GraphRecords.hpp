@@ -15,15 +15,15 @@ namespace pyramid_scheme_simulator {
 
 
 /**
- * global sales records
+ * global records
  */
-class Transactions
+class GraphRecords
 {
     /**
      * unique Distributor instance that has unlimited inventory and from which
      * all other Distributors are forced to buy
      */
-//    const std::unique_ptr<Distributor> companyDistributor;
+    const std::unique_ptr<Distributor> companyDistributor;
 
 //    class SaleIsPossibleResult;
 
@@ -44,11 +44,6 @@ public:
 //    void processPotentialConversion(CapitalHolder&);
 
     
-//    SalesResult processPotentialSale(SimulationTick,
-//            Money price,
-//            rd_ptr,
-//            CapitalHolder& seller,
-//            CapitalHolder& buyer);
 };
 
 }
