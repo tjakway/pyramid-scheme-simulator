@@ -97,6 +97,12 @@ std::string hashToStr(T t)
 
 namespace pyramid_scheme_simulator {
 
+
+bool UniqueRecord::operator==(const UniqueRecord& other)
+{
+    return when == other.when && id == other.id;
+}
+
 MoneyChangeRecord::MoneyChangeRecord(SimulationTick when, Money price, 
         CapitalHolder* p)
     : UniqueRecord(when, p->id),
@@ -121,11 +127,20 @@ Unique Sale::getUnique(SimulationTick when,
 Sale::Sale(SimulationTick when, Money price, 
         const std::shared_ptr<Distributor> seller, 
         const std::shared_ptr<Consumer> buyer) 
-    : UniqueRecord(when, )
+
+    : UniqueRecord(when, 
+            Sale::getUnique(when, price, 
+                seller.get(), buyer.get())),
+
       price(price), 
-      sellerRecord(checkSellerRecord(price, seller, buyer)),
-      buyerRecord(checkBuyerRecord(price, buyer))
+      sellerRecord(checkSellerRecord(when, price, seller.get(), buyer.get())),
+      buyerRecord(checkBuyerRecord(when, price, buyer.get()))
 { }
 
+
+bool Sale::operator==(const Sale& other)
+{
+    return UniqueRecord::operator==(other);
+}
 
 }

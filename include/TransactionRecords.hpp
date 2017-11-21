@@ -62,6 +62,8 @@ public:
     const SimulationTick when;
     UniqueRecord(SimulationTick when, Unique u)
         : Uniqueable(u), when(when) {}
+
+    bool operator==(const UniqueRecord&);
 };
 
 
@@ -92,6 +94,8 @@ public:
             Money price, 
             const std::shared_ptr<Distributor>, 
             const std::shared_ptr<Consumer>);
+
+    bool operator==(const Sale&);
 };
 
 }
