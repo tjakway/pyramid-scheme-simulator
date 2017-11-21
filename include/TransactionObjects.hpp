@@ -16,7 +16,7 @@
 
 namespace pyramid_scheme_simulator {
 
-//data classes
+//data base classes
 class Recordable
 {
 protected:
