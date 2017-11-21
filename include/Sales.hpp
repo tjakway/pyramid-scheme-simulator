@@ -5,7 +5,6 @@
 #include "TransactionRecords.hpp"
 #include "CapitalHolder.hpp"
 #include "Util/Unique.hpp"
-#include "SalesRecords.hpp"
 
 #include <memory>
 #include <set>
