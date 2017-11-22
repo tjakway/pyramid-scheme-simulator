@@ -31,6 +31,16 @@ public:
         BOTH_DISTRIBUTORS,
         /** seller is out of inventory */
         NO_INVENTORY,
+        /** distinct from NO_INVENTORY--
+         * the distributor might have inventory but has
+         * decided to restock this tick instead 
+         *
+         * for instance, a distributor might have 5 inventory
+         * and 10 customers who want to buy
+         * in this case he'll make 5 sales and 5 NO_INVENTORY
+         * but next turn if he has 10 customers and decides to restock
+         * all of his results will be NEEDS_RESTOCK*/
+        NEEDS_RESTOCK,
         CONSUMER_INSUFFICIENT_FUNDS,
         CHANCE_FAILED,
         SUCCESS
@@ -53,6 +63,8 @@ public:
                 return "BOTH_DISTRIBUTORS";
             case NO_INVENTORY:
                 return "NO_INVENTORY";
+            case NEEDS_RESTOCK:
+                return "NEEDS_RESTOCK";
             case CONSUMER_INSUFFICIENT_FUNDS:
                 return "CONSUMER_INSUFFICIENT_FUNDS";
             case CHANCE_FAILED:

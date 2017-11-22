@@ -81,7 +81,11 @@ public:
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
-    static const std::set<ElemType> toSet(RecordType&&);
+    /**
+     * the final output of this class
+     */
+    using RestockSet = std::set<ElemType>;
+    static const RestockSet toSet(RecordType&&);
 };
 
 class SaleHandler
@@ -125,6 +129,8 @@ public:
     using ElemType = Sale;
     using RecordType = ListTransactionRecord<ElemType>;
 
+    SaleHandler(RestockHandler::RestockSet&&);
+
     virtual RecordType operator()(SimulationTick,
             Money, 
             CapitalHolder&, 
@@ -138,6 +144,7 @@ public:
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
 
+private:
     class SaleIsPossibleResult;
 
     /**
@@ -146,10 +153,9 @@ public:
      */
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
+    SalesResult needsRestock(Distributor&);
 
-    void processPotentialRestocking(SimulationTick,
-            Money,
-            CapitalHolder&);
+    RestockHandler::RestockSet restockSet;
 };
 
 }

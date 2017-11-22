@@ -4,8 +4,14 @@
 #include <string>
 #include <exception>
 #include <memory>
+#include <set>
+#include <utility>
 
 namespace pyramid_scheme_simulator {
+
+SaleHandler::SaleHandler(RestockHandler::RestockSet&& restockSet)
+    : restockSet(restockSet)
+{ }
 
 /**
  * this class exists to prevent dynamic_cast'ing twice
@@ -224,5 +230,16 @@ SaleHandler::SaleIsPossibleResult SaleHandler::saleIsPossible(
     }
 }
 
+
+SalesResult needsRestock(Distributor& seller)
+{
+    //check if the set has this distributor's id
+    if(restockSet.find(seller.id) == restockSet.end()) {
+        return SalesResult(SalesResult::Reason::NEEDS_RESTOCK);
+    }
+    else {
+        return SalesResult(SalesResult::Reason::SUCCESS);
+    }
+}
 
 }
