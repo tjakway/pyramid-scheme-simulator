@@ -8,6 +8,7 @@
 #include <functional>
 #include <memory>
 #include <list>
+#include <utility>
 #include <set>
 
 namespace pyramid_scheme_simulator {
@@ -26,6 +27,14 @@ public:
     { }
 
 };
+
+
+template <typename X>
+ListTransactionRecord<X> emptyListTransactionRecord() 
+{
+    ListTransactionRecord<X>::ContainerType emptyContainer;
+    return ListTransactionRecord<X>(std::move(emptyContainer));
+}
 
 template <typename X>
 ListTransactionRecord<X> mergeListTransactionRecords(
