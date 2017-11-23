@@ -134,7 +134,6 @@ const std::shared_ptr<Consumer>
     }
 }
 
-//TODO: change return type
 SaleHandler::SaleIsPossibleResult 
     SaleHandler::processPotentialSale(
             Money price,
