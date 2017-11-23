@@ -19,6 +19,7 @@ class PopulationGraph
 {
     /** Type synonyms */
 
+public:
     //vertex type
     using Pop = std::shared_ptr<CapitalHolder>;
     using PopEdge = std::pair<Pop, Pop>;
@@ -34,6 +35,7 @@ class PopulationGraph
     using PopDescriptor = 
         boost::graph_traits<BGLPopulationGraph>::vertex_descriptor;
 
+private:
     /*****************/
 
     //TODO: *maybe* make this a GraphGenerationOptions field
