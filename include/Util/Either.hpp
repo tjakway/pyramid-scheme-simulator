@@ -232,4 +232,14 @@ public:
     {
         return type;
     }
+
+    bool isLeft()
+    {
+        return type == LEFT;
+    }
+
+    bool isRight()
+    {
+        return type == RIGHT;
+    }
 };
