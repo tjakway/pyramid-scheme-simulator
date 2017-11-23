@@ -83,6 +83,11 @@ void Consumer::deductMoney(Money howMuch)
     }
 }
 
+bool Consumer::canBecomeDistributor(Money buyIn)
+{
+    return buyIn < getMoney();
+}
+
 Distributor::Distributor(Unique id, Money m, std::shared_ptr<Distributor> _recruitedBy)
     : Consumer(id, m),
     recruitedBy(_recruitedBy)

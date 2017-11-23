@@ -110,7 +110,7 @@ public:
 
     void addMoney(Money);
 
-    virtual bool canBecomeDistributor(Money buyIn) override { return false; }
+    virtual bool canBecomeDistributor(Money /*buyIn*/) override { return false; }
 
     virtual bool isDistributor() override { return true; }
 
