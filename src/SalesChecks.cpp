@@ -1,4 +1,5 @@
 #include "TransactionObjects.hpp"
+#include "TransactionRecords.hpp"
 #include "SalesResult.hpp"
 #include "Util/Either.hpp"
 
@@ -253,20 +254,29 @@ SaleHandler::RecordType
     SaleIsPossibleResult result = 
         SaleHandler::processPotentialSale(price, rd, seller, buyer);
 
+    using EitherPtr = std::unique_ptr<SaleHandler::ElemType>;
+    EitherPtr eitherPtr;
     if(!result)
     {
-        return Either<SalesResult, Sale>::left(make_unique<SalesResult>(result.result));
+        eitherPtr = make_unique<Either<SalesResult, Sale>>(
+                Either<SalesResult, Sale>::left(
+                make_unique<SalesResult>(result.result)));
     }
     else
     {
         auto seller = result.seller;
         auto buyer = result.buyer;
 
+        std::unique_ptr<Sale> sale = make_unique<Sale>(Sale(when, price, seller, buyer));
+
         CapitalHolder::atomicallyDoSaleSideEffects(price, seller.get(), buyer.get());
-        return Either<SalesResult, Sale>::right(
-                make_unique<Sale>(Sale(when, price, seller, buyer)));
+
+        eitherPtr = make_unique<Either<SalesResult, Sale>>(
+            
+            Either<SalesResult, Sale>::right(std::move(sale)));
     }
 
+    return singleElementListTransactionRecord<EitherPtr>(std::move(eitherPtr));
 }
 
 }

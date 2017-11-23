@@ -49,6 +49,17 @@ ListTransactionRecord<X> mergeListTransactionRecords(
     return ListTransactionRecord<X>(std::move(combinedList));
 }
 
+/**
+ * returns a ListTransactonRecord containing 1 element
+ */
+template <typename X>
+ListTransactionRecord<X> singleElementListTransactionRecord(
+        typename ListTransactionRecord<X>::ElementType&& e)
+{
+    auto l = emptyListTransactionRecord<X>();
+    l.records.emplace_back(e);
+    return ListTransactionRecord<X>(std::move(l.records));
+}
 
 /**
  * returns true if fst < snd
