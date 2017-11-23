@@ -75,6 +75,7 @@ class Consumer : public CapitalHolder
 {
 public:
     Consumer(Unique id, Money startingFunds): CapitalHolder(id, startingFunds) {}
+    virtual ~Consumer() {}
 
     virtual void deductMoney(Money);
 
@@ -99,13 +100,15 @@ protected:
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
 
 public:
+    virtual ~Distributor() {}
+
     void addMoney(Money);
 
     virtual bool canBecomeDistributor(Money buyIn) override { return false; }
 
     virtual bool isDistributor() override { return true; }
 
-    virtual unsigned int getDesiredRestockAmount();
+    virtual Inventory getDesiredRestockAmount();
 
     virtual bool hasInventory() { return getInventory() > 0; }
 

@@ -6,4 +6,6 @@ class Lockable
 {
 protected:
     std::mutex mutex;
+public:
+    virtual ~Lockable() {}
 };

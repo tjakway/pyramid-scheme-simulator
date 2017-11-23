@@ -156,6 +156,7 @@ public:
     const Unique id;
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
+    virtual ~Uniqueable() {}
 };
 
 }
