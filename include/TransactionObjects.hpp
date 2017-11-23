@@ -164,4 +164,10 @@ private:
     RestockHandler::RestockSet restockSet;
 };
 
+/**
+ * takes the output of RestockHandler and chains it into sales using
+ * SaleHandler
+ */
+class RestockSaleHandler;
+
 }
