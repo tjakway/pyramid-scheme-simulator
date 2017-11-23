@@ -113,12 +113,12 @@ public:
     
     std::string getLTypeName()
     {
-        return demangle(typeid(L).name().c_str());
+        return demangle(typeid(L).name());
     }
 
     std::string getRTypeName()
     {
-        return demangle(typeid(R).name().c_str());
+        return demangle(typeid(R).name());
     }
 
 private:
