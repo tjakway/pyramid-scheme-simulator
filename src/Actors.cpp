@@ -70,7 +70,48 @@ unsigned int Company::getInventory()
 /**
  * no-op because the company never buys anything
  */
-void Company::deductMoney(Money m)
+void Company::deductMoney(Money)
 { return; }
+
+StaticDistributor::StaticDistributor(Unique id, 
+        Money startingMoney, 
+        Inventory startingInventory)
+    : StaticDistributor(id, startingMoney, startingInventory, nullptr)
+{
+    setInventory(startingInventory);
+}
+
+StaticDistributor::StaticDistributor(Unique id, 
+        Money startingMoney, 
+        Inventory startingInventory,
+        ChanceContributor* _salesChance)
+    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
+      salesChance(_salesChance->clone())
+    {}
+
+
+
+StaticDistributor::StaticDistributor(Unique id, 
+        Money startingMoney, 
+        Inventory startingInventory,
+        const double _salesChance)
+    : StaticDistributor(id, startingMoney, startingInventory,
+        new StaticChanceContributor(_salesChance))
+{ }
+
+
+
+StaticDistributor::StaticDistributor(Unique id, 
+        Money startingMoney, 
+        Inventory startingInventory,
+        std::unique_ptr<ChanceContributor>& _salesChance)
+    : StaticDistributor(id, startingMoney, startingInventory,
+        _salesChance.get())
+{}
+
+ChanceContributor& StaticDistributor::getSalesChanceContribution()
+{
+    return *salesChance.get();
+}
 
 }

@@ -53,6 +53,10 @@ public:
         return inventory;
     }
 
+    virtual void setInventory(Inventory i) {
+        inventory = i;
+    }
+
     virtual void incrementInventory() {
         inventory++;
     }
@@ -98,6 +102,8 @@ protected:
     virtual bool canPurchase(Money cost, const CapitalHolder& from) override;
 
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
+
+    Distributor(Unique, Money, std::shared_ptr<Distributor>);
 
 public:
     virtual ~Distributor() {}

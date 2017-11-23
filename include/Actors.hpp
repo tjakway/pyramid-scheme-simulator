@@ -41,10 +41,26 @@ class Company : public Distributor
 protected:
     virtual bool canPurchase(Money, const CapitalHolder&) override;
 
-    static const unsigned int inventory;
+    static const Inventory inventory;
 public:
     virtual void deductMoney(Money) override;
     virtual unsigned int getInventory() override;
+};
+
+class StaticDistributor : public Distributor
+{
+    std::unique_ptr<ChanceContributor> salesChance;
+protected:
+    StaticDistributor(Unique, Money, Inventory);
+public:
+    StaticDistributor(Unique, Money, Inventory, const double salesChance);
+    StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
+    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&);
+
+    virtual ~StaticDistributor() {}
+
+    virtual ChanceContributor&
+        getSalesChanceContribution() override;
 };
 
 }

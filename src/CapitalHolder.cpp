@@ -83,15 +83,25 @@ void Consumer::deductMoney(Money howMuch)
     }
 }
 
+Distributor::Distributor(Unique id, Money m, std::shared_ptr<Distributor> _recruitedBy)
+    : Consumer(id, m),
+    recruitedBy(_recruitedBy)
+{ }
+
+
 bool Distributor::canPurchase(Money cost, const CapitalHolder& from)
 {
-    if(*this != from)
+    if(getMoney() < cost)
     {
         return false;
     }
-    else
+    //can't buy from yourself
+    else if(id == from.id)
     {
-        //XXX
+        return false;
+    }
+    else {
+        return true;
     }
 }
 
