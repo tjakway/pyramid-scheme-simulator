@@ -6,6 +6,7 @@
 #include "Tick.hpp"
 #include "CapitalHolder.hpp"
 #include "Util/Unique.hpp"
+#include "Util/Either.hpp"
 #include "TransactionRecords.hpp"
 #include "SalesResult.hpp"
 
@@ -119,14 +120,12 @@ public:
                 Money price, 
                 const std::shared_ptr<Distributor>, 
                 const std::shared_ptr<Consumer>);
+        Sale(const Sale&) = default;
 
         bool operator==(const Sale&);
-
-    protected:
-        Sale(const Sale&) = default;
     };
 
-    using ElemType = Sale;
+    using ElemType = Either<SalesResult, Sale>;
     using RecordType = ListTransactionRecord<ElemType>;
 
     SaleHandler(RestockHandler::RestockSet&&);

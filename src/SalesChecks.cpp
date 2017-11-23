@@ -1,5 +1,6 @@
 #include "TransactionObjects.hpp"
 #include "SalesResult.hpp"
+#include "Util/Either.hpp"
 
 #include <string>
 #include <exception>
@@ -249,6 +250,22 @@ SaleHandler::RecordType
             CapitalHolder& seller,
             CapitalHolder& buyer)
 {
+    SaleIsPossibleResult result = 
+        SaleHandler::processPotentialSale(price, rd, seller, buyer);
+
+    if(!result)
+    {
+        return Either<SalesResult, Sale>::left(make_unique<SalesResult>(result.result));
+    }
+    else
+    {
+        auto seller = result.seller;
+        auto buyer = result.buyer;
+
+        CapitalHolder::atomicallyDoSaleSideEffects(price, seller.get(), buyer.get());
+        return Either<SalesResult, Sale>::right(
+                make_unique<Sale>(Sale(when, price, seller, buyer)));
+    }
 
 }
 

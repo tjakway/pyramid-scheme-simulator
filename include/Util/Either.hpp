@@ -160,6 +160,17 @@ public:
         : Either(nullptr, std::move(rPtr), RIGHT)
     {}
 
+    static Either<L, R> left(std::unique_ptr<L>&& lPtr)
+    {
+        return Either<L, R>(std::move(lPtr), nullptr, LEFT);
+    }
+
+
+    static Either<L, R> right(std::unique_ptr<R>&& rPtr)
+    {
+        return Either<L, R>(nullptr, std::move(rPtr), RIGHT);
+    }
+
     //get*Ptr() methods return nullptr
     //on incorrect type
     std::unique_ptr<L> getLeftPtr()
