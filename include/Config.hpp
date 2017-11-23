@@ -69,6 +69,7 @@ public:
 
         class DistributorOptions
         {
+        public:
             //how much does a distributor get from converting someone else 
             //into a distributor?
             //bounded to 99% because it doesn't make sense 
