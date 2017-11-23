@@ -244,4 +244,15 @@ SalesResult SaleHandler::needsRestock(Distributor& seller)
     }
 }
 
+SaleHandler::RecordType 
+    SaleHandler::operator()(
+            SimulationTick when, 
+            Money price,
+            rd_ptr rd,
+            CapitalHolder& seller,
+            CapitalHolder& buyer)
+{
+
+}
+
 }

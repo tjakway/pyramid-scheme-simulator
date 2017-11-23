@@ -6,13 +6,14 @@
 
 #include "CapitalHolderClassDecls.hpp"
 #include "Util/Unique.hpp"
+#include "Util/Lockable.hpp"
 #include "Tick.hpp"
 #include "Config.hpp"
 #include "ChanceContributor.hpp"
 
 namespace pyramid_scheme_simulator {
 
-class CapitalHolder : public Uniqueable
+class CapitalHolder : public Uniqueable, protected Lockable
 {
 protected:
     Money money;
@@ -23,7 +24,7 @@ protected:
 
     void setMoney(Money);
 
-    virtual bool canPurchase(Money productCost, const CapitalHolder& from) {
+    virtual bool canPurchase(Money productCost, const CapitalHolder& /*from*/) {
         return money >= productCost;
     }
 
@@ -52,8 +53,21 @@ public:
         return inventory;
     }
 
+    virtual void incrementInventory() {
+        inventory++;
+    }
+
+    virtual void decrementInventory() {
+        inventory--;
+    }
+
     bool operator==(const CapitalHolder&);
     bool operator!=(const CapitalHolder&);
+
+    static void atomicallyDoSaleSideEffects(
+            Money price,
+            Distributor* seller,
+            Consumer* buyer);
 };
 
 //TODO

@@ -3,8 +3,34 @@
 #include <string>
 #include <sstream>
 #include <exception>
+#include <mutex>
 
 namespace pyramid_scheme_simulator {
+
+
+void CapitalHolder::atomicallyDoSaleSideEffects(
+        Money price,
+        Distributor* seller,
+        Consumer* buyer)
+{
+    //use std::lock to lock 2 mutexes at the same time
+    //see http://en.cppreference.com/w/cpp/thread/lock
+    std::lock(seller->mutex, buyer->mutex);
+    
+    //take ownership of the locks
+    std::lock_guard<std::mutex> lk1(seller->mutex, std::adopt_lock);
+    std::lock_guard<std::mutex> lk2(buyer->mutex,  std::adopt_lock);
+
+    //process the sale
+    //the calling function should have checked all preconditions before
+    //calling this
+    buyer->incrementInventory();
+    buyer->deductMoney(price);
+
+    seller->decrementInventory();
+    seller->addMoney(price);
+}
+
 
 void CapitalHolder::setMoney(Money m)
 {
