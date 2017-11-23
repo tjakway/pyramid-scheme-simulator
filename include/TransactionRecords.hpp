@@ -57,7 +57,7 @@ ListTransactionRecord<X> singleElementListTransactionRecord(
         typename ListTransactionRecord<X>::ElementType&& e)
 {
     auto l = emptyListTransactionRecord<X>();
-    l.records.emplace_back(e);
+    l.records.emplace_back(std::move(e));
     return ListTransactionRecord<X>(std::move(l.records));
 }
 

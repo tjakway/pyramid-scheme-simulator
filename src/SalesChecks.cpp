@@ -254,13 +254,12 @@ SaleHandler::RecordType
     SaleIsPossibleResult result = 
         SaleHandler::processPotentialSale(price, rd, seller, buyer);
 
-    using EitherPtr = std::unique_ptr<SaleHandler::ElemType>;
-    EitherPtr eitherPtr;
     if(!result)
     {
-        eitherPtr = make_unique<Either<SalesResult, Sale>>(
-                Either<SalesResult, Sale>::left(
-                make_unique<SalesResult>(result.result)));
+        return singleElementListTransactionRecord<SaleHandler::ElemType>(
+                make_unique<Either<SalesResult, Sale>>(
+                        Either<SalesResult, Sale>::left(
+                make_unique<SalesResult>(result.result))));
     }
     else
     {
@@ -271,12 +270,10 @@ SaleHandler::RecordType
 
         CapitalHolder::atomicallyDoSaleSideEffects(price, seller.get(), buyer.get());
 
-        eitherPtr = make_unique<Either<SalesResult, Sale>>(
-            
-            Either<SalesResult, Sale>::right(std::move(sale)));
+        return singleElementListTransactionRecord<SaleHandler::ElemType>(
+            make_unique<Either<SalesResult, Sale>>(
+                    Either<SalesResult, Sale>::right(std::move(sale))));
     }
-
-    return singleElementListTransactionRecord<EitherPtr>(std::move(eitherPtr));
 }
 
 }
