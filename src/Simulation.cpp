@@ -2,7 +2,7 @@
 
 #include "Tick.hpp"
 #include "Config.hpp"
-#include "Graph.hpp"
+#include "PopulationGraph.hpp"
 #include "Simulation.hpp"
 
 namespace pyramid_scheme_simulator {

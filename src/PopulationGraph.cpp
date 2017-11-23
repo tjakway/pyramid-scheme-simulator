@@ -1,6 +1,6 @@
 #include "Config.hpp"
 #include "Util/Unique.hpp"
-#include "Graph.hpp"
+#include "PopulationGraph.hpp"
 #include "Util/Util.hpp"
 
 #include <unordered_map>

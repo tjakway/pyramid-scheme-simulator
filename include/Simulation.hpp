@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "Config.hpp"
-#include "Graph.hpp"
+#include "PopulationGraph.hpp"
 
 namespace pyramid_scheme_simulator {
 

@@ -3,7 +3,7 @@
 #include "TransactionObjects.hpp"
 #include "TransactionRecords.hpp"
 #include "CapitalHolder.hpp"
-#include "Graph.hpp"
+#include "PopulationGraph.hpp"
 #include "Config.hpp"
 
 int main(int argc, char** argv)
