@@ -102,6 +102,9 @@ target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/incl
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
 
 all_targets_compile_definitions("-DTESTING")
+#change to -DEITHER_HPP_DEMANGLE_NAMES to enable
+all_targets_compile_definitions("-DNO_EITHER_HPP_DEMANGLE_NAMES")
+
 
 if((${CMAKE_BUILD_TYPE} STREQUAL "DEBUG") OR (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
     message("Building in debug mode without warnings.")

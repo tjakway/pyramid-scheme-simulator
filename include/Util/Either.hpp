@@ -4,6 +4,11 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
+#include <utility>
+#include <typeinfo>
+#include <cstdlib>
+#include <cstring>
+#include <cctype>
 
 #ifndef EITHER_HPP_DEMANGLE_NAMES
 
@@ -15,10 +20,11 @@
 #endif
 
 namespace {
-#ifdef EITHER_HPP_DEMANGLE_NAMES
+#if defined EITHER_HPP_DEMANGLE_NAMES && !(defined NO_EITHER_HPP_DEMANGLE_NAMES)
+//implement name de-mangling
+
 //see https://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.3/a01696.html
 #include <cxxabi.h>
-#include <cstdlib>
 
 class DemanglingException : public std::runtime_error
 {
@@ -33,7 +39,7 @@ std::string demangle(const char* mangledName)
     std::size_t length;
     int status;
 
-    char* ret = abi::__cxa_demangle(mangledName, NULL, &length, &status);
+    char* ret = __cxxabiv1::__cxa_demangle(mangledName, NULL, &length, &status);
 
     if(status == 0)
     {
@@ -140,18 +146,18 @@ private:
         throw EitherException(os.str());
     }
 public:
-    Either(std::unique_ptr<L> lPtr, 
-            std::unique_ptr<R> rPtr, 
+    Either(std::unique_ptr<L>&& lPtr, 
+            std::unique_ptr<R>&& rPtr, 
             Type type)
-        : lPtr(lPtr), rPtr(rPtr), type(type)
+        : lPtr(std::move(lPtr)), rPtr(std::move(rPtr)), type(type)
     {}
 
-    Either(std::unique_ptr<L> lPtr)
-        : Either(lPtr, nullptr, LEFT)
+    Either(std::unique_ptr<L>&& lPtr)
+        : Either(std::move(lPtr), nullptr, LEFT)
     {}
 
-    Either(std::unique_ptr<R> rPtr)
-        : Either(nullptr, rPtr, RIGHT)
+    Either(std::unique_ptr<R>&& rPtr)
+        : Either(nullptr, std::move(rPtr), RIGHT)
     {}
 
     //get*Ptr() methods return nullptr
