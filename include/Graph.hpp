@@ -72,6 +72,9 @@ class PopulationGraph
 
     BGLPopulationGraph buildGraph(rd_ptr, Config&);
 
+protected:
+    PopulationGraph(const BGLPopulationGraph&);
+
 public:
     template <class T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
     {

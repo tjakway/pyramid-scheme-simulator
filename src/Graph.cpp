@@ -16,6 +16,7 @@
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
+#include <boost/graph/copy.hpp>
 
 namespace {
     using namespace pyramid_scheme_simulator;
@@ -202,6 +203,11 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
 PopulationGraph::PopulationGraph(Config& config)
 {
     graph = buildGraph(config.randomGen, config);
+}
+
+PopulationGraph::PopulationGraph(const BGLPopulationGraph& otherGraph)
+{
+    boost::copy_graph(otherGraph, graph);
 }
 
 }
