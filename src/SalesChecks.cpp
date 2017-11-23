@@ -159,7 +159,7 @@ SaleHandler::SaleIsPossibleResult
         }
         else
         {
-            return chanceProc;
+            return SaleHandler::SaleIsPossibleResult::bad(chanceProc);
         }
     }
     else
