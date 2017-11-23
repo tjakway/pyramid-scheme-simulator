@@ -22,6 +22,7 @@ namespace {
 
 class DemanglingException : public std::runtime_error
 {
+public:
     DemanglingException(const std::string& what_arg)
         : std::runtime_error(what_arg)
     {}
