@@ -137,7 +137,6 @@ const std::shared_ptr<Consumer>
 //TODO: change return type
 SaleHandler::SaleIsPossibleResult 
     SaleHandler::processPotentialSale(
-            SimulationTick when, 
             Money price,
             rd_ptr rd,
             CapitalHolder& seller,
@@ -163,7 +162,7 @@ SaleHandler::SaleIsPossibleResult
     }
     else
     {
-        return saleIsPossibleResult.result;
+        return saleIsPossibleResult;
     }
 }
 

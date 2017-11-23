@@ -154,8 +154,7 @@ private:
      */
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
-    SalesResult processPotentialSale(
-            SimulationTick, 
+    SaleIsPossibleResult processPotentialSale(
             Money,
             rd_ptr,
             CapitalHolder&,
