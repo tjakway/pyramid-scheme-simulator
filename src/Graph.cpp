@@ -13,6 +13,7 @@
 #include <memory>
 #include <iterator>
 #include <exception>
+#include <tuple>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
@@ -208,6 +209,50 @@ PopulationGraph::PopulationGraph(Config& config)
 PopulationGraph::PopulationGraph(const BGLPopulationGraph& otherGraph)
 {
     boost::copy_graph(otherGraph, graph);
+}
+
+
+PopulationGraph::BGLPopulationGraph PopulationGraph::graphFromTuples(
+        std::vector<std::pair<Pop, Pop>> tuples)
+{
+    BGLPopulationGraph g;
+
+    std::unordered_map<Unique, BGLPopulationGraph::vertex_descriptor> popDescriptors;
+
+
+    //either insert a vertex or return the existing vertex's vertex_descriptor
+    const auto insertIfNeeded = [&g, &popDescriptors](Pop& p) {
+        const Unique popId = p->id;
+
+        //check if we've already inserted this vertex
+        //see http://www.cplusplus.com/reference/unordered_map/unordered_map/count/
+
+        if(popDescriptors.count(popId) == 0) {
+            auto vd = boost::add_vertex(p, g);
+            //insert the descriptor into the map
+            popDescriptors.emplace(popId, vd);
+
+            return vd;
+        }
+        else {
+            return popDescriptors.at(popId);
+        }
+    };
+
+    for(auto t : tuples)
+    {
+        auto left = t.first;
+        auto right = t.second;
+
+        //get or create the vertex descriptors corresponding to these Pops
+        auto leftVd = insertIfNeeded(left);
+        auto rightVd = insertIfNeeded(right);
+
+        //use them to create an edge in the graph
+        boost::add_edge(leftVd, rightVd, g);
+    }
+
+    return g;
 }
 
 }

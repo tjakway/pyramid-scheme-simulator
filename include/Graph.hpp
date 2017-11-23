@@ -75,6 +75,9 @@ class PopulationGraph
 protected:
     PopulationGraph(const BGLPopulationGraph&);
 
+    static BGLPopulationGraph graphFromTuples(
+            std::vector<std::pair<Pop, Pop>>);
+
 public:
     template <class T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
     {
