@@ -57,6 +57,8 @@ const std::set<RestockHandler::ElemType>
         //copy it
         uniques.emplace<Unique>(std::move(*x));
     }
+
+    return uniques;
 }
 
 
