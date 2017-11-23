@@ -135,12 +135,13 @@ const std::shared_ptr<Consumer>
 }
 
 //TODO: change return type
-SalesResult SaleHandler::processPotentialSale(
-        SimulationTick when, 
-        Money price,
-        rd_ptr rd,
-        CapitalHolder& seller,
-        CapitalHolder& buyer)
+SaleHandler::SaleIsPossibleResult 
+    SaleHandler::processPotentialSale(
+            SimulationTick when, 
+            Money price,
+            rd_ptr rd,
+            CapitalHolder& seller,
+            CapitalHolder& buyer)
 {
     auto saleIsPossibleResult = saleIsPossible(seller, buyer);
     if(saleIsPossibleResult)
@@ -193,8 +194,9 @@ SaleHandler::SaleIsPossibleResult SaleHandler::saleIsPossible(
     }
     else {
         //check the seller
-        if(needsRestock(*seller)) {
-            return needsRestock(*seller);
+        const auto needsRestockResult = needsRestock(*seller);
+        if(needsRestockResult) {
+            return SaleHandler::SaleIsPossibleResult::bad(needsRestockResult);
         }
         else if(!seller->hasInventory())
         {
@@ -231,7 +233,7 @@ SaleHandler::SaleIsPossibleResult SaleHandler::saleIsPossible(
 }
 
 
-SalesResult needsRestock(Distributor& seller)
+SalesResult SaleHandler::needsRestock(Distributor& seller)
 {
     //check if the set has this distributor's id
     if(restockSet.find(seller.id) == restockSet.end()) {

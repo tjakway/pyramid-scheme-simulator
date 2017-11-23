@@ -133,6 +133,7 @@ public:
 
     virtual RecordType operator()(SimulationTick,
             Money, 
+            rd_ptr,
             CapitalHolder&, 
             CapitalHolder&);
 
@@ -153,6 +154,13 @@ private:
      */
     SalesResult sampleSalesChance(rd_ptr, CapitalHolder& seller, CapitalHolder& buyer);
     SaleIsPossibleResult saleIsPossible(CapitalHolder& seller, CapitalHolder& buyer);
+    SalesResult processPotentialSale(
+            SimulationTick, 
+            Money,
+            rd_ptr,
+            CapitalHolder&,
+            CapitalHolder&);
+
     SalesResult needsRestock(Distributor&);
 
     RestockHandler::RestockSet restockSet;
