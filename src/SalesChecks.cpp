@@ -134,20 +134,6 @@ const std::shared_ptr<Consumer>
     }
 }
 
-void SaleHandler::processPotentialRestocking(SimulationTick when,
-        Money price,
-        CapitalHolder& holder)
-{
-    if(holder.isDistributor())
-    {
-        Distributor& d = dynamic_cast<Distributor&>(holder);
-        const auto desiredRestock = d.getDesiredRestockAmount();
-
-        //TODO: process the sale but without sampling random chance
-        //since the distributor has to restock
-    }
-}
-
 //TODO: change return type
 SalesResult SaleHandler::processPotentialSale(
         SimulationTick when, 
@@ -206,27 +192,41 @@ SaleHandler::SaleIsPossibleResult SaleHandler::saleIsPossible(
                 SalesResult(SalesResult::Reason::SELLER_NOT_DISTRIBUTOR));
     }
     else {
-        Consumer* buyer = dynamic_cast<Consumer*> (&_buyer);
-        if(!buyer) {
-            return SaleHandler::SaleIsPossibleResult::bad(
-                    SalesResult(SalesResult::Reason::BUYER_NOT_CONSUMER));
+        //check the seller
+        if(needsRestock(*seller)) {
+            return needsRestock(*seller);
         }
-        //make sure they're not also a distributor
-        else if(buyer->isDistributor()){
+        else if(!seller->hasInventory())
+        {
             return SaleHandler::SaleIsPossibleResult::bad(
-                    SalesResult(SalesResult::Reason::BOTH_DISTRIBUTORS));
+                    SalesResult(SalesResult::Reason::NO_INVENTORY));
         }
-        else if(!seller->hasInventory()){
-            return SaleHandler::SaleIsPossibleResult::bad(
-                    SalesResult::Reason::NO_INVENTORY);
-        }
+        //finally check the buyer
         else {
-            return SaleHandler::SaleIsPossibleResult::good(
-                    SalesResult(SalesResult::Reason::SUCCESS),
-                    std::shared_ptr<Distributor>(seller),
-                    std::shared_ptr<Consumer>(buyer)
-                    );
+
+            Consumer* buyer = dynamic_cast<Consumer*> (&_buyer);
+            if(!buyer) {
+                return SaleHandler::SaleIsPossibleResult::bad(
+                        SalesResult(SalesResult::Reason::BUYER_NOT_CONSUMER));
+            }
+            //make sure they're not also a distributor
+            else if(buyer->isDistributor()){
+                return SaleHandler::SaleIsPossibleResult::bad(
+                        SalesResult(SalesResult::Reason::BOTH_DISTRIBUTORS));
+            }
+            else if(!seller->hasInventory()){
+                return SaleHandler::SaleIsPossibleResult::bad(
+                        SalesResult::Reason::NO_INVENTORY);
+            }
+            else {
+                return SaleHandler::SaleIsPossibleResult::good(
+                        SalesResult(SalesResult::Reason::SUCCESS),
+                        std::shared_ptr<Distributor>(seller),
+                        std::shared_ptr<Consumer>(buyer)
+                        );
+            }
         }
+
     }
 }
 
