@@ -150,12 +150,11 @@ SaleHandler::SaleIsPossibleResult
         if(chanceProc)
         {
             
-            Sale s(when, price, 
+            return SaleHandler::SaleIsPossibleResult::good(
+                    SalesResult::Reason::SUCCESS,
                     saleIsPossibleResult.seller,
-                    saleIsPossibleResult.buyer);
-            //TODO: change to return a TransactionRecord
-            sales.insert(s);
-            return saleIsPossibleResult.result;
+                    saleIsPossibleResult.buyer
+                    );
         }
         else
         {
