@@ -32,7 +32,7 @@ public:
 template <typename X>
 ListTransactionRecord<X> emptyListTransactionRecord() 
 {
-    ListTransactionRecord<X>::ContainerType emptyContainer;
+    typename ListTransactionRecord<X>::ContainerType emptyContainer;
     return ListTransactionRecord<X>(std::move(emptyContainer));
 }
 
