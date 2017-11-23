@@ -160,6 +160,11 @@ public:
         : Either(nullptr, std::move(rPtr), RIGHT)
     {}
 
+
+    Either(Either&& other)
+        : Either(std::move(other.lPtr), std::move(other.rPtr), other.type)
+    {}
+
     static Either<L, R> left(std::unique_ptr<L>&& lPtr)
     {
         return Either<L, R>(std::move(lPtr), nullptr, LEFT);
