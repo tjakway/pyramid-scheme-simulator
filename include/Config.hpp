@@ -20,8 +20,6 @@ namespace pyramid_scheme_simulator {
  * see doc for explanation
  *
  * TODO: CTOR with preamble
- * TODO: for C++ random number distributions, see  C++ concepts: RandomNumberDistribution
- *  [numeric/random/*]
  */
 class Config
 {
