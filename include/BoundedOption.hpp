@@ -52,7 +52,7 @@ private:
 public:
     void setOption(T opt) 
     {
-        option = std::unique_ptr<T>(opt);
+        option = std::unique_ptr<T>(new T(opt));
         checkOption();
     }
 

@@ -110,9 +110,9 @@ PopulationGraph::BGLPopulationGraph
     //check if link chance procs
     auto testEdge = [&rd, &config]() -> bool { 
         return Util::sampleFrom(rd, 
-            config.graphGenerationOptions.linkChance.getOption()); };
+            config.graphGenerationOptions->linkChance.getOption()); };
 
-    const auto graphSize = config.graphGenerationOptions.graphSize.getOption();
+    const auto graphSize = config.graphGenerationOptions->graphSize.getOption();
 
     std::unordered_set<UndirectedEdge> edges;
     std::vector<Unique> vertices(graphSize);
@@ -148,7 +148,7 @@ PopulationGraph::BGLPopulationGraph
         popDescriptors.emplace(p->id, v);
     };
 
-    auto startingFunds = config.simulationOptions.startingFunds;
+    auto startingFunds = config.simulationOptions->startingFunds;
 
     //add vertices to the boost graph and save the descriptors
     for(auto i : vertices)
