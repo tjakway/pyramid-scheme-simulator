@@ -179,7 +179,7 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     //see http://www.boost.org/doc/libs/1_53_0/libs/graph/example/connected_components.cpp
     //and http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/connected_components.html
     std::vector<int> components(boost::num_vertices(g));
-    int numSubgraphs = boost::connected_components(g, &components[0]);
+    auto numSubgraphs = boost::connected_components(g, &components[0]);
     
     //initialize the vector of subgraphs and fill it with enough empty sets
     std::vector<std::unordered_set<Pop>> subgraphs(numSubgraphs);
