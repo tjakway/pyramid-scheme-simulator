@@ -27,7 +27,7 @@ flags = [
 '-I', 'include/',
 '-I', 'lib/crossguid', #stop warning about Uniques
 '-I', 'lib/googletest/googletest/include',
-'-I', 'test/mocks',
+'-I', 'test',
 '-isystem',
 '/usr/include',
 '-isystem',
