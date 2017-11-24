@@ -23,8 +23,8 @@ namespace pyramid_scheme_simulator {
  */
 class Config
 {
-//private internal variables
-    const int randomSeed;
+protected:
+    const rd_seed_type randomSeed;
 
 //public config values
 public:
@@ -165,6 +165,13 @@ public:
         std::shared_ptr<Consumer> mkConsumer(rd_ptr, Unique);
     };
     std::unique_ptr<Config::Defaults> defaults = make_unique<Config::Defaults>(this);
+
+
+    Config(const rd_seed_type seed, const SimulationOptions,
+            const GraphGenerationOptions);
+
+    Config(const SimulationOptions,
+            const GraphGenerationOptions);
 };
 
 

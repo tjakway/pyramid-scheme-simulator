@@ -9,6 +9,7 @@ namespace pyramid_scheme_simulator {
  */
 using rd_ptr  = std::shared_ptr<std::mt19937_64>;
 using rd_type = decltype(std::mt19937_64()());
+using rd_seed_type = unsigned long;
 
 using Money = unsigned int;
 using Inventory = unsigned int;
