@@ -45,6 +45,8 @@ protected:
 public:
     virtual void deductMoney(Money) override;
     virtual unsigned int getInventory() override;
+
+    virtual ~Company() {}
 };
 
 class StaticDistributor : public Distributor
@@ -52,6 +54,8 @@ class StaticDistributor : public Distributor
     std::unique_ptr<ChanceContributor> salesChance;
 protected:
     StaticDistributor(Unique, Money, Inventory);
+
+    static const std::unique_ptr<ChanceContributor> conversionChance;
 public:
     StaticDistributor(Unique, Money, Inventory, const double salesChance);
     StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
@@ -61,6 +65,9 @@ public:
 
     virtual ChanceContributor&
         getSalesChanceContribution() override;
+
+    virtual ChanceContributor&
+        getDistributorConversionChanceContribution() override;
 };
 
 }

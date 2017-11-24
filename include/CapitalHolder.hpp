@@ -38,10 +38,10 @@ public:
     virtual ~CapitalHolder() {}
 
     virtual ChanceContributor&
-        getSalesChanceContribution();
+        getSalesChanceContribution() = 0;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution();
+        getDistributorConversionChanceContribution() = 0;
 
     virtual bool isDistributor() { return false; }
 
@@ -114,11 +114,11 @@ public:
 
     virtual bool isDistributor() override { return true; }
 
-    virtual Inventory getDesiredRestockAmount();
+    virtual Inventory getDesiredRestockAmount() = 0;
 
     virtual bool hasInventory() { return getInventory() > 0; }
 
-    virtual Inventory getRestockThreshold();
+    virtual Inventory getRestockThreshold() = 0;
     virtual bool needsRestock() { return getInventory() > getRestockThreshold(); }
 };
 

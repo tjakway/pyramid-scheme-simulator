@@ -137,5 +137,5 @@ else()
     all_targets_compile_definitions("-DNDEBUG")
 endif()
 
-target_link_libraries(${TEST_TARGET} gtest gtest_main)
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
+target_link_libraries(${TEST_TARGET} gtest gtest_main)

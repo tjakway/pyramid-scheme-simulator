@@ -33,6 +33,14 @@ public:
     EagerDistributor(Unique u, Money m, Inventory i)
         : StaticDistributor(u, m, i, 1.0)
     {}
+
+    virtual Inventory getDesiredRestockAmount() override {
+        return 5;
+    }
+
+    virtual Inventory getRestockThreshold() override {
+        return 1;
+    }
 };
 
 class EagerTestDistributor : public EagerDistributor

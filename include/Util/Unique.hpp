@@ -28,13 +28,6 @@ namespace std {
     public:
         size_t operator()(pyramid_scheme_simulator::Unique const &) const;
     };
-
-    template <>
-    class hash<const pyramid_scheme_simulator::Unique>
-    {
-    public:
-        size_t operator()(const pyramid_scheme_simulator::Unique) const;
-    };
 }
 
 namespace pyramid_scheme_simulator {
@@ -75,6 +68,7 @@ public:
         guids.insert(guid);
     }
 
+
     template <typename InputIt>
     UniqueSet(InputIt begin, InputIt end)
     : UniqueSet()
@@ -82,6 +76,7 @@ public:
         guids.insert(begin, end);
     }
 
+    virtual ~UniqueSet() {}
 
     /** the comparison functions will work equally well when the 
      * set only has one element*/
@@ -121,6 +116,8 @@ public:
 
     Unique(): UniqueSet()
     {}
+
+    virtual ~Unique() {}
 
     std::string str() const {
         return id.str();
@@ -164,12 +161,6 @@ public:
 //instantiate template specializations for Unique
 namespace std {
 size_t hash<pyramid_scheme_simulator::Unique>::operator()(pyramid_scheme_simulator::Unique const &  u) const
-{
-    hash<string> hasher;
-    return hasher(u.str());
-}
-
-size_t hash<const pyramid_scheme_simulator::Unique>::operator()(const pyramid_scheme_simulator::Unique u) const
 {
     hash<string> hasher;
     return hasher(u.str());

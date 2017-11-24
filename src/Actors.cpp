@@ -114,4 +114,13 @@ ChanceContributor& StaticDistributor::getSalesChanceContribution()
     return *salesChance.get();
 }
 
+const std::unique_ptr<ChanceContributor> StaticDistributor::conversionChance =
+    make_unique<StaticChanceContributor>(0.0);
+
+ChanceContributor&
+        StaticDistributor::getDistributorConversionChanceContribution()
+{
+    return *StaticDistributor::conversionChance;
+}
+
 }

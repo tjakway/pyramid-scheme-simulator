@@ -79,6 +79,10 @@ public:
             //how much inventory do you need to buy from the company to become
             //a distributor?
             const unsigned int buyIn;
+
+            //used by Consumer::becomeDistributor
+            const std::function<std::unique_ptr<Distributor>(Consumer&, Distributor*)> 
+                newDistributorFunction;
         } distributorOptions;
     } simulationOptions;
     
