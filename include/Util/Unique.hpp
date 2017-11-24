@@ -158,12 +158,3 @@ public:
 
 }
 
-//instantiate template specializations for Unique
-namespace std {
-size_t hash<pyramid_scheme_simulator::Unique>::operator()(pyramid_scheme_simulator::Unique const &  u) const
-{
-    hash<string> hasher;
-    return hasher(u.str());
-}
-
-}
