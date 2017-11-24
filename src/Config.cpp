@@ -4,6 +4,7 @@
 #include <chrono>
 #include <string>
 
+#include "Util/Util.hpp"
 #include "Types.hpp"
 
 namespace {
@@ -62,5 +63,23 @@ Config::SimulationOptions::SimulationOptions(
         wholesaleProductCost(_wholesaleProductCost),
         startingFunds(_startingFunds)
       {}
+
+Config::GraphGenerationOptions::GraphGenerationOptions(
+        const bool _allowUnconnectedSubgraphs,
+        const unsigned long _graphSize,
+        const double _linkChance,
+        const unsigned long _maxEdgesPerVertex,
+        const Config::ChanceDistribution _salesSkillDistribution,
+        const Config::ChanceDistribution _conversionChanceDistribution,
+        const bool _onlyInitialOnboarding)
+    : allowUnconnectedSubgraphs(_allowUnconnectedSubgraphs),
+    linkChance(make_unique<PercentOption>(_linkChance)),
+    salesSkillDistribution(_salesSkillDistribution),
+    conversionChanceDistribution(_conversionChanceDistribution),
+    onlyInitialOnboarding(_onlyInitialOnboarding)
+{
+    graphSize.setOption(_graphSize);
+    maxEdgesPerVertex.setOption(_maxEdgesPerVertex);
+}
 
 }

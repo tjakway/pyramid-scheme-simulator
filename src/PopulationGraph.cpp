@@ -110,7 +110,7 @@ PopulationGraph::BGLPopulationGraph
     //check if link chance procs
     auto testEdge = [&rd, &config]() -> bool { 
         return Util::sampleFrom(rd, 
-            config.graphGenerationOptions->linkChance.getOption()); };
+            config.graphGenerationOptions->linkChance->getOption()); };
 
     const auto graphSize = config.graphGenerationOptions->graphSize.getOption();
 

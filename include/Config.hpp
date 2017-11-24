@@ -129,7 +129,7 @@ public:
         /**
          * how likely are people to have connections to other people?
          */
-        PercentOption linkChance;
+        std::unique_ptr<PercentOption> linkChance;
 
 
         //corresponding to the maximum number of people someone
@@ -153,6 +153,14 @@ public:
          * during graph generation
          */
         const bool onlyInitialOnboarding;
+
+        GraphGenerationOptions(const bool,
+                const unsigned long,
+                const double,
+                const unsigned long,
+                const ChanceDistribution,
+                const ChanceDistribution,
+                const bool);
     };
     std::unique_ptr<GraphGenerationOptions> graphGenerationOptions;
 
