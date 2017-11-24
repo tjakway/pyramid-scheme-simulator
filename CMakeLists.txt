@@ -101,8 +101,8 @@ add_executable(${TEST_TARGET} ${TESTS_SRC})
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
 
-#add test/ to the test target's list of include directories
-target_include_directories(${TEST_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/test)
+#add test/include to the test target's list of include directories
+target_include_directories(${TEST_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/test/include)
 
 all_targets_compile_definitions("-DTESTING")
 #change to -DEITHER_HPP_DEMANGLE_NAMES to enable
