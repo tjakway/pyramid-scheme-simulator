@@ -39,12 +39,6 @@ public:
         const SimulationTick maxTicks;
 
         /**
-         * chance of a Consumer spontaneously becoming a Distributor
-         * (i.e. being recruited directly by the company)
-         */
-        const double onboardingChance;
-
-        /**
          * TODO: if needed can replace these with a function
          *
          * unsigned int productCost(CapitalHolder&);
@@ -81,10 +75,21 @@ public:
             const unsigned int buyIn;
 
             //used by Consumer::becomeDistributor
-            const std::function<std::unique_ptr<Distributor>(Consumer&, Distributor*)> 
-                newDistributorFunction;
-        } distributorOptions;
-    } simulationOptions;
+            using NewDistributorFunction = 
+                std::function<std::unique_ptr<Distributor>(Consumer&, Distributor*)>;
+            const NewDistributorFunction newDistributorFunction;
+
+            DistributorOptions(double, const unsigned int, NewDistributorFunction);
+        };
+        std::unique_ptr<DistributorOptions> distributionOptions;
+
+        SimulationOptions(std::unique_ptr<DistributorOptions>&&,
+                const SimulationTick,
+                const unsigned int, const unsigned int,
+                const std::function<Money()>);
+
+    };
+    std::unique_ptr<SimulationOptions> simulationOptions;
     
 
     /**
@@ -148,7 +153,8 @@ public:
          * during graph generation
          */
         const bool onlyInitialOnboarding;
-    } graphGenerationOptions;
+    };
+    std::unique_ptr<GraphGenerationOptions> graphGenerationOptions;
 
 
     class Defaults
@@ -167,11 +173,12 @@ public:
     std::unique_ptr<Config::Defaults> defaults = make_unique<Config::Defaults>(this);
 
 
-    Config(const rd_seed_type seed, const SimulationOptions,
-            const GraphGenerationOptions);
+    Config(const rd_seed_type seed,
+            std::unique_ptr<SimulationOptions>&&,
+            std::unique_ptr<GraphGenerationOptions>&&);
 
-    Config(const SimulationOptions,
-            const GraphGenerationOptions);
+    Config(std::unique_ptr<SimulationOptions>&&,
+            std::unique_ptr<GraphGenerationOptions>&&);
 };
 
 

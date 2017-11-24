@@ -49,13 +49,14 @@ private:
     std::unique_ptr<T> option;
     std::pair<T, T> range;
 
-protected:
+public:
     void setOption(T opt) 
     {
         option = std::unique_ptr<T>(opt);
         checkOption();
     }
 
+protected:
     std::pair<T, T> getRange() { return range; }
 
     void setRange(std::pair<T, T> r) { range = r; }

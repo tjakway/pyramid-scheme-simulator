@@ -22,21 +22,46 @@ namespace {
 
 namespace pyramid_scheme_simulator {
 
-Config::Config(const rd_seed_type seed, const Config::SimulationOptions simOptions,
-    const Config::GraphGenerationOptions graphGenOptions)
-
-    : randomSeed(seed), simulationOptions(simOptions),
+    Config(const rd_seed_type seed,
+            
+            ;
+Config::Config(const rd_seed_type seed, 
+    std::unique_ptr<SimulationOptions>&& simOptions,
+    std::unique_ptr<GraphGenerationOptions>&& graphGenOptions)
+    : randomSeed(seed), 
+        simulationOptions(simOptions),
         graphGenerationOptions(graphGenOptions),
         //initialize the random generator from the passed seed
         randomGen(rdFromSeed(randomSeed))
 { }
 
 //if no seed is given use current time
-Config::Config(const Config::SimulationOptions simOptions,
-    const Config::GraphGenerationOptions graphGenOptions)
-    : Config(getCurrentTimeMillis(), simOptions, graphGenOptions)
+Config(std::unique_ptr<SimulationOptions>&& simOptions,
+        std::unique_ptr<GraphGenerationOptions>&& graphGenOptions)
+: Config(getCurrentTimeMillis(), simOptions, graphGenOptions)
 { }
 
 
+Config::SimulationOptions::DistributorOptions::DistributorOptions(
+        double pct, const unsigned int _buyIn, 
+        Config::SimulationOptions::DistributorOptions::NewDistributorFunction f)
+    : buyIn(_buyIn), newDistributorFunction(f)
+{
+    downstreamPercent.setOption(pct);
+}
+
+
+Config::SimulationOptions::SimulationOptions(
+        std::unique_ptr<DistributorOptions>&& ops,
+        const SimulationTick _maxTicks,
+        const unsigned int _standardProductCost,
+        const unsigned int _wholesaleProductCost,
+        const std::function<Money()> _startingFunds)
+    : distributionOptions(ops),
+        maxTicks(_maxTicks),
+        standardProductCost(_standardProductCost),
+        wholesaleProductCost(_wholesaleProductCost),
+        startingFunds(_startingFunds)
+      {}
 
 }
