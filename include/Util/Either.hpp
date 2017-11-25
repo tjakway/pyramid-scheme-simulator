@@ -117,7 +117,23 @@ public:
             : std::runtime_error(what_arg)
         {}
     };
+
+    class EitherTypeException : public EitherException
+    {
+    public:
+        EitherTypeException(const std::string& what_arg)
+            : EitherException(what_arg)
+        {}
+    };
     
+    class EitherNullException : public EitherException
+    {
+    public:
+        EitherNullException(const std::string& what_arg)
+            : EitherException(what_arg)
+        {}
+    };
+
     std::string getLTypeName()
     {
         return demangle(typeid(L).name());
@@ -134,16 +150,46 @@ private:
 
     Type type;
 
+    bool underlyingValueIsNull()
+    {
+        if(type == LEFT && lPtr == nullptr)
+        {
+            return true;
+        }
+        else if(type == RIGHT && rPtr == nullptr)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-    void throwException(Type triedType)
+    std::string getExceptionHeader()
+    {
+        return "Exception in Either[" << 
+            getLTypeName() << ", "
+            << getRTypeName() << "]: ";
+    }
+
+    void throwTypeException(Type triedType)
     {
         std::ostringstream os;
-        os << "Exception in Either[" << getLTypeName() << ", "
-            << getRTypeName() << "]: "
+        os << getExceptionHeader()
             << "Tried to access type of " << typeToString(triedType)
             << " but this Either object is a " << typeToString(type)
             << std::endl;
-        throw EitherException(os.str());
+        throw EitherTypeException(os.str());
+    }
+
+    void throwValueException()
+    {
+        std::ostringstream os;
+        os << getExceptionHeader()
+            << "Have type " << typeToString(type)
+            << " but the underlying value is null"
+            << std::endl;
     }
 public:
     Either(std::unique_ptr<L>&& lPtr, 
@@ -178,7 +224,7 @@ public:
 
     //get*Ptr() methods return nullptr
     //on incorrect type
-    std::unique_ptr<L> getLeftPtr()
+    std::unique_ptr<L> getLeftPtr() const
     {
         if(type == RIGHT)
         {
@@ -190,7 +236,7 @@ public:
         }
     }
 
-    std::unique_ptr<R> getRightPtr()
+    std::unique_ptr<R> getRightPtr() const
     {
         if(type == LEFT)
         {
@@ -211,7 +257,14 @@ public:
         }
         else
         {
-            return *lPtr;
+            if(underlyingValueIsNull())
+            {
+                throwValueException();
+            }
+            else
+            {
+                return *lPtr;
+            }
         }
     }
 
@@ -223,23 +276,53 @@ public:
         }
         else
         {
-            return *rPtr;
+            if(underlyingValueIsNull())
+            {
+                throwValueException();
+            }
+            else
+            {
+                return *rPtr;
+            }
         }
     }
 
 
-    Type getType()
+    Type getType() const
     {
         return type;
     }
 
-    bool isLeft()
+    bool isLeft() const
     {
         return type == LEFT;
     }
 
-    bool isRight()
+    bool isRight() const
     {
         return type == RIGHT;
+    }
+
+    bool operator==(const Either<L, R>& other) const
+    {
+        //compare types
+        if(type != other.type)
+        {
+            return false;
+        }
+        //if the types match compare the underlying objects
+        else if(isLeft())
+        {
+            return getLeft() == other.getLeft();
+        }
+        else if(isRight())
+        {
+            return getRight() == other.getRight();
+        }
+        //sanity check
+        else
+        {
+            throw "Unrecognized type.";
+        }
     }
 };
