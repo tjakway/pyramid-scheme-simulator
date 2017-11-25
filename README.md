@@ -13,6 +13,7 @@ TODO:
     * run a consumption check on each Distributor--if they use their own product, decrease their inventory but don't change anything else (since they already paid for it)
     * whenever a Distributor runs low on inventory they need to buy from the company again
     * model competition
+    * rename SalesResult -> SaleResult
 
 Config TODO:
     * have flags for default graph sizes: --verysmall --small --medium --big --verybig etc.
