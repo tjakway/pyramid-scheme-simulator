@@ -3,6 +3,19 @@
 
 #include <memory>
 #include <set>
+#include <functional>
+
+namespace {
+    template <typename T>
+    std::function<bool(const std::unique_ptr<T>&, const std::unique_ptr<T>&)>
+            mkCmpUniqueables()
+    {
+        return [](const std::unique_ptr<T>& lhs, 
+                const std::unique_ptr<T>& rhs) -> bool {
+            return pyramid_scheme_simulator::compareUniqueables(lhs.get(), rhs.get());
+        };
+    }
+}
 
 namespace pyramid_scheme_simulator {
 
@@ -61,7 +74,7 @@ const std::set<RestockHandler::ElemType>
     return uniques;
 }
 
-
-//TODO: initialize SaleHandler::comparator
+const SaleHandler::ComparatorType SaleHandler::comparator =
+        mkCmpUniqueables<SaleHandler::ElemType>();
 
 }
