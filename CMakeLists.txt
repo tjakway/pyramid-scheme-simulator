@@ -36,12 +36,17 @@ endfunction()
 ########################################
 #cmake list of flags
 set(COMMON_DEBUG_FLAGS -g -Wall -Wextra -Wundef -Wcast-qual -Wconversion -Wformat=2 -Wshadow -ftrapv -Wuninitialized -Winit-self -Wcast-align -Wwrite-strings)
+set(SUPPRESS_DEBUG_FLAGS -Wno-shadow)
 
 #Apple LLVM version 6.1.0 (clang-602.0.53) (based on LLVM 3.6.0svn) doesn't support -faddress=sanitize
 #NOTE THAT VALGRIND WILL NOT WORK WITH -fsanitize=address (the other flags do not seem to pose a problem)
 set(CLANG_SANITIZE_ADDRESS_FLAG "-fsanitize=address")
 set(GCC_OPTIMIZE_DEBUG "-Og")
 ########################################
+
+function(SuppressDebugWarnings)
+    all_targets_compile_property(${SUPPRESS_DEBUG_FLAGS})
+endfunction()
 
 function(EnableDebugWarnings)
     all_targets_compile_definitions("-DDEBUG") 
@@ -114,6 +119,7 @@ if((${CMAKE_BUILD_TYPE} STREQUAL "DEBUG") OR (${CMAKE_BUILD_TYPE} STREQUAL "Debu
     message("To enable warnings, pass -DCMAKE_BUILD_TYPE=DebugWithWarnings")
     #see http://stackoverflow.com/questions/5352074/how-to-create-a-c-define-for-a-certain-target-using-cmake
     all_targets_compile_definitions("-DDEBUG") 
+    SuppressDebugWarnings()
 elseif(${CMAKE_BUILD_TYPE} STREQUAL "DebugWithWarnings")
     message("Building in debug mode with warnings.")
     message("To disable warnings, pass -DCMAKE_BUILD_TYPE=Debug")
