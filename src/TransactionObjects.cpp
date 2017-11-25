@@ -1,5 +1,6 @@
 #include "TransactionObjects.hpp"
 #include "TransactionRecords.hpp"
+#include "Util/Unique.hpp"
 
 #include <memory>
 #include <set>
@@ -17,15 +18,10 @@ namespace {
     }
 
 
-    template <typename T>
-    std::function<bool(const std::unique_ptr<T>&, const std::unique_ptr<T>&)>
-            mkCmpUniques()
-
+    bool cmpUniquePtrs(const std::unique_ptr<pyramid_scheme_simulator::Unique>& lhs, 
+            const std::unique_ptr<pyramid_scheme_simulator::Unique>& rhs)
     {
-        return [](const std::unique_ptr<T>& lhs, 
-                const std::unique_ptr<T>& rhs) -> bool {
-            return pyramid_scheme_simulator::compareUniques(lhs.get(), rhs.get());
-        };
+        return compareUniques(lhs.get(), rhs.get());
     }
 }
 
@@ -62,7 +58,7 @@ const std::function<RestockHandler::RecordType(
 
 
 const RestockHandler::ListComparatorType RestockHandler::listComparator =
-    mkCmpUniques<RestockHandler::ElemType>();
+    cmpUniquePtrs;
 
 
 const std::set<RestockHandler::ElemType> 
