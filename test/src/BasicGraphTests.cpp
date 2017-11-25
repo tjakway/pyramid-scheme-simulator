@@ -51,7 +51,7 @@ public:
     const SimulationTick when = 0;
 };
 
-TEST_F(BasicGraphTests, BasicTest)
+TEST_F(BasicGraphTests, BasicSaleTest)
 {
     auto recordResult = (*saleHandler)(when, price, 
             rd, *distributor, *customer1);
@@ -59,14 +59,22 @@ TEST_F(BasicGraphTests, BasicTest)
     ASSERT_TRUE(recordResult.records.size() > 0);
 }
 
-TEST_F(BasicGraphTests, BasicRestockTest)
+TEST_F(BasicGraphTests, NoInventoryTest)
 {
     //sale shouldn't happen if there's no inventory
     distributor->setInventory(0);
+    EXPECT_EQ(distributor->getInventory(), 0);
+
     auto recordResult = (*saleHandler)(when, price, 
             rd, *distributor, *customer1);
 
-    ASSERT_EQ(recordResult.records.size(), 0);
+    ASSERT_EQ(recordResult.records.size(), 1);
+    auto& rec = recordResult.records.front();
+
+    EXPECT_TRUE(rec->isLeft());
+    auto& res = rec->getLeft();
+    ASSERT_EQ(res.reason, SalesResult::Reason::NO_INVENTORY) 
+        << "Unexpected SalesResult: " << res.str();
 }
 
 }
