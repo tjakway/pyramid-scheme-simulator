@@ -18,7 +18,7 @@ namespace {
     }
 
 
-    bool cmpUniquePtrs(const std::unique_ptr<pyramid_scheme_simulator::Unique>& lhs, 
+    bool cmpUniquePtrsToUnique(const std::unique_ptr<pyramid_scheme_simulator::Unique>& lhs, 
             const std::unique_ptr<pyramid_scheme_simulator::Unique>& rhs)
     {
         return compareUniques(lhs.get(), rhs.get());
@@ -58,7 +58,7 @@ const std::function<RestockHandler::RecordType(
 
 
 const RestockHandler::ListComparatorType RestockHandler::listComparator =
-    cmpUniquePtrs;
+    cmpUniquePtrsToUnique;
 
 
 const std::set<RestockHandler::ElemType> 
@@ -75,6 +75,7 @@ const std::set<RestockHandler::ElemType>
     return uniques;
 }
 
-//const SaleHandler::ComparatorType SaleHandler::comparator =
+const SaleHandler::ComparatorType SaleHandler::comparator =
+    Util::deepCompareUniquePtrs<SaleHandler::ElemType>;
 
 }

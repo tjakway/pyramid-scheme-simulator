@@ -32,6 +32,29 @@ public:
     }
 
 
+    template <typename T>
+    static bool deepCompareUniquePtrs(const std::unique_ptr<T>& lhs, const std::unique_ptr<T>& rhs)
+    {
+        //compare pointer values first
+        if(lhs.get() == nullptr && rhs.get() == nullptr)
+        {
+            return true;
+        }
+        else if(lhs.get() == nullptr && rhs.get() != nullptr)
+        {
+            return false;
+        }
+        else if(lhs.get() != nullptr && rhs.get() == nullptr)
+        {
+            return false;
+        }
+        else
+        {
+            //compare referands
+            return *lhs == *rhs;
+        }
+    }
+
     static const std::array<unsigned char, 16> hashToArray(size_t hash);
 };
 
