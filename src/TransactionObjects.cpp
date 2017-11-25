@@ -15,16 +15,24 @@ namespace {
             return pyramid_scheme_simulator::compareUniqueables(lhs.get(), rhs.get());
         };
     }
+
+
+    template <typename T>
+    std::function<bool(const std::unique_ptr<T>&, const std::unique_ptr<T>&)>
+            mkCmpUniques()
+
+    {
+        return [](const std::unique_ptr<T>& lhs, 
+                const std::unique_ptr<T>& rhs) -> bool {
+            return pyramid_scheme_simulator::compareUniques(lhs.get(), rhs.get());
+        };
+    }
 }
 
 namespace pyramid_scheme_simulator {
 
 const ConversionHandler::ComparatorType ConversionHandler::comparator =
-    [](const std::unique_ptr<ConversionHandler::Conversion>& lhs, 
-            const std::unique_ptr<ConversionHandler::Conversion>& rhs) -> bool {
-
-        return compareUniqueables(lhs.get(), rhs.get());
-    };
+    mkCmpUniqueables<ConversionHandler::Conversion>();
 
 const std::function<ConversionHandler::RecordType(
         ConversionHandler::RecordType&&, 
@@ -54,10 +62,7 @@ const std::function<RestockHandler::RecordType(
 
 
 const RestockHandler::ListComparatorType RestockHandler::listComparator =
-    [](const std::unique_ptr<RestockHandler::ElemType>& lhs, 
-            const std::unique_ptr<RestockHandler::ElemType>& rhs) -> bool {
-        return compareUniques(lhs.get(), rhs.get());
-    };
+    mkCmpUniques<RestockHandler::ElemType>();
 
 
 const std::set<RestockHandler::ElemType> 
@@ -74,7 +79,6 @@ const std::set<RestockHandler::ElemType>
     return uniques;
 }
 
-const SaleHandler::ComparatorType SaleHandler::comparator =
-        mkCmpUniqueables<SaleHandler::ElemType>();
+//const SaleHandler::ComparatorType SaleHandler::comparator =
 
 }
