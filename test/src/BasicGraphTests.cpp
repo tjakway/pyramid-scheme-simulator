@@ -59,7 +59,7 @@ TEST_F(BasicGraphTests, BasicSaleTest)
     ASSERT_TRUE(recordResult.records.size() > 0);
 }
 
-TEST_F(BasicGraphTests, NoInventoryTest)
+TEST_F(BasicGraphTests, BasicNoInventoryTest)
 {
     //sale shouldn't happen if there's no inventory
     distributor->setInventory(0);
@@ -76,5 +76,6 @@ TEST_F(BasicGraphTests, NoInventoryTest)
     ASSERT_EQ(res.reason, SalesResult::Reason::NO_INVENTORY) 
         << "Unexpected SalesResult: " << res.str();
 }
+
 
 }
