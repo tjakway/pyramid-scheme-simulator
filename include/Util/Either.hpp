@@ -97,7 +97,7 @@ public:
         RIGHT
     };
 
-    const char* typeToString(Type t)
+    const char* typeToString(Type t) const
     {
         if(t == LEFT)
         {
@@ -134,12 +134,12 @@ public:
         {}
     };
 
-    std::string getLTypeName()
+    std::string getLTypeName() const
     {
         return demangle(typeid(L).name());
     }
 
-    std::string getRTypeName()
+    std::string getRTypeName() const
     {
         return demangle(typeid(R).name());
     }
@@ -150,7 +150,7 @@ private:
 
     Type type;
 
-    bool underlyingValueIsNull()
+    bool underlyingValueIsNull() const
     {
         if(type == LEFT && lPtr == nullptr)
         {
@@ -166,14 +166,16 @@ private:
         }
     }
 
-    std::string getExceptionHeader()
+    std::string getExceptionHeader() const
     {
-        return "Exception in Either[" << 
+        std::ostringstream os;
+        os << "Exception in Either[" << 
             getLTypeName() << ", "
             << getRTypeName() << "]: ";
+        return os.str();
     }
 
-    void throwTypeException(Type triedType)
+    void throwTypeException(Type triedType) const
     {
         std::ostringstream os;
         os << getExceptionHeader()
@@ -183,7 +185,7 @@ private:
         throw EitherTypeException(os.str());
     }
 
-    void throwValueException()
+    void throwValueException() const
     {
         std::ostringstream os;
         os << getExceptionHeader()
@@ -249,11 +251,11 @@ public:
     }
 
     //getLeft and getRight throw an exception on incorrect type
-    L& getLeft()
+    L& getLeft() const
     {
         if(type == RIGHT)
         {
-            throwException(RIGHT);
+            throwTypeException(RIGHT);
         }
         else
         {
@@ -268,11 +270,11 @@ public:
         }
     }
 
-    R& getRight()
+    R& getRight() const
     {
         if(type == LEFT)
         {
-            throwException(RIGHT);
+            throwTypeException(RIGHT);
         }
         else
         {
