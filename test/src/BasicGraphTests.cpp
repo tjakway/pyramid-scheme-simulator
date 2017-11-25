@@ -77,5 +77,20 @@ TEST_F(BasicGraphTests, BasicNoInventoryTest)
         << "Unexpected SalesResult: " << res.str();
 }
 
+TEST_F(BasicGraphTests, BasicRestockTest)
+{
+    //clear out the distributor's inventory
+    distributor->setInventory(0);
+
+    //get the restock list
+    RestockHandler restockHandler;
+    RestockHandler::RestockSet restockSet = 
+        RestockHandler::toSet(
+            std::move(restockHandler(when, price, *distributor)));
+
+    SaleHandler h(std::move(restockSet));
+    auto recordResult = h(when, price, rd, *distributor, *customer1);
+}
+
 
 }
