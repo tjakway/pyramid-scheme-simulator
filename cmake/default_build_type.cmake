@@ -2,7 +2,7 @@
 #(slightly modified)
 
 # Set a default build type if none was specified
-set(default_build_type "Release")
+set(default_build_type "Debug")
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
     set(default_build_type "DebugWithWarnings")
 endif()
