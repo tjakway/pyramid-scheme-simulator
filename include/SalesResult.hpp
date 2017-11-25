@@ -90,6 +90,10 @@ public:
         return !success;
     }
 
+    bool operator==(const SalesResult& other) const {
+        return reason == other.reason;
+    }
+
     std::string str() const { return std::string(reasonToString(reason)); }
 
     SalesResult(Reason);
