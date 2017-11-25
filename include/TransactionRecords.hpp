@@ -51,6 +51,7 @@ ListTransactionRecord<X> mergeListTransactionRecords(
 
 /**
  * returns a ListTransactonRecord containing 1 element
+ * ! remember to pass a unique_ptr since ListTransactionRecorrd::ElementType is a unique_ptr<U>!
  */
 template <typename X>
 ListTransactionRecord<X> singleElementListTransactionRecord(
