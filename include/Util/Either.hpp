@@ -207,7 +207,7 @@ public:
     {
         if(type == RIGHT)
         {
-            throwException();
+            throwException(RIGHT);
         }
         else
         {
@@ -219,7 +219,7 @@ public:
     {
         if(type == LEFT)
         {
-            throwException();
+            throwException(RIGHT);
         }
         else
         {
