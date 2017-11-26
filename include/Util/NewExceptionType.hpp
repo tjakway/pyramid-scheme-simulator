@@ -19,7 +19,8 @@
     { \
         const std::string msg;\
     public: \
-        virtual std::string getExceptionTypeName() { return XSTRINGIFY_MACRO__(A); } \
+        virtual std::string getExceptionTypeName() const noexcept \
+            { return XSTRINGIFY_MACRO__(A); } \
             \
         A(const std::string& message) \
             : B(message), msg(message)\
