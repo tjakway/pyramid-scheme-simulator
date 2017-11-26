@@ -22,7 +22,7 @@ Config TODO:
 
 Notes on Debugging:
     * don't forget the tests are in the pyramid_scheme_simulator namespace
-    * google test will mangle the names, example:
+    * google test will mangle names and make setting breakpoints painful, for example:
 (gdb) break pyramid_scheme_simulator::BasicGraphTests
 BasicGraphTests                                                                  BasicGraphTests_BasicRestockTest_Test::~BasicGraphTests_BasicRestockTest_Test()
 BasicGraphTests::BasicGraphTests()                                               BasicGraphTests_BasicTest_Test
