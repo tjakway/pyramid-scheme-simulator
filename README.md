@@ -34,3 +34,6 @@ BasicGraphTests_BasicRestockTest_Test::BasicGraphTests_BasicRestockTest_Test()  
 BasicGraphTests_BasicRestockTest_Test::TestBody()                                BasicGraphTests_BasicTest_Test::~BasicGraphTests_BasicTest_Test()
 BasicGraphTests_BasicRestockTest_Test::test_info_
 
+
+Code Quality:
+    * figure out how to implement PopulationGraph::mutateVerticesOfGraph with templates so we could share code between PopulationGraph::mutateVertices and PopulationGraph::mutateVerticesWithPredicate.  Basically need to figure out how to get filtered_graph<BGLPopulationGraph, VertexPredicateObject> to behave like BGLPopulationGraph, and the obvious route of trying a template function wasn't successful.
