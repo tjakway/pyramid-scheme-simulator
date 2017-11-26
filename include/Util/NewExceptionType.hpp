@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <stdexcept>
 
 
 //stringification macros
@@ -13,7 +14,7 @@
 
 
 //NOTE: the base class must have a constructor that takes a std::string
-#define NEW_EXCEPTION_TYPE(A, B) \
+#define NEW_EXCEPTION_TYPE_WITH_BASE(A, B) \
     class A : public B \
     { \
         const std::string msg;\
@@ -33,3 +34,6 @@
             return os.str().c_str();\
         }\
     };
+
+//runtime_error is a reasonable default base
+#define NEW_EXCEPTION_TYPE(A) NEW_EXCEPTION_TYPE_WITH_BASE(A, std::runtime_error)
