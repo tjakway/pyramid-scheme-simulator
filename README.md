@@ -14,10 +14,12 @@ TODO:
     * whenever a Distributor runs low on inventory they need to buy from the company again
     * model competition
     * rename SalesResult -> SaleResult
+    * implement ```buyIn``` instead of just waiting for the restock phase next tick.
+    * implement upstream profit transfer... this is what makes it a pyramid scheme, after all
 
 Config TODO:
     * have flags for default graph sizes: --verysmall --small --medium --big --verybig etc.
-    * if we transition to database-backed transactions, have a flag to commit or rollback when interrupted
+    * if we transition to database-backed transactions, have a flag for whether to commit what we have so far or rollback when interrupted
 
 
 Notes on Debugging:
