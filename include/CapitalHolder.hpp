@@ -22,8 +22,10 @@ protected:
 
     double getMoneyToProductCostRatio();
 
+public:
     void setMoney(Money);
 
+protected:
     virtual bool canPurchase(Money productCost, const CapitalHolder& /*from*/) {
         return money >= productCost;
     }

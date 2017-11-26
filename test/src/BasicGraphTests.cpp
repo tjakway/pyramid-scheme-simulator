@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Util/Util.hpp"
+#include "Util/Unique.hpp"
 #include "TransactionRecords.hpp"
 #include "TransactionObjects.hpp"
 #include "PopulationGraph.hpp"
@@ -10,10 +11,12 @@
 #include "mocks/MockTransactionObjects.hpp"
 #include "mocks/EagerActors.hpp"
 
+#include <unordered_map>
 #include <vector>
 #include <utility>
 #include <tuple>
 #include <memory>
+#include <random>
 
 namespace pyramid_scheme_simulator {
 
@@ -46,6 +49,14 @@ public:
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
+    std::vector<PopulationGraph::Pop> getAllPops()
+    {
+        return {
+            distributor,
+            customer1,
+            customer2
+        };
+    }
 
     const Money price = 10;
     const SimulationTick when = 0;
@@ -90,6 +101,37 @@ TEST_F(BasicGraphTests, BasicRestockTest)
 
     SaleHandler h(std::move(restockSet));
     auto recordResult = h(when, price, rd, *distributor, *customer1);
+}
+
+TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
+{
+    //change everyone's money and see if it sticks
+    const int numVerticesPrev = tinyGraph->numVertices();
+    
+    std::unordered_map<Unique, Money> newMoneyMap;
+
+    rd_ptr rd = std::make_shared<std::mt19937_64>();
+
+    auto mutateFunction = [&newMoneyMap, &rd](CapitalHolder& h) -> 
+        std::shared_ptr<CapitalHolder> 
+    {
+        //assign them some random value
+        const Money newMoney = (*rd)();
+        newMoneyMap.insert(std::make_pair(h.id, newMoney));
+        h.setMoney(newMoney);
+
+        return std::shared_ptr<CapitalHolder>(&h);
+    };
+
+    EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
+    tinyGraph->mutateVertices(mutateFunction);
+
+
+    //check that the changes persist
+    for(auto x : getAllPops())
+    {
+        ASSERT_EQ(newMoneyMap[x->id], x->getMoney());
+    }
 }
 
 
