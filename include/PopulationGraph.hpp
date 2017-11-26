@@ -100,6 +100,38 @@ public:
     }
 
     PopulationGraph(Config&);
+
+    int numVertices();
+    int numEdges();
+
+    using VertexPredicate = std::function<bool(const CapitalHolder&)>;
+    using MutateVertexFunction = std::function<std::shared_ptr<CapitalHolder>(
+            CapitalHolder&)>;
+
+    /** an unsigned integer type */
+    using vertices_size_type = BGLPopulationGraph::vertices_size_type;
+
+protected:
+    /**
+     * returns the number of vertices mutated
+     */
+    static vertices_size_type mutateVerticesOfGraph(MutateVertexFunction, 
+            BGLPopulationGraph&);
+
+public:
+    /**
+     * returns the number of vertices mutated
+     * 
+     * (thin layer over mutateVerticesOfGraph that just passes our graph)
+     */
+    vertices_size_type mutateVertices(MutateVertexFunction);
+
+    /**
+     * filters the graph then mutates it
+     * more efficiently than trying to filter in the function passed to mutateVertices
+     * returns the number of vertices mutated
+     */
+    vertices_size_type mutatesVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
 };
 
 

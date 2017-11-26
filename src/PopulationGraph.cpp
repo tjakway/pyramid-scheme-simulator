@@ -2,6 +2,7 @@
 #include "Util/Unique.hpp"
 #include "PopulationGraph.hpp"
 #include "Util/Util.hpp"
+#include "Util/AssertWithMessage.hpp"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -16,6 +17,7 @@
 #include <tuple>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/copy.hpp>
 
@@ -254,5 +256,106 @@ PopulationGraph::BGLPopulationGraph PopulationGraph::graphFromTuples(
 
     return g;
 }
+
+int PopulationGraph::numVertices()
+{
+    return boost::num_vertices(graph);
+}
+
+int PopulationGraph::numEdges()
+{
+    return boost::num_edges(graph);
+}
+
+
+PopulationGraph::vertices_size_type 
+    PopulationGraph::mutateVerticesOfGraph(MutateVertexFunction mutate, 
+        BGLPopulationGraph& g)
+{
+    //counter
+    vertices_size_type numMutated = 0;
+
+    BGLPopulationGraph::vertex_iterator vi, viEnd;
+
+    std::tie(vi, viEnd) = boost::vertices(g);
+
+    for(; vi != viEnd; ++vi)
+    {
+        BGLPopulationGraph::vertex_descriptor vd = *vi;
+
+        //the proper way to access the graph using bundled properties
+        //is the [] operator
+        //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
+        std::shared_ptr<CapitalHolder> vertexData = g[vd];
+        std::shared_ptr<CapitalHolder> newVertexData = mutate(*vertexData);
+        g[vd] = newVertexData;
+
+        numMutated++;
+    }
+
+    return numMutated;
+}
+
+PopulationGraph::vertices_size_type 
+    PopulationGraph::mutateVertices(MutateVertexFunction mutate)
+{
+    PopulationGraph::mutateVerticesOfGraph(mutate, graph);
+}
+
+PopulationGraph::vertices_size_type
+    PopulationGraph::mutatesVerticesWithPredicate(
+        MutateVertexFunction mutate,
+        VertexPredicate predicate)
+{
+    /**
+     * orchestrates state to call the VertexPredicate function
+     * (i.e. translating between the boost::graph representation
+     * of our vertices and CapitalHolder&)
+     */
+    class VertexPredicateObject
+    {
+        //TODO: should this be a shared_ptr...?
+        //seems like overkill since this is a pointer to a field
+        //within the same object this method is running in...
+        BGLPopulationGraph* graphPtr = nullptr;
+
+        VertexPredicate pred;
+
+    public:
+        //boost filtered_graph docs say the predicate has to have a default constructor
+        VertexPredicateObject() = default;
+
+        VertexPredicateObject(
+                BGLPopulationGraph& g,
+                VertexPredicate _pred
+                )
+            : pred(_pred), 
+             graphPtr(&g)
+        {}
+
+        /**
+         * the docs explicitly say vertex and edge descriptors in the 
+         * filtered_graph are valid for the original graph object
+         */
+        bool operator()(const BGLPopulationGraph::vertex_descriptor& vd) const {
+            Pop thisVertex = (*graphPtr)[vd];
+
+            //sanity check
+            ASSERT_WITH_MESSAGE(thisVertex.get() != nullptr,
+                    "The vertices shouldn't have null pointers");
+
+            //dereference the pointer and run the actual predicate
+            return pred(*thisVertex);
+        }
+    } predicateObject(graph, predicate);
+
+    //filter the graph using our predicate
+    boost::filtered_graph<BGLPopulationGraph, VertexPredicateObject>
+        filteredBGLPopulationGraph(graph, predicateObject);
+
+    //mutate the graph
+    return PopulationGraph::mutateVerticesOfGraph(mutate, filteredBGLPopulationGraph);
+}
+
 
 }
