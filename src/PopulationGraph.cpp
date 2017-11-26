@@ -268,6 +268,9 @@ int PopulationGraph::numEdges()
 }
 
 
+/**
+ * getting this to work with templates is beyond me
+ */
 PopulationGraph::vertices_size_type 
     PopulationGraph::mutateVerticesOfGraph(MutateVertexFunction mutate, 
         BGLPopulationGraph& g)
@@ -350,11 +353,31 @@ PopulationGraph::vertices_size_type
     } predicateObject(graph, predicate);
 
     //filter the graph using our predicate
-    boost::filtered_graph<BGLPopulationGraph, VertexPredicateObject>
-        filteredBGLPopulationGraph(graph, predicateObject);
+    using FGraph = boost::filtered_graph<BGLPopulationGraph, VertexPredicateObject>;
+    FGraph fgraph(graph, predicateObject);
 
-    //mutate the graph
-    return PopulationGraph::mutateVerticesOfGraph(mutate, filteredBGLPopulationGraph);
+    //***see refactor note at top of mutateVerticesOfGraph***
+    vertices_size_type numMutated = 0;
+
+    FGraph::vertex_iterator vi, viEnd;
+
+    std::tie(vi, viEnd) = boost::vertices(fgraph);
+
+    for(; vi != viEnd; ++vi)
+    {
+        FGraph::vertex_descriptor vd = *vi;
+
+        //the proper way to access the graph using bundled properties
+        //is the [] operator
+        //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
+        std::shared_ptr<CapitalHolder> vertexData = fgraph[vd];
+        std::shared_ptr<CapitalHolder> newVertexData = mutate(*vertexData);
+        fgraph[vd] = newVertexData;
+
+        numMutated++;
+    }
+
+    return numMutated;
 }
 
 
