@@ -13,6 +13,7 @@
 #include "mocks/EagerActors.hpp"
 
 #include <unordered_map>
+#include <functional>
 #include <vector>
 #include <utility>
 #include <tuple>
@@ -134,25 +135,16 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
 TEST_F(BasicGraphTests, BecomeDistributorTest)
 {
-    class TestDistributorConfig :  
-        public Config::SimulationOptions::DistributorOptions
-    {
-    public:
-        static std::unique_ptr<Distributor> newDistributorFunction(Consumer& who,
-                Distributor* convertedBy)
+    std::function<std::unique_ptr<Distributor>(Consumer& who,
+                Distributor* convertedBy)> newDistributorFunction = 
+        [](Consumer& who, Distributor* convertedBy)
         {
             return make_unique<EagerTestDistributor>(who, convertedBy);
-        }
-
-        TestDistributorConfig()
-            : Config::SimulationOptions::DistributorOptions(
-                    0.5, 0, newDistributorFunction)
-        {}
-    } distributorConfig;
+        };
 
     Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
     std::unique_ptr<Distributor> newDistributor = 
-        consumer1->becomeDistributor(TestDistributorConfig::newDistributorFunction,
+        consumer1->becomeDistributor(newDistributorFunction,
                 convertedBy);
 
     tinyGraph.mutatesVerticesWithPredicate(
