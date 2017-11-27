@@ -89,10 +89,11 @@ bool Consumer::canBecomeDistributor(Money buyIn)
 }
 
 std::unique_ptr<Distributor> Consumer::becomeDistributor(
-        Config::SimulationOptions::DistributorOptions& opts,
+        Config::SimulationOptions::DistributorOptions::NewDistributorFunction 
+            newDistributorFunction,
             Distributor* convertedBy)
 {
-    return opts.newDistributorFunction(*this, convertedBy);
+    return newDistributorFunction(*this, convertedBy);
 }
 
 

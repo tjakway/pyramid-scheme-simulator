@@ -54,6 +54,8 @@ class StaticDistributor : public Distributor
     std::unique_ptr<ChanceContributor> salesChance;
 protected:
     StaticDistributor(Unique, Money, Inventory);
+    StaticDistributor(Consumer& self, Distributor* convBy) : Distributor(self, convBy)
+    {}
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:

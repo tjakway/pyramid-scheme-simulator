@@ -86,7 +86,8 @@ public:
     virtual void deductMoney(Money);
 
     virtual std::unique_ptr<Distributor> 
-        becomeDistributor(Config::SimulationOptions::DistributorOptions&,
+        becomeDistributor(
+                Config::SimulationOptions::DistributorOptions::NewDistributorFunction,
                 Distributor* convertedBy);
 
     virtual bool canBecomeDistributor(Money buyIn);
@@ -106,6 +107,10 @@ protected:
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
 
     Distributor(Unique, Money, std::shared_ptr<Distributor>);
+
+    //initialize from a consumer
+    //used in becomeDistributor
+    Distributor(Consumer&, Distributor*);
 
 public:
     virtual ~Distributor() {}

@@ -34,6 +34,10 @@ public:
         : StaticDistributor(u, m, i, 1.0)
     {}
 
+    EagerDistributor(Consumer& self, Distributor* convBy) 
+        : StaticDistributor(self, convBy)
+    {}
+
     virtual Inventory getDesiredRestockAmount() override {
         return 5;
     }
@@ -48,6 +52,10 @@ class EagerTestDistributor : public EagerDistributor
 public:
     EagerTestDistributor(Money m, Inventory i = 0)
         : EagerDistributor(Unique::newUnique(), m, i)
+    {}
+
+    EagerTestDistributor(Consumer& self, Distributor* convBy) 
+        : EagerDistributor(self, convBy)
     {}
 };
 

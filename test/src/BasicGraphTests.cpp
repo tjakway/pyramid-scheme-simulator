@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include "Config.hpp"
 #include "Util/Util.hpp"
 #include "Util/Unique.hpp"
 #include "TransactionRecords.hpp"
@@ -129,6 +130,41 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
     {
         ASSERT_EQ(newMoneyMap[x->id], x->getMoney());
     }
+}
+
+TEST_F(BasicGraphTests, BecomeDistributorTest)
+{
+    class TestDistributorConfig :  
+        public Config::SimulationOptions::DistributorOptions
+    {
+    public:
+        static std::unique_ptr<Distributor> newDistributorFunction(Consumer& who,
+                Distributor* convertedBy)
+        {
+            return make_unique<EagerTestDistributor>(who, convertedBy);
+        }
+
+        TestDistributorConfig()
+            : Config::SimulationOptions::DistributorOptions(
+                    0.5, 0, newDistributorFunction)
+        {}
+    } distributorConfig;
+
+    Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
+    std::unique_ptr<Distributor> newDistributor = 
+        consumer1->becomeDistributor(TestDistributorConfig::newDistributorFunction,
+                convertedBy);
+
+    tinyGraph.mutatesVerticesWithPredicate(
+            [&newDistributor](PopulationGraph::Pop* popPtr){
+                //delete the consumer at that vertex
+                delete (*popPtr);
+                //and replace it with a distributor constructed from the consumer's data
+                (*popPtr) = std::make_shared<CapitalHolder>(std::move(newDistributor));
+            },
+            [&consumer1](CapitalHolder& thisH){
+                return consumer1 == thisH;
+            });
 }
 
 
