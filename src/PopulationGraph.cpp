@@ -269,7 +269,7 @@ int PopulationGraph::numEdges()
 
 
 /**
- * getting this to work with templates is beyond me
+ * can't get this to work with templates
  */
 PopulationGraph::vertices_size_type 
     PopulationGraph::mutateVerticesOfGraph(MutateVertexFunction mutate, 
@@ -289,9 +289,7 @@ PopulationGraph::vertices_size_type
         //the proper way to access the graph using bundled properties
         //is the [] operator
         //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
-        std::shared_ptr<CapitalHolder> vertexData = g[vd];
-        std::shared_ptr<CapitalHolder> newVertexData = mutate(*vertexData);
-        g[vd] = newVertexData;
+        mutate(&g[vd]);
 
         numMutated++;
     }
@@ -370,10 +368,7 @@ PopulationGraph::vertices_size_type
         //the proper way to access the graph using bundled properties
         //is the [] operator
         //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
-        std::shared_ptr<CapitalHolder> vertexData = fgraph[vd];
-        std::shared_ptr<CapitalHolder> newVertexData = mutate(*vertexData);
-        fgraph[vd] = newVertexData;
-
+        mutate(&fgraph[vd]);
         numMutated++;
     }
 

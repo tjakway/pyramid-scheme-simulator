@@ -112,15 +112,12 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
-    auto mutateFunction = [&newMoneyMap, &rd](CapitalHolder& h) -> 
-        std::shared_ptr<CapitalHolder> 
+    auto mutateFunction = [&newMoneyMap, &rd](std::shared_ptr<CapitalHolder>* hPtr)
     {
         //assign them some random value
         const Money newMoney = (*rd)();
-        newMoneyMap.insert(std::make_pair(h.id, newMoney));
-        h.setMoney(newMoney);
-
-        return std::shared_ptr<CapitalHolder>(&h);
+        newMoneyMap.insert(std::make_pair((*hPtr)->id, newMoney));
+        (*hPtr)->setMoney(newMoney);
     };
 
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
