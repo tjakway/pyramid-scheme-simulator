@@ -124,10 +124,12 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
         newMoneyMap.insert(std::make_pair(h->id, newMoney));
         h->setMoney(newMoney);
     };
-
+    
+    EXPECT_EQ(consumer1.use_count(), 1);
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
     tinyGraph->mutateVertices(mutateFunction);
 
+    EXPECT_EQ(consumer1.use_count(), 1);
 
     //check that the changes persist
     for(auto x : getAllPops())
