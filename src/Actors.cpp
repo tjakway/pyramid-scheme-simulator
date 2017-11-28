@@ -31,12 +31,20 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
 {}
 
 
-StaticConsumer::StaticConsumer(StaticConsumer& c)
+//copy constructor
+StaticConsumer::StaticConsumer(const StaticConsumer& c)
     : StaticConsumer(c.id, c.getMoney(),
             //copy pointer referands
             salesChance->clone().get(),
             conversionChance->clone().get())
 {}
+
+
+std::shared_ptr<CapitalHolder> StaticConsumer::clone() const 
+{
+    //call copy constructor
+    return std::make_shared<StaticConsumer>(*this);
+}
 
 ChanceContributor& StaticConsumer::getSalesChanceContribution()
 {
@@ -62,7 +70,7 @@ bool Company::canPurchase(Money cost, const CapitalHolder& from)
 /**
  * the company will never run out of its products
  */
-unsigned int Company::getInventory()
+unsigned int Company::getInventory() const
 {
     return std::numeric_limits<unsigned int>::max();
 }
@@ -100,6 +108,14 @@ StaticDistributor::StaticDistributor(Unique id,
 { }
 
 
+//copy constructor
+StaticDistributor::StaticDistributor(const StaticDistributor& other)
+    : StaticDistributor(other.id, other.getMoney(), other.getInventory(),
+            other.salesChance.get())
+{
+    recruitedBy = other.recruitedBy;
+}
+
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
@@ -108,6 +124,8 @@ StaticDistributor::StaticDistributor(Unique id,
     : StaticDistributor(id, startingMoney, startingInventory,
         _salesChance.get())
 {}
+
+StaticDistributor::~StaticDistributor() {}
 
 ChanceContributor& StaticDistributor::getSalesChanceContribution()
 {

@@ -115,7 +115,8 @@ public:
     CapitalHolder& findVertexByUnique(const Unique&);
 
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
-    using MutateVertexFunction = std::function<void(std::shared_ptr<CapitalHolder>&)>;
+    using MutateVertexFunction = 
+        std::function<const std::shared_ptr<CapitalHolder>(std::shared_ptr<CapitalHolder>)>;
 
     /** an unsigned integer type */
     using vertices_size_type = BGLPopulationGraph::vertices_size_type;
@@ -131,6 +132,10 @@ public:
     /**
      * returns the number of vertices mutated
      * 
+     * NOTE: if the caller is only modifying the vertex and not replacing its
+     * object with another instance of CapitalHolder then the MutateVertexFunction
+     * can just return the shared_ptr it was passed
+     *
      * (thin layer over mutateVerticesOfGraph that just passes our graph)
      */
     vertices_size_type mutateVertices(MutateVertexFunction);

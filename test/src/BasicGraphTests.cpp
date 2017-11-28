@@ -118,12 +118,15 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
-    auto mutateFunction = [&newMoneyMap, rd](std::shared_ptr<CapitalHolder>& h)
+    auto mutateFunction = [&newMoneyMap, rd](const std::shared_ptr<CapitalHolder> h)
     {
         //assign them some random value
         const Money newMoney = (*rd)();
         newMoneyMap.insert(std::make_pair(h->id, newMoney));
         h->setMoney(newMoney);
+
+        //not replacing the vertex
+        return h;
     };
     
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
@@ -154,10 +157,10 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
                 convertedBy);
 
     tinyGraph->mutateVerticesWithPredicate(
-            [&newDistributor](PopulationGraph::Pop& popPtr) -> void {
+            [newDistributor](const PopulationGraph::Pop /*popPtr*/) {
                 //replace the consumer at that vertex 
                 //with a distributor constructed from the consumer's data
-                popPtr = newDistributor;
+                return newDistributor;
             },
             //don't forget that the argument to the predicate has to be const
             [this](const CapitalHolder& thisH) -> bool {

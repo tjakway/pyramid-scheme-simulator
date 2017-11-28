@@ -25,9 +25,11 @@ public:
             std::unique_ptr<ChanceContributor>&);
 
     //copy constructor
-    StaticConsumer(StaticConsumer&);
+    StaticConsumer(const StaticConsumer&);
 
     virtual ~StaticConsumer() {}
+
+    virtual std::shared_ptr<CapitalHolder> clone() const override;
 
     virtual ChanceContributor&
         getSalesChanceContribution() override;
@@ -44,7 +46,7 @@ protected:
     static const Inventory inventory;
 public:
     virtual void deductMoney(Money) override;
-    virtual unsigned int getInventory() override;
+    virtual unsigned int getInventory() const override;
 
     virtual ~Company() {}
 };
@@ -54,7 +56,8 @@ class StaticDistributor : public Distributor
     std::unique_ptr<ChanceContributor> salesChance;
 protected:
     StaticDistributor(Unique, Money, Inventory);
-    StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) : Distributor(self, convBy)
+    StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
+        : Distributor(self, convBy)
     {}
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
@@ -63,7 +66,10 @@ public:
     StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
     StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&);
 
-    virtual ~StaticDistributor() {}
+    //copy constructor
+    StaticDistributor(const StaticDistributor&);
+
+    virtual ~StaticDistributor();
 
     virtual ChanceContributor&
         getSalesChanceContribution() override;

@@ -39,19 +39,21 @@ protected:
 public:
     virtual ~CapitalHolder() {}
 
+    virtual std::shared_ptr<CapitalHolder> clone() const = 0;
+
     virtual ChanceContributor&
         getSalesChanceContribution() = 0;
 
     virtual ChanceContributor&
         getDistributorConversionChanceContribution() = 0;
 
-    virtual bool isDistributor() { return false; }
+    virtual bool isDistributor() const { return false; }
 
     Money getMoney() const;
 
     /** both Consumers and Distributors have inventory
      * but do different things with it */
-    virtual Inventory getInventory() {
+    virtual Inventory getInventory() const {
         return inventory;
     }
 
@@ -103,13 +105,12 @@ public:
 
 class Distributor : public Consumer
 {
-private:
+protected:
     /**
      * who this distributor was recruited by
      * nullptr if they directly bought in from the company
      */
     std::shared_ptr<Distributor> recruitedBy;
-protected:
     virtual bool canPurchase(Money cost, const CapitalHolder& from) override;
 
     bool isSubDistributor() { return recruitedBy.get() != nullptr; }
@@ -128,11 +129,11 @@ public:
 
     virtual bool canBecomeDistributor(Money /*buyIn*/) override { return false; }
 
-    virtual bool isDistributor() override { return true; }
+    virtual bool isDistributor() const override { return true; }
 
-    virtual Inventory getDesiredRestockAmount() = 0;
+    virtual Inventory getDesiredRestockAmount() const = 0;
 
-    virtual bool hasInventory() { return getInventory() > 0; }
+    virtual bool hasInventory() const { return getInventory() > 0; }
 
     virtual Inventory getRestockThreshold() = 0;
     virtual bool needsRestock() { return getInventory() > getRestockThreshold(); }

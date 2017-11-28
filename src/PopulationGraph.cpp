@@ -308,7 +308,7 @@ PopulationGraph::vertices_size_type
         //the proper way to access the graph using bundled properties
         //is the [] operator
         //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
-        mutate(g[vd]);
+        g[vd] = mutate(g[vd]);
 
         numMutated++;
     }
@@ -387,7 +387,7 @@ PopulationGraph::vertices_size_type
         //the proper way to access the graph using bundled properties
         //is the [] operator
         //see https://stackoverflow.com/questions/28740974/boost-graph-accessing-properties-through-vertex-descriptor
-        mutate(fgraph[vd]);
+        fgraph[vd] = mutate(fgraph[vd]);
         numMutated++;
     }
 
