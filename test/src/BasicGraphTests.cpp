@@ -118,7 +118,7 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
-    auto mutateFunction = [&newMoneyMap, &rd](std::shared_ptr<CapitalHolder>& h)
+    auto mutateFunction = [&newMoneyMap, rd](std::shared_ptr<CapitalHolder>& h)
     {
         //assign them some random value
         const Money newMoney = (*rd)();
