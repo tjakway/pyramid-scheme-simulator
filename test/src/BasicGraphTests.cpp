@@ -150,14 +150,15 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
         std::dynamic_pointer_cast<Distributor>(distributor);
 
     PopulationGraph::Pop newDistributor = 
-        (dynamic_cast<Consumer&>(*consumer1)).becomeDistributor(newDistributorFunction,
+        std::dynamic_pointer_cast<Consumer>(consumer1)->becomeDistributor(
+                newDistributorFunction,
                 convertedBy);
 
     tinyGraph->mutateVerticesWithPredicate(
             [&newDistributor](PopulationGraph::Pop& popPtr) -> void {
                 //replace the consumer at that vertex 
                 //with a distributor constructed from the consumer's data
-                popPtr.reset(newDistributor.get());
+                popPtr = newDistributor;
             },
             //don't forget that the argument to the predicate has to be const
             [this](const CapitalHolder& thisH) -> bool {
@@ -167,7 +168,7 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
     //make sure it worked
     ASSERT_EQ(newDistributor->id, consumer1->id);
 
-    ASSERT_NE(dynamic_cast<Distributor*>(consumer1.get()), nullptr);
+    ASSERT_NE(std::dynamic_pointer_cast<Distributor>(consumer1).get(), nullptr);
 }
 
 
