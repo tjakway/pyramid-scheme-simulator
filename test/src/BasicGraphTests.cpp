@@ -147,14 +147,14 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
     Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
 
     PopulationGraph::Pop newDistributor = 
-        dynamic_cast<Consumer&>(*consumer1).becomeDistributor(newDistributorFunction,
+        (dynamic_cast<Consumer&>(*consumer1)).becomeDistributor(newDistributorFunction,
                 convertedBy);
 
     tinyGraph->mutateVerticesWithPredicate(
             [&newDistributor](PopulationGraph::Pop& popPtr) -> void {
                 //replace the consumer at that vertex 
                 //with a distributor constructed from the consumer's data
-                popPtr = newDistributor;
+                popPtr.reset(newDistributor.get());
             },
             //don't forget that the argument to the predicate has to be const
             [this](const CapitalHolder& thisH) -> bool {

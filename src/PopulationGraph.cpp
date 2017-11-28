@@ -59,25 +59,14 @@ namespace {
         }
 
         std::pair<int, int> toIndicesPair(Unique* vertices, int length) const {
-            //sanity check--should never happen
-            class VertexNotFoundException : public std::exception {
-                const Unique* which;
-            public:
-                VertexNotFoundException(const Unique* which) : which(which) {}
-
-                const char* what() const throw() override {
-                    std::string msg = "Could not find the index of vertex " 
-                        + which->str();
-                    return msg.c_str();
-                }
-            };
-
             const Unique* begin = vertices;
             const Unique* end = begin + length;
 
             auto checkFind = [=](const Unique* which, const Unique* res) { 
                 if(res == end) {
-                    throw VertexNotFoundException(which);
+                    std::ostringstream os;
+                    os << "Could not find the index of vertex " << which << std::endl;
+                    throw PopulationGraph::VertexNotFoundException(os.str());
                 }
             };
             

@@ -10,6 +10,7 @@
 
 #include "Config.hpp"
 #include "CapitalHolder.hpp"
+#include "Util/NewExceptionType.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -17,9 +18,8 @@ namespace pyramid_scheme_simulator {
 
 class PopulationGraph
 {
-    /** Type synonyms */
-
 public:
+    /** Type synonyms */
     //vertex type
     using Pop = std::shared_ptr<CapitalHolder>;
     using PopEdge = std::pair<Pop, Pop>;
@@ -34,6 +34,13 @@ public:
 
     using PopDescriptor = 
         boost::graph_traits<BGLPopulationGraph>::vertex_descriptor;
+
+
+    /** Exception types */
+
+    NEW_EXCEPTION_TYPE(PopulationGraphException);
+    NEW_EXCEPTION_TYPE_WITH_BASE(VertexNotFoundException, PopulationGraphException);
+    
 
 private:
     /*****************/
@@ -103,6 +110,8 @@ public:
 
     int numVertices();
     int numEdges();
+
+    CapitalHolder& findVertexByUnique(Unique);
 
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
     using MutateVertexFunction = std::function<void(std::shared_ptr<CapitalHolder>&)>;
