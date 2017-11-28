@@ -90,9 +90,9 @@ namespace std {
 }
 
 
-namespace pyramid_scheme_simulator {
-
-void PopulationGraph::throwVertexNotFoundException(Unique which)
+&namespace pyramid_scheme_simulator {
+&
+void PopulationGraph::throwVertexNotFoundException(Unique& which)
 {
     std::ostringstream os;
     os << "Could not find the index of vertex " << which << std::endl;
@@ -277,11 +277,13 @@ CapitalHolder& PopulationGraph::findVertexByUnique(Unique vert)
 
     if(res == end)
     {
-        throw VertexNotFoundException();
+        throw VertexNotFoundException(vert);
     }
     else
     {
-        return graph[*res];
+        auto vd = *res;
+        Pop foundVert = graph[vd];
+        return *foundVert;
     }
 }
 
