@@ -130,7 +130,7 @@ public:
      * more efficiently than trying to filter in the function passed to mutateVertices
      * returns the number of vertices mutated
      */
-    vertices_size_type mutatesVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
+    vertices_size_type mutateVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
 };
 
 

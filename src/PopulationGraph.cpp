@@ -304,7 +304,7 @@ PopulationGraph::vertices_size_type
 }
 
 PopulationGraph::vertices_size_type
-    PopulationGraph::mutatesVerticesWithPredicate(
+    PopulationGraph::mutateVerticesWithPredicate(
         MutateVertexFunction mutate,
         VertexPredicate predicate)
 {
