@@ -101,6 +101,21 @@ Distributor::Distributor(Unique id, Money m, std::shared_ptr<Distributor> _recru
     recruitedBy(_recruitedBy)
 { }
 
+Distributor::Distributor(Unique id, Money m)
+    : Distributor(id, m, nullptr)
+{}
+
+
+//initialize a distributor from a consumer
+//metaphorically the consumer is being recruited as a distributor
+//so the fields should match up
+Distributor::Distributor(Consumer& from, Distributor* convertedBy)
+    : Distributor(from.id, 
+            from.getMoney(), 
+            std::shared_ptr<Distributor>(convertedBy))
+{
+    setInventory(from.getInventory());
+}
 
 bool Distributor::canPurchase(Money cost, const CapitalHolder& from)
 {
