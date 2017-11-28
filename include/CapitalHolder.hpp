@@ -76,7 +76,6 @@ public:
             Consumer* buyer);
 };
 
-//TODO
 class Consumer : public CapitalHolder
 {
 public:
