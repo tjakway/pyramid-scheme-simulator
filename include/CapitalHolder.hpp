@@ -85,9 +85,9 @@ public:
 
     virtual void deductMoney(Money);
 
-    virtual std::unique_ptr<Distributor> 
+    virtual std::shared_ptr<Distributor> 
         becomeDistributor(
-                Config::SimulationOptions::DistributorOptions::NewDistributorFunction,
+                NewDistributorFunction,
                 Distributor* convertedBy);
 
     virtual bool canBecomeDistributor(Money buyIn);

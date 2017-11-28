@@ -139,23 +139,22 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
                 Distributor* convertedBy)> newDistributorFunction = 
         [](Consumer& who, Distributor* convertedBy)
         {
-            return make_unique<EagerTestDistributor>(who, convertedBy);
+            return std::make_shared<EagerTestDistributor>(who, convertedBy);
         };
 
     Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
     std::unique_ptr<Distributor> newDistributor = 
-        consumer1->becomeDistributor(newDistributorFunction,
+        dynamic_cast<Consumer&>(*customer1).becomeDistributor(newDistributorFunction,
                 convertedBy);
 
-    tinyGraph.mutatesVerticesWithPredicate(
-            [&newDistributor](PopulationGraph::Pop* popPtr){
-                //delete the consumer at that vertex
-                delete (*popPtr);
-                //and replace it with a distributor constructed from the consumer's data
-                (*popPtr) = std::make_shared<CapitalHolder>(std::move(newDistributor));
+    tinyGraph.mutateVerticesWithPredicate(
+            [&newDistributor](PopulationGraph::Pop& popPtr){
+                //and replace the consumer at that vertex 
+                //with a distributor constructed from the consumer's data
+                popPtr = std::make_shared<CapitalHolder>(std::move(newDistributor));
             },
-            [&consumer1](CapitalHolder& thisH){
-                return consumer1 == thisH;
+            [&customer1](CapitalHolder& thisH){
+                return customer1 == thisH;
             });
 }
 

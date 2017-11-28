@@ -6,6 +6,7 @@
 
 #include "Util/Util.hpp"
 #include "Types.hpp"
+#include "CapitalHolderClassDecls.hpp"
 
 namespace {
     using namespace pyramid_scheme_simulator;
@@ -44,7 +45,7 @@ Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
 
 Config::SimulationOptions::DistributorOptions::DistributorOptions(
         double pct, const unsigned int _buyIn, 
-        Config::SimulationOptions::DistributorOptions::NewDistributorFunction f)
+        NewDistributorFunction f)
     : buyIn(_buyIn), newDistributorFunction(f)
 {
     downstreamPercent.setOption(pct);

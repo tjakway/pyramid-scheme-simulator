@@ -75,8 +75,6 @@ public:
             const unsigned int buyIn;
 
             //used by Consumer::becomeDistributor
-            using NewDistributorFunction = 
-                std::function<std::unique_ptr<Distributor>(Consumer&, Distributor*)>;
             const NewDistributorFunction newDistributorFunction;
 
             DistributorOptions(double, const unsigned int, NewDistributorFunction);

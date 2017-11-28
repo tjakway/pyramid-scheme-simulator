@@ -105,7 +105,7 @@ public:
     int numEdges();
 
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
-    using MutateVertexFunction = std::function<void(std::shared_ptr<CapitalHolder>*)>;
+    using MutateVertexFunction = std::function<void(std::shared_ptr<CapitalHolder>&)>;
 
     /** an unsigned integer type */
     using vertices_size_type = BGLPopulationGraph::vertices_size_type;
