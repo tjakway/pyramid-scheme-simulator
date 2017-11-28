@@ -22,6 +22,7 @@
 #include <tuple>
 #include <memory>
 #include <random>
+#include <iostream>
 
 namespace pyramid_scheme_simulator {
 
@@ -125,11 +126,9 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
         h->setMoney(newMoney);
     };
     
-    EXPECT_EQ(consumer1.use_count(), 1);
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
     tinyGraph->mutateVertices(mutateFunction);
 
-    EXPECT_EQ(consumer1.use_count(), 1);
 
     //check that the changes persist
     for(auto x : getAllPops())
@@ -168,7 +167,8 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
     //make sure it worked
     ASSERT_EQ(newDistributor->id, consumer1->id);
 
-    ASSERT_NE(std::dynamic_pointer_cast<Distributor>(consumer1).get(), nullptr);
+    //our stored consumer pointer shouldn't be freed
+    ASSERT_EQ(std::dynamic_pointer_cast<Distributor>(consumer1).get(), nullptr);
 }
 
 
