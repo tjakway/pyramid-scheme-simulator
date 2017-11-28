@@ -96,7 +96,7 @@ public:
     virtual std::shared_ptr<Distributor> 
         becomeDistributor(
                 NewDistributorFunction,
-                Distributor* convertedBy);
+                std::shared_ptr<Distributor> convertedBy);
 
     virtual bool canBecomeDistributor(Money buyIn);
 };
@@ -119,7 +119,7 @@ protected:
 
     //initialize from a consumer
     //used in becomeDistributor
-    Distributor(Consumer&, Distributor*);
+    Distributor(Consumer&, std::shared_ptr<Distributor>);
 
 public:
     virtual ~Distributor() {}

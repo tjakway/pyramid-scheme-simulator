@@ -90,7 +90,7 @@ bool Consumer::canBecomeDistributor(Money buyIn)
 
 std::shared_ptr<Distributor> Consumer::becomeDistributor(
             NewDistributorFunction newDistributorFunction,
-            Distributor* convertedBy)
+            std::shared_ptr<Distributor> convertedBy)
 {
     return newDistributorFunction(*this, convertedBy);
 }
@@ -109,7 +109,7 @@ Distributor::Distributor(Unique id, Money m)
 //initialize a distributor from a consumer
 //metaphorically the consumer is being recruited as a distributor
 //so the fields should match up
-Distributor::Distributor(Consumer& from, Distributor* convertedBy)
+Distributor::Distributor(Consumer& from, std::shared_ptr<Distributor> convertedBy)
     : Distributor(from.id, 
             from.getMoney(), 
             std::shared_ptr<Distributor>(convertedBy))

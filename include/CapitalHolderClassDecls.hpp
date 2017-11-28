@@ -10,5 +10,5 @@ class Consumer;
 class Distributor;
 
 using NewDistributorFunction = 
-    std::function<std::shared_ptr<Distributor>(Consumer&, Distributor*)>;
+    std::function<std::shared_ptr<Distributor>(Consumer&, std::shared_ptr<Distributor>)>;
 }

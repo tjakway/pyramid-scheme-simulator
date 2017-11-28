@@ -34,9 +34,11 @@ public:
         : StaticDistributor(u, m, i, 1.0)
     {}
 
-    EagerDistributor(Consumer& self, Distributor* convBy) 
+    EagerDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : StaticDistributor(self, convBy)
     {}
+
+    virtual ~EagerDistributor() {}
 
     virtual Inventory getDesiredRestockAmount() override {
         return 5;
@@ -54,9 +56,11 @@ public:
         : EagerDistributor(Unique::newUnique(), m, i)
     {}
 
-    EagerTestDistributor(Consumer& self, Distributor* convBy) 
+    EagerTestDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : EagerDistributor(self, convBy)
     {}
+
+    virtual ~EagerTestDistributor() {}
 };
 
 }

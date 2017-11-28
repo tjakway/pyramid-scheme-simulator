@@ -141,12 +141,13 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 TEST_F(BasicGraphTests, BecomeDistributorTest)
 {
     NewDistributorFunction newDistributorFunction = 
-        [](Consumer& who, Distributor* convertedBy)
+        [](Consumer& who, std::shared_ptr<Distributor> convertedBy)
         {
             return std::make_shared<EagerTestDistributor>(who, convertedBy);
         };
 
-    Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
+    std::shared_ptr<Distributor> convertedBy = 
+        std::dynamic_pointer_cast<Distributor>(distributor);
 
     PopulationGraph::Pop newDistributor = 
         (dynamic_cast<Consumer&>(*consumer1)).becomeDistributor(newDistributorFunction,
