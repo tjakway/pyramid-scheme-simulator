@@ -41,6 +41,7 @@ public:
     NEW_EXCEPTION_TYPE(PopulationGraphException);
     NEW_EXCEPTION_TYPE_WITH_BASE(VertexNotFoundException, PopulationGraphException);
     
+    static void throwVertexNotFoundException(Unique);
 
 private:
     /*****************/

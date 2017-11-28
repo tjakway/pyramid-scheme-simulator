@@ -64,9 +64,7 @@ namespace {
 
             auto checkFind = [=](const Unique* which, const Unique* res) { 
                 if(res == end) {
-                    std::ostringstream os;
-                    os << "Could not find the index of vertex " << which << std::endl;
-                    throw PopulationGraph::VertexNotFoundException(os.str());
+                    PopulationGraph::throwVertexNotFoundException(*which);
                 }
             };
             
@@ -93,6 +91,14 @@ namespace std {
 
 
 namespace pyramid_scheme_simulator {
+
+void PopulationGraph::throwVertexNotFoundException(Unique which)
+{
+    std::ostringstream os;
+    os << "Could not find the index of vertex " << which << std::endl;
+    throw PopulationGraph::VertexNotFoundException(os.str());
+}
+
 
 PopulationGraph::BGLPopulationGraph 
     PopulationGraph::buildGraph(rd_ptr rd, Config& config)
@@ -256,6 +262,28 @@ int PopulationGraph::numEdges()
     return boost::num_edges(graph);
 }
 
+
+CapitalHolder& PopulationGraph::findVertexByUnique(Unique vert)
+{
+    BGLPopulationGraph::vertex_iterator begin, end;
+    std::tie(begin, end) = boost::vertices(graph);
+
+    //since we're searching for a UUID that has no relation to graph structure
+    //there's no reason to use a graph-specific search function
+    auto res = std::find_if(begin, end, 
+        [&vert, this](BGLPopulationGraph::vertex_descriptor vd){
+            return this->graph[vd]->id == vert;
+        });
+
+    if(res == end)
+    {
+        throw VertexNotFoundException();
+    }
+    else
+    {
+        return graph[*res];
+    }
+}
 
 /**
  * can't get this to work with templates
