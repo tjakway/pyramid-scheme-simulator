@@ -62,7 +62,7 @@ namespace {
             const Unique* begin = vertices;
             const Unique* end = begin + length;
 
-            auto checkFind = [=](const Unique* which, const Unique* res) { 
+            auto checkFind = [=](const Unique* const which, const Unique* res) { 
                 if(res == end) {
                     PopulationGraph::throwVertexNotFoundException(*which);
                 }
@@ -90,9 +90,9 @@ namespace std {
 }
 
 
-&namespace pyramid_scheme_simulator {
-&
-void PopulationGraph::throwVertexNotFoundException(Unique& which)
+namespace pyramid_scheme_simulator {
+
+void PopulationGraph::throwVertexNotFoundException(const Unique& which)
 {
     std::ostringstream os;
     os << "Could not find the index of vertex " << which << std::endl;
@@ -263,7 +263,7 @@ int PopulationGraph::numEdges()
 }
 
 
-CapitalHolder& PopulationGraph::findVertexByUnique(Unique vert)
+CapitalHolder& PopulationGraph::findVertexByUnique(const Unique& vert)
 {
     BGLPopulationGraph::vertex_iterator begin, end;
     std::tie(begin, end) = boost::vertices(graph);
@@ -277,7 +277,7 @@ CapitalHolder& PopulationGraph::findVertexByUnique(Unique vert)
 
     if(res == end)
     {
-        throw VertexNotFoundException(vert);
+        throwVertexNotFoundException(vert);
     }
     else
     {

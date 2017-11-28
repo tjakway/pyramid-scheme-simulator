@@ -41,7 +41,7 @@ public:
     NEW_EXCEPTION_TYPE(PopulationGraphException);
     NEW_EXCEPTION_TYPE_WITH_BASE(VertexNotFoundException, PopulationGraphException);
     
-    static void throwVertexNotFoundException(Unique);
+    static void throwVertexNotFoundException(const Unique&);
 
 private:
     /*****************/
@@ -112,7 +112,7 @@ public:
     int numVertices();
     int numEdges();
 
-    CapitalHolder& findVertexByUnique(Unique);
+    CapitalHolder& findVertexByUnique(const Unique&);
 
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
     using MutateVertexFunction = std::function<void(std::shared_ptr<CapitalHolder>&)>;
