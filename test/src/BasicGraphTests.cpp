@@ -31,17 +31,17 @@ public:
     PopulationGraph::Pop distributor = 
         std::make_shared<EagerTestDistributor>(startingMoney);
 
-    PopulationGraph::Pop customer1 = 
+    PopulationGraph::Pop consumer1 = 
         std::make_shared<EagerTestConsumer>(startingMoney);
 
-    PopulationGraph::Pop customer2 = 
+    PopulationGraph::Pop consumer2 = 
         std::make_shared<EagerTestConsumer>(startingMoney);
 
     std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
         tinyGraphTuples = {
-                std::make_pair(distributor, customer1),
-                std::make_pair(distributor, customer2),
-                std::make_pair(customer1, customer2) };
+                std::make_pair(distributor, consumer1),
+                std::make_pair(distributor, consumer2),
+                std::make_pair(consumer1, consumer2) };
 
     std::unique_ptr<PopulationGraph> tinyGraph = 
         make_unique<MockPopulationGraph>(tinyGraphTuples);
@@ -55,8 +55,8 @@ public:
     {
         return {
             distributor,
-            customer1,
-            customer2
+            consumer1,
+            consumer2
         };
     }
 
@@ -67,7 +67,7 @@ public:
 TEST_F(BasicGraphTests, BasicSaleTest)
 {
     auto recordResult = (*saleHandler)(when, price, 
-            rd, *distributor, *customer1);
+            rd, *distributor, *consumer1);
 
     ASSERT_TRUE(recordResult.records.size() > 0);
 }
@@ -79,7 +79,7 @@ TEST_F(BasicGraphTests, BasicNoInventoryTest)
     EXPECT_EQ(distributor->getInventory(), 0);
 
     auto recordResult = (*saleHandler)(when, price, 
-            rd, *distributor, *customer1);
+            rd, *distributor, *consumer1);
 
     ASSERT_EQ(recordResult.records.size(), 1);
     auto& rec = recordResult.records.front();
@@ -102,7 +102,7 @@ TEST_F(BasicGraphTests, BasicRestockTest)
             std::move(restockHandler(when, price, *distributor)));
 
     SaleHandler h(std::move(restockSet));
-    auto recordResult = h(when, price, rd, *distributor, *customer1);
+    auto recordResult = h(when, price, rd, *distributor, *consumer1);
 }
 
 TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
@@ -144,7 +144,7 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
 
     Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
     std::unique_ptr<Distributor> newDistributor = 
-        dynamic_cast<Consumer&>(*customer1).becomeDistributor(newDistributorFunction,
+        dynamic_cast<Consumer&>(*consumer1).becomeDistributor(newDistributorFunction,
                 convertedBy);
 
     tinyGraph.mutateVerticesWithPredicate(
@@ -153,9 +153,11 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
                 //with a distributor constructed from the consumer's data
                 popPtr = std::make_shared<CapitalHolder>(std::move(newDistributor));
             },
-            [&customer1](CapitalHolder& thisH){
-                return customer1 == thisH;
+            [&consumer1](CapitalHolder& thisH){
+                return consumer1 == thisH;
             });
+
+    consumer1Ptr = dynamic_cast<Distributor*>(consumer1);
 }
 
 
