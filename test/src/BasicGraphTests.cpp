@@ -55,15 +55,6 @@ public:
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
-    std::vector<PopulationGraph::Pop> getAllPops()
-    {
-        return {
-            distributor,
-            consumer1,
-            consumer2
-        };
-    }
-
     const Money price = 10;
     const SimulationTick when = 0;
 };
@@ -116,12 +107,12 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
     
     std::unordered_map<Unique, Money> newMoneyMap;
 
-    rd_ptr rd = std::make_shared<std::mt19937_64>();
+    std::mt19937_64 rd;
 
-    auto mutateFunction = [&newMoneyMap, rd](const std::shared_ptr<CapitalHolder> h)
+    auto mutateFunction = [&newMoneyMap, &rd](const std::shared_ptr<CapitalHolder> h)
     {
         //assign them some random value
-        const Money newMoney = (*rd)();
+        const Money newMoney = rd();
         newMoneyMap.insert(std::make_pair(h->id, newMoney));
         h->setMoney(newMoney);
 
@@ -131,10 +122,10 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
     
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
     tinyGraph->mutateVertices(mutateFunction);
-
+    EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
 
     //check that the changes persist
-    for(auto x : getAllPops())
+    for(auto x : tinyGraph->vertices())
     {
         ASSERT_EQ(newMoneyMap[x->id], x->getMoney());
     }
