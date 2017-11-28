@@ -169,6 +169,17 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
 
     //our stored consumer pointer shouldn't be freed
     ASSERT_EQ(std::dynamic_pointer_cast<Distributor>(consumer1).get(), nullptr);
+
+    //check the graph's shared_ptr
+    CapitalHolder& vertRef = tinyGraph->findVertexByUnique(newDistributor->id);
+    ASSERT_EQ(vertRef.id, newDistributor->id);
+    ASSERT_EQ(vertRef.id, consumer1->id);
+
+
+    ASSERT_TRUE(vertRef.isDistributor());
+    //verify the underlying type
+    ASSERT_NE(dynamic_cast<Distributor*>(&vertRef), nullptr);
+
 }
 
 
