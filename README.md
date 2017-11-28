@@ -37,3 +37,7 @@ BasicGraphTests_BasicRestockTest_Test::test_info_
 
 Code Quality:
     * figure out how to implement PopulationGraph::mutateVerticesOfGraph with templates so we could share code between PopulationGraph::mutateVertices and PopulationGraph::mutateVerticesWithPredicate.  Basically need to figure out how to get filtered_graph<BGLPopulationGraph, VertexPredicateObject> to behave like BGLPopulationGraph, and the obvious route of trying a template function wasn't successful.
+    * CapitalHolder::clone has the same obvious implementation in every subclass...
+        ```std::make_shared<WhoAmI>(*this)```
+       to call the copy constructor...
+       but getting access to WhoAmI would require using the CRTP and it is irritating to change all existing code to deal with CapitalHolder having a template parameter
