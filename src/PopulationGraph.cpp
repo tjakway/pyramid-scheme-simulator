@@ -15,6 +15,7 @@
 #include <iterator>
 #include <exception>
 #include <tuple>
+#include <vector>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -260,6 +261,23 @@ int PopulationGraph::numVertices()
 int PopulationGraph::numEdges()
 {
     return boost::num_edges(graph);
+}
+
+
+std::vector<PopulationGraph::Pop> PopulationGraph::vertices()
+{
+    //copy all shared_ptr objects into a vector and return it
+    std::vector<Pop> allPops(boost::num_vertices(graph));
+
+    BGLPopulationGraph::vertex_iterator vd, end;
+    std::tie(vd, end) = boost::vertices(graph);
+
+    for(; vd != end; ++vd)
+    {
+        allPops.push_back(graph[*vd]);
+    }
+
+    return allPops;
 }
 
 

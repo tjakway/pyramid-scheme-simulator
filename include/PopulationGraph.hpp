@@ -112,6 +112,8 @@ public:
     int numVertices();
     int numEdges();
 
+    std::vector<Pop> vertices();
+
     CapitalHolder& findVertexByUnique(const Unique&);
 
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
