@@ -7,6 +7,9 @@
 #include "TransactionObjects.hpp"
 #include "PopulationGraph.hpp"
 #include "Types.hpp"
+#include "CapitalHolderClassDecls.hpp"
+#include "CapitalHolder.hpp"
+#include "PopulationGraph.hpp"
 
 #include "mocks/MockPopulationGraph.hpp"
 #include "mocks/MockTransactionObjects.hpp"
@@ -114,12 +117,12 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 
-    auto mutateFunction = [&newMoneyMap, &rd](std::shared_ptr<CapitalHolder>* hPtr)
+    auto mutateFunction = [&newMoneyMap, &rd](std::shared_ptr<CapitalHolder>& h)
     {
         //assign them some random value
         const Money newMoney = (*rd)();
-        newMoneyMap.insert(std::make_pair((*hPtr)->id, newMoney));
-        (*hPtr)->setMoney(newMoney);
+        newMoneyMap.insert(std::make_pair(h->id, newMoney));
+        h->setMoney(newMoney);
     };
 
     EXPECT_EQ(numVerticesPrev, tinyGraph->numVertices());
@@ -135,29 +138,33 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 
 TEST_F(BasicGraphTests, BecomeDistributorTest)
 {
-    std::function<std::unique_ptr<Distributor>(Consumer& who,
-                Distributor* convertedBy)> newDistributorFunction = 
+    NewDistributorFunction newDistributorFunction = 
         [](Consumer& who, Distributor* convertedBy)
         {
             return std::make_shared<EagerTestDistributor>(who, convertedBy);
         };
 
     Distributor* convertedBy = dynamic_cast<Distributor*>(distributor.get());
-    std::unique_ptr<Distributor> newDistributor = 
+
+    PopulationGraph::Pop newDistributor = 
         dynamic_cast<Consumer&>(*consumer1).becomeDistributor(newDistributorFunction,
                 convertedBy);
 
-    tinyGraph.mutateVerticesWithPredicate(
-            [&newDistributor](PopulationGraph::Pop& popPtr){
-                //and replace the consumer at that vertex 
+    tinyGraph->mutateVerticesWithPredicate(
+            [&newDistributor](PopulationGraph::Pop& popPtr) -> void {
+                //replace the consumer at that vertex 
                 //with a distributor constructed from the consumer's data
-                popPtr = std::make_shared<CapitalHolder>(std::move(newDistributor));
+                popPtr = newDistributor;
             },
-            [&consumer1](CapitalHolder& thisH){
-                return consumer1 == thisH;
+            //don't forget that the argument to the predicate has to be const
+            [this](const CapitalHolder& thisH) -> bool {
+                return consumer1->operator==(thisH);
             });
 
-    consumer1Ptr = dynamic_cast<Distributor*>(consumer1);
+    //make sure it worked
+    ASSERT_EQ(newDistributor->id, consumer1->id);
+
+    ASSERT_NE(dynamic_cast<Distributor*>(consumer1.get()), nullptr);
 }
 
 
