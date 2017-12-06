@@ -106,7 +106,7 @@ TEST_F(BasicGraphTests, BasicRestockTest)
     RestockHandler restockHandler;
     RestockHandler::RestockSet restockSet = 
         RestockHandler::toSet(
-            std::move(restockHandler(when, price, *distributor)));
+            restockHandler(when, price, *distributor));
 
     SaleHandler h(std::move(restockSet));
     auto recordResult = h(when, price, rd, *distributor, *consumer1);
