@@ -59,17 +59,6 @@ public:
     const SimulationTick when = 0;
 };
 
-TEST_F(BasicGraphTests, TestUnorderedMapOfUniques)
-{
-    std::unordered_map<Unique, Money> umap;
-    umap.insert(std::make_pair(Unique(), 10));
-    for(auto x : umap)
-    {
-        std::cout << x.first << "," << x.second << std::endl;
-    }
-
-    std::cout << xg::Guid() << std::endl;
-}
 
 TEST_F(BasicGraphTests, BasicSaleTest)
 {
@@ -110,6 +99,14 @@ TEST_F(BasicGraphTests, BasicRestockTest)
 
     SaleHandler h(std::move(restockSet));
     auto recordResult = h(when, price, rd, *distributor, *consumer1);
+}
+
+TEST_F(BasicGraphTests, TestVertices)
+{
+    auto verts = tinyGraph->vertices();
+    const auto numVerts = tinyGraph->numVertices();
+
+    ASSERT_EQ(numVerts, verts.size());
 }
 
 TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
@@ -187,6 +184,4 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
     ASSERT_NE(dynamic_cast<Distributor*>(&vertRef), nullptr);
 
 }
-
-
 }
