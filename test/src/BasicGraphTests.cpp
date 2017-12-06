@@ -124,7 +124,7 @@ TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
     auto mutateFunction = [&newMoneyMap, &rd](const std::shared_ptr<CapitalHolder> h)
     {
         //assign them some random value
-        const Money newMoney = rd();
+        const Money newMoney = rd() % 1000;
         newMoneyMap.insert(std::make_pair(h->id, newMoney));
         h->setMoney(newMoney);
 
