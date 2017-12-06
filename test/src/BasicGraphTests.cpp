@@ -59,6 +59,18 @@ public:
     const SimulationTick when = 0;
 };
 
+TEST_F(BasicGraphTests, TestUnorderedMapOfUniques)
+{
+    std::unordered_map<Unique, Money> umap;
+    umap.insert(std::make_pair(Unique(), 10));
+    for(auto x : umap)
+    {
+        std::cout << x.first << "," << x.second << std::endl;
+    }
+
+    std::cout << xg::Guid() << std::endl;
+}
+
 TEST_F(BasicGraphTests, BasicSaleTest)
 {
     auto recordResult = (*saleHandler)(when, price, 
