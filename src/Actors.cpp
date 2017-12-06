@@ -83,20 +83,19 @@ void Company::deductMoney(Money)
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
-        Inventory startingInventory)
-    : StaticDistributor(id, startingMoney, startingInventory, nullptr)
+        Inventory startingInventory,
+        ChanceContributor* _salesChance)
+    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
+      salesChance(_salesChance->clone())
 {
     setInventory(startingInventory);
 }
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
-        Inventory startingInventory,
-        ChanceContributor* _salesChance)
-    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
-      salesChance(_salesChance->clone())
-    {}
-
+        Inventory startingInventory)
+    : StaticDistributor(id, startingMoney, startingInventory, nullptr)
+{ }
 
 
 StaticDistributor::StaticDistributor(Unique id, 
