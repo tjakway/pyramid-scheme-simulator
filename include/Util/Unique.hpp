@@ -23,7 +23,7 @@ class Uniqueable;
 //forward declare hash template specialization for Unique
 namespace std {
     template <>
-    class hash<pyramid_scheme_simulator::Unique>
+    struct hash<pyramid_scheme_simulator::Unique>
     {
     public:
         size_t operator()(pyramid_scheme_simulator::Unique const &) const;
