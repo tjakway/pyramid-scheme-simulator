@@ -13,8 +13,8 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
         ChanceContributor* sChance,
         ChanceContributor* cChance)
     : Consumer(u, m),
-    salesChance(std::move(sChance->clone())),
-    conversionChance(std::move(cChance->clone()))
+    salesChance(sChance->clone()),
+    conversionChance(cChance->clone())
 {}
 
 StaticConsumer::StaticConsumer(Unique u, Money m,
