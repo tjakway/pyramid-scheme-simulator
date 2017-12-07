@@ -12,8 +12,9 @@ namespace {
     using namespace pyramid_scheme_simulator;
     rd_seed_type getCurrentTimeMillis()
     {
-        return std::chrono::duration_cast< std::chrono::milliseconds >(
-            std::chrono::system_clock::now().time_since_epoch()).count();
+        return static_cast<rd_seed_type>(std::chrono::duration_cast< 
+                std::chrono::milliseconds >(
+            std::chrono::system_clock::now().time_since_epoch()).count());
     }
 
     rd_ptr rdFromSeed(const rd_seed_type seed)
