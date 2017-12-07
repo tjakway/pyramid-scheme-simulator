@@ -62,7 +62,7 @@ const unsigned int Company::inventory = std::numeric_limits<unsigned int>::max()
  * the company would never buy from one of its own distributors that it sold
  * its product to
  */
-bool Company::canPurchase(Money cost, const CapitalHolder& from)
+bool Company::canPurchase(Money /*cost*/, const CapitalHolder& /*from*/)
 {
     return false;
 }
