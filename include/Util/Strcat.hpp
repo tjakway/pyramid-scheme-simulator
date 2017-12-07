@@ -41,4 +41,7 @@
 
 //WARNING: only works for C++11 (because of the ostringstream, not anything to do with macros), 
 //see https://stackoverflow.com/questions/24494761/c-stringstream-inline
-#define UTIL_STRCAT__ ((std::ostringstream&)(std::ostringstream("") FEED(__VA_ARGS__) )).str()
+#define UTIL_STRCAT__(...) ((std::ostringstream&)(std::ostringstream("") FEED(__VA_ARGS__) )).str()
+
+#define STRCAT(...) UTIL_STRCAT__(__VA_ARGS__)
+
