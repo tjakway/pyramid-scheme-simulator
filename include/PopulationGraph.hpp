@@ -40,6 +40,8 @@ public:
 
     NEW_EXCEPTION_TYPE(PopulationGraphException);
     NEW_EXCEPTION_TYPE_WITH_BASE(VertexNotFoundException, PopulationGraphException);
+    //for internal errors AKA sanity checks
+    NEW_EXCEPTION_TYPE_WITH_BASE(ImplementationException, PopulationGraphException);
     
     static void throwVertexNotFoundException(const Unique&);
 

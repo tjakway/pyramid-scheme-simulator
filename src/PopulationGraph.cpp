@@ -3,6 +3,8 @@
 #include "PopulationGraph.hpp"
 #include "Util/Util.hpp"
 #include "Util/AssertWithMessage.hpp"
+#include "Util/NewExceptionType.hpp"
+#include "Util/Strcat.hpp"
 
 #include <unordered_map>
 #include <unordered_set>
@@ -178,9 +180,17 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     //and http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/connected_components.html
     std::vector<int> components(boost::num_vertices(g));
     auto numSubgraphs = boost::connected_components(g, &components[0]);
-    
+
     //initialize the vector of subgraphs and fill it with enough empty sets
-    std::vector<std::unordered_set<Pop>> subgraphs(numSubgraphs);
+    std::vector<std::unordered_set<Pop>> subgraphs;
+
+    if(numSubgraphs > 0) {
+        subgraphs.reserve(numSubgraphs);
+    } else if(numSubgraphs < 0) {
+        throw ImplementationException(STRCAT("Error in boost::connected_components, ",
+                    "numSubgraphs is < 0"));
+    }
+    
     for(int i = 0; i < numSubgraphs; i++)
     {
         subgraphs.emplace_back();
