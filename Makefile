@@ -8,6 +8,8 @@ CMAKE_GENERATED_MAKEFILE=$(BIN_DIR)/Makefile
 
 LIST_RULE_PATH=$(MKFILE_DIR)/mk/list_rule.txt
 
+CLANG_CHECK_ARGS=-extra-arg=-Wno-undef -extra-arg=-Wno-unused-function
+
 VERBOSE_VALGRIND_ARGS=--expensive-definedness-checks=yes --track-origins=yes --show-below-main=yes --fair-sched=yes --show-emwarns=yes
 #also print memory info at the end
 VERY_VERBOSE_VALGRIND_ARGS=--leak-check=full $(VERBOSE_VALGRIND_ARGS)
@@ -37,7 +39,7 @@ compile_commands.json: cmake
 .PHONY: clang-check
 clang-check: compile_commands.json
 	find src/ include/ test -regextype egrep -regex ".*\.(cpp|h|hpp|cxx|c)" -type f \
-	    -exec clang-check {} +
+	    -exec clang-check $(CLANG_CHECK_ARGS) {} +
 
 #when I wrote this I didn't realize CMake generates
 #a help target that does the same thing with nicer formatting...
