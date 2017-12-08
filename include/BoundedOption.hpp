@@ -42,16 +42,16 @@ protected:
 
     void setRange(std::pair<T, T> r) { range = r; }
 
-    std::string defaultErrorMessage()
+    static std::string defaultErrorMessage(std::pair<T, T> paramRange)
     {
         std::ostringstream ss;
         ss << "Option not in range " <<
-            range.first << " to " << range.second << 
+            paramRange.first << " to " << paramRange.second << 
             std::endl;
         return ss.str();
     }
 
-    std::string optionNotInRangeMsg = defaultErrorMessage();
+    std::string optionNotInRangeMsg;
 
     void rangeCheck()
     {
@@ -101,14 +101,14 @@ public:
     {}
 
     BoundedOption(T& opt, std::pair<T, T> _range)
-        : BoundedOption(&opt, _range, defaultErrorMessage())
+        : BoundedOption(&opt, _range, defaultErrorMessage(_range))
     {}
 
     /**
     * constructor to pass the range in ahead of time
     */
     BoundedOption(std::pair<T, T> range)
-        : BoundedOption(nullptr, range, defaultErrorMessage())
+        : BoundedOption(nullptr, range, defaultErrorMessage(range))
     { }
 
 
