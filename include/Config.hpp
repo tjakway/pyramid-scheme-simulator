@@ -116,7 +116,7 @@ public:
     class GraphGenerationOptions
     {
     public:
-        const bool allowUnconnectedSubgraphs = true;
+        const bool allowDisconnectedSubgraphs = true;
 
         BoundedOption<unsigned long> graphSize =
             BoundedOption<unsigned long>(

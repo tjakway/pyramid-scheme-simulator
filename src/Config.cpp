@@ -67,14 +67,14 @@ Config::SimulationOptions::SimulationOptions(
       {}
 
 Config::GraphGenerationOptions::GraphGenerationOptions(
-        const bool _allowUnconnectedSubgraphs,
+        const bool _allowDisconnectedSubgraphs,
         const unsigned long _graphSize,
         const double _linkChance,
         const unsigned long _maxEdgesPerVertex,
         const Config::ChanceDistribution _salesSkillDistribution,
         const Config::ChanceDistribution _conversionChanceDistribution,
         const bool _onlyInitialOnboarding)
-    : allowUnconnectedSubgraphs(_allowUnconnectedSubgraphs),
+    : allowDisconnectedSubgraphs(_allowDisconnectedSubgraphs),
     linkChance(make_unique<PercentOption>(_linkChance)),
     salesSkillDistribution(_salesSkillDistribution),
     conversionChanceDistribution(_conversionChanceDistribution),
