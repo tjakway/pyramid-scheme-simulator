@@ -47,8 +47,8 @@ public:
     
     [[noreturn]] static void throwVertexNotFoundException(const Unique&);
 
-private:
     /*****************/
+private:
 
     //TODO: *maybe* make this a GraphGenerationOptions field
     unsigned int maxTries;
