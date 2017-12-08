@@ -6,6 +6,8 @@
 #include <utility>
 #include <limits>
 
+#include <spdlog/spdlog.h>
+
 #include "Types.hpp"
 #include "ChanceContributor.hpp"
 #include "CapitalHolderClassDecls.hpp"
@@ -185,6 +187,15 @@ public:
 
     Config(std::unique_ptr<SimulationOptions>&&,
             std::unique_ptr<GraphGenerationOptions>&&);
+
+
+    /********************/
+    /******Statics*******/
+    /********************/
+
+    static const std::shared_ptr<spdlog::logger> logger;
+
+    /********************/
 };
 
 

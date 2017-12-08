@@ -3,6 +3,7 @@
 #include <random>
 #include <chrono>
 #include <string>
+#include <iostream>
 
 #include "Util/Util.hpp"
 #include "Types.hpp"
@@ -83,5 +84,20 @@ Config::GraphGenerationOptions::GraphGenerationOptions(
     graphSize.setOption(_graphSize);
     maxEdgesPerVertex.setOption(_maxEdgesPerVertex);
 }
+
+const std::shared_ptr<spdlog::logger> Config::logger = [](){
+    try {
+        return spdlog::stdout_color_mt("pyramid_scheme_simulator");
+    }
+    catch (const spdlog::spdlog_ex& ex)
+    {
+        std::cerr << "Error while statically initializing Config: log init failed " 
+            << ex.what() << std::endl;
+        throw ex;
+    }
+}();
+
+
+
 
 }
