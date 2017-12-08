@@ -36,6 +36,12 @@ function(all_targets_compile_definitions def)
     target_compile_definitions(${TEST_TARGET} PRIVATE ${def})
 endfunction()
 
+function(all_targets_link_libraries)
+    target_link_libraries(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
+    target_link_libraries(${MAIN_EXE_TARGET} PRIVATE ${ARGN})
+    target_link_libraries(${TEST_TARGET} PRIVATE ${ARGN})
+endfunction()
+
 #divide debug fields into common (i.e. non compiler-specific) debug flags, GCC-specific flags and clang-specific flags
 ########################################
 #cmake list of flags
@@ -150,3 +156,5 @@ endif()
 
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
+
+all_targets_link_libraries(spdlog)
