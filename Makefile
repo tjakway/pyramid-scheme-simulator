@@ -17,6 +17,7 @@ VERY_VERBOSE_VALGRIND_ARGS=--leak-check=full $(VERBOSE_VALGRIND_ARGS)
 .PHONY: all
 all: tags
 
+.PHONY: tags
 tags:
 	ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --language-force=C++ .
 
