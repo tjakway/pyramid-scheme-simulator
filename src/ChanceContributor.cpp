@@ -8,8 +8,8 @@ namespace pyramid_scheme_simulator {
 std::unique_ptr<ChanceContributor> 
     ChanceContributor::operator+(const ChanceContributor& other)
 {
-    return make_unique<Intersection>(std::move(clone()),
-            std::move(other.clone()));
+    return make_unique<Intersection>(clone(),
+            other.clone());
 }
 
 
@@ -21,8 +21,8 @@ double ChanceContributor::Intersection::getChance(rd_ptr rd)
 std::unique_ptr<ChanceContributor> ChanceContributor::Intersection::clone() const
 {
     return make_unique<Intersection>(
-            std::move(firstSource->clone()), 
-            std::move(secondSource->clone()));
+            firstSource->clone(), 
+            secondSource->clone());
 }
 
 bool ChanceContributor::sampleFrom(rd_ptr rd)
