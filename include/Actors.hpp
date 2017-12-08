@@ -59,6 +59,8 @@ protected:
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : Distributor(self, convBy)
     {}
+    //used by other constructors
+    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&&);
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:

@@ -85,11 +85,10 @@ StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney, 
         Inventory startingInventory,
         ChanceContributor* _salesChance)
-    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
-      salesChance(_salesChance->clone())
-{
-    setInventory(startingInventory);
-}
+    : StaticDistributor(id, startingMoney,
+            startingInventory,
+            _salesChance->clone())
+{ }
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
@@ -97,13 +96,23 @@ StaticDistributor::StaticDistributor(Unique id,
     : StaticDistributor(id, startingMoney, startingInventory, nullptr)
 { }
 
+StaticDistributor::StaticDistributor(Unique id,
+        Money startingMoney,
+        Inventory startingInventory,
+        std::unique_ptr<ChanceContributor>&& _salesChance)
+    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
+        salesChance(std::move(_salesChance))
+{
+    setInventory(startingInventory);
+}
+
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
         Inventory startingInventory,
         const double _salesChance)
     : StaticDistributor(id, startingMoney, startingInventory,
-        new StaticChanceContributor(_salesChance))
+        make_unique<StaticChanceContributor>(_salesChance))
 { }
 
 
@@ -128,7 +137,7 @@ StaticDistributor::~StaticDistributor() {}
 
 ChanceContributor& StaticDistributor::getSalesChanceContribution()
 {
-    return *salesChance.get();
+    return *salesChance;
 }
 
 const std::unique_ptr<ChanceContributor> StaticDistributor::conversionChance =
