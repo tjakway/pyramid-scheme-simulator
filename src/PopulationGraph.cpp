@@ -178,19 +178,29 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
 {
     //see http://www.boost.org/doc/libs/1_53_0/libs/graph/example/connected_components.cpp
     //and http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/connected_components.html
-    std::vector<int> components(boost::num_vertices(g));
+    
+    //boost::connected_components assigns every vertex an integer representing its subgraph
+    std::vector<int> components;
+    components.reserve(boost::num_vertices(g));
+
     auto numSubgraphs = boost::connected_components(g, &components[0]);
 
     //initialize the vector of subgraphs and fill it with enough empty sets
     std::vector<std::unordered_set<Pop>> subgraphs;
 
     if(numSubgraphs > 0) {
-        subgraphs.reserve(numSubgraphs);
+        //if its >0 we can safely cast to an unsigned size type
+        const auto uNumSubgraphs = 
+            static_cast<std::vector<std::unordered_set<Pop>>::size_type>(numSubgraphs);
+
+        subgraphs.reserve(uNumSubgraphs);
+        //impossible to have negative subgraphs
     } else if(numSubgraphs < 0) {
         throw ImplementationException(STRCAT("Error in boost::connected_components, ",
                     "numSubgraphs is < 0"));
     }
     
+    //create empty sets for the subgraphs
     for(int i = 0; i < numSubgraphs; i++)
     {
         subgraphs.emplace_back();
@@ -200,10 +210,12 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     //check that every vertex has been assigned to a subgraph
     assert(components.size() == boost::num_vertices(g));
 
+    //assign each vertex to an unordered_set based on the subgraph number it was given
+    //by connected_components
     for(std::vector<int>::size_type i = 0;
             i < components.size(); ++i)
     {
-        subgraphs[components[i]].insert(g[i]);
+        subgraphs.at(components[i]).insert(g[i]);
     }
     
     return subgraphs;
