@@ -95,7 +95,7 @@ namespace std {
 
 namespace pyramid_scheme_simulator {
 
-void PopulationGraph::throwVertexNotFoundException(const Unique& which)
+[[noreturn]] void PopulationGraph::throwVertexNotFoundException(const Unique& which)
 {
     std::ostringstream os;
     os << "Could not find the index of vertex " << which << std::endl;

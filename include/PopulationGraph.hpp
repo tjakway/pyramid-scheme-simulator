@@ -43,7 +43,7 @@ public:
     //for internal errors AKA sanity checks
     NEW_EXCEPTION_TYPE_WITH_BASE(ImplementationException, PopulationGraphException);
     
-    static void throwVertexNotFoundException(const Unique&);
+    [[noreturn]] static void throwVertexNotFoundException(const Unique&);
 
 private:
     /*****************/
