@@ -2,10 +2,15 @@
 #include "Util/Util.hpp"
 #include "ChanceContributor.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include <limits>
 #include <utility>
 
 namespace pyramid_scheme_simulator {
+
+const std::shared_ptr<spdlog::logger> TestConfig::logger = 
+    spdlog::stdout_color_mt("test_console");
 
 const Money TestConfig::minStartingFunds = 10;
 const Money TestConfig::maxStartingFunds = 1000;
