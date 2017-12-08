@@ -47,7 +47,7 @@ public:
         }
         else 
         {
-            return std::uniform_int_distribution<T>(bounds.first, bounds.second)(rng);
+            return std::uniform_int_distribution<T>(bounds.first, bounds.second)(*rng);
         }
     }
 

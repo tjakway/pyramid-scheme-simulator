@@ -42,7 +42,7 @@ if(probability < 0)
 double Util::sampleUniformDistributionZeroToOne(rd_ptr rng)
 {
     static auto dist = getUniformRealDistZeroToOne();
-    return dist(rng);
+    return dist(*rng);
 }
 
 const std::array<unsigned char, 16> Util::hashToArray(size_t hash)
