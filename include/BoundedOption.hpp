@@ -78,7 +78,7 @@ protected:
         {
             throw OptionNotSetException();
         }
-        else if(!(*option <= range.first && *option >= range.second))
+        else if((*option < range.first) || (*option > range.second))
         {
             throw OptionNotInRangeException(optionNotInRangeMsg);
         }
