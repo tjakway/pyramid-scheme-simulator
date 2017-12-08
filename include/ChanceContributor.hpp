@@ -9,6 +9,10 @@ class ChanceContributor
 public:
     virtual double getChance(rd_ptr) = 0;
 
+    /**
+     * convenience method that returns whether or not the chance "happened"
+     * according to the distribution governed by the ChanceContributor
+     */
     bool sampleFrom(rd_ptr);
 
     virtual std::unique_ptr<ChanceContributor> clone() const = 0;
@@ -48,6 +52,18 @@ public:
     StaticChanceContributor(double staticChance);
 
     virtual double getChance(rd_ptr) override;
+    virtual std::unique_ptr<ChanceContributor> clone() const override;
+};
+
+/**
+ * most trivial instance of a ChanceContributor: has no state, just rolls the dice
+ */
+class RandomChanceContributor : public ChanceContributor
+{
+public:
+    RandomChanceContributor() {}
+    virtual double getChance(rd_ptr) override;
+
     virtual std::unique_ptr<ChanceContributor> clone() const override;
 };
 

@@ -46,5 +46,15 @@ std::unique_ptr<ChanceContributor> StaticChanceContributor::clone() const
     return make_unique<StaticChanceContributor>(chance);
 }
 
+double RandomChanceContributor::getChance(rd_ptr rd)
+{
+    return Util::sampleUniformDistributionZeroToOne(rd);
+}
+
+std::unique_ptr<ChanceContributor> RandomChanceContributor::clone() const 
+{
+    return make_unique<RandomChanceContributor>();
+}
+
 
 }
