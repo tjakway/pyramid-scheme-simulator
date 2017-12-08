@@ -78,8 +78,8 @@ public:
     bool hasOption() { return option.get() == nullptr; };
     virtual T getOption() { return checkOption(); }
 
-    BoundedOption(T* opt, std::pair<T, T> range, std::string onErrorMsg)
-        : option(std::unique_ptr<T>(opt)), range(range), optionNotInRangeMsg(onErrorMsg)
+    BoundedOption(T* opt, std::pair<T, T> _range, std::string onErrorMsg)
+        : option(std::unique_ptr<T>(opt)), range(_range), optionNotInRangeMsg(onErrorMsg)
     {
         //don't throw if the option isn't set yet
         if(opt != nullptr) {
