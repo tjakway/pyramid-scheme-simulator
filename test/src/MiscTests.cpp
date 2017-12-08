@@ -29,5 +29,29 @@ TEST(MiscTests, TestSTRCAT)
     ASSERT_EQ("610bazquz", STRCAT((int)6, (unsigned long)10, "baz", std::string("quz")));
 }
 
+namespace {
+    std::string returnsOwnName(){
+        return STRCAT(__func__);
+    }
+}
+//STRCAT can be used with convenient debugging macros like __file__, __line__, etc.
+TEST(MiscTests, TestSTRCATWithDebuggingMacros)
+{
+    //note: using __func__ in google tests gives unintuitive results because
+    //gtest relies on macro magic to transform tests under the hood
+    EXPECT_EQ(returnsOwnName(), "returnsOwnName");
+
+    const std::string expected = "MiscTests.cpp";
+    //__FILE__ can (always? sometimes? not sure) give an absolute path
+    std::string path = STRCAT(__FILE__);
+    ASSERT_TRUE(path.length() >= expected.length());
+
+    auto rfindRes = path.rfind(expected);
+    ASSERT_NE(rfindRes, std::string::npos);
+
+    ASSERT_EQ(rfindRes + expected.length(), path.length());
+
+}
+
 
 }
