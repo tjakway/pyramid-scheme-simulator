@@ -2,9 +2,12 @@
 
 #include <utility>
 #include <exception>
+#include <stdexcept>
 #include <string>
 #include <sstream> 
 #include <memory>
+
+#include "Util/NewExceptionType.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -16,35 +19,12 @@ public:
      * ERROR CLASSES
      */
 
-    class BoundedOptionException : public std::exception
-    { };
 
-    /**
-     * exception thrown if the option is out of the specified bounds
-     */
-    class OptionNotInRangeException : 
-        public BoundedOptionException
-    {
-        std::string msg;
-    public:
-        OptionNotInRangeException(std::string explicitMsg)
-            : msg(explicitMsg)
-        { }
+    NEW_EXCEPTION_TYPE_WITH_BASE(BoundedOptionException, std::runtime_error);
+    NEW_EXCEPTION_TYPE_WITH_BASE(OptionNotInRangeException, BoundedOptionException);
+    //thrown if the BoundedOption was only given a range
+    NEW_EXCEPTION_TYPE_WITH_BASE(OptionNotSetException, BoundedOptionException);
 
-        virtual const char* what() const throw() override
-        {
-            return msg.c_str();
-        }
-    };
-
-    class OptionNotSetException 
-        : public BoundedOptionException
-    {
-        virtual const char* what() const throw() override
-        {
-            return "BoundedOption was only given a range.";
-        }
-    };
 private:
     std::unique_ptr<T> option;
     std::pair<T, T> range;
@@ -84,7 +64,7 @@ protected:
     {
         if(option == nullptr)
         {
-            throw OptionNotSetException();
+            throw OptionNotSetException("BoundedOption was only given a range");
         }
         else
         {
@@ -101,7 +81,10 @@ public:
     BoundedOption(T* opt, std::pair<T, T> range, std::string onErrorMsg)
         : option(std::unique_ptr<T>(opt)), range(range), optionNotInRangeMsg(onErrorMsg)
     {
-        checkOption();
+        //don't throw if the option isn't set yet
+        if(opt != nullptr) {
+            checkOption();
+        }
     }
 
     /**
