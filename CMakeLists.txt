@@ -10,6 +10,7 @@ set(TEST_TARGET "test-pyramid-simulator")
 
 
 include("cmake/default_build_type.cmake" OPTIONAL)
+include("cmake/build_spdlog_dep.cmake" REQUIRED)
 
 #the name of the file containing main() that shouldn't be included in MAIN_LIB_TARGET
 set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
@@ -36,6 +37,8 @@ function(all_targets_compile_definitions def)
     target_compile_definitions(${TEST_TARGET} PRIVATE ${def})
 endfunction()
 
+#NOTE: this function probably isn't needed since you can link everything to the main
+#lib target and then link that to other targets
 function(all_targets_link_libraries)
     target_link_libraries(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
     target_link_libraries(${MAIN_EXE_TARGET} PRIVATE ${ARGN})
@@ -67,9 +70,9 @@ function(EnableDebugWarnings)
     #note: clang with apple modifications is named AppleClang (which will fail STREQUAL "Clang")
     #use MATCHES "Clang" to check for either kind of clang
     #see http://stackoverflow.com/questions/10046114/in-cmake-how-can-i-test-if-the-compiler-is-clang
-    if(("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang") AND NOT ${APPLE})
+    if((${CMAKE_CXX_COMPILER_ID} MATCHES "Clang") AND NOT ${APPLE})
         message("Building with clang on a non-Apple machine.  Enabling -faddress=sanitize.")
-        all_targets_compile_property("${CLANG_SANITIZE_ADDRESS_FLAG}")
+        all_targets_compile_property(${CLANG_SANITIZE_ADDRESS_FLAG})
     endif()
 endfunction()
 
@@ -107,6 +110,7 @@ add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
 target_link_libraries(${MAIN_LIB_TARGET} xg)
 #see https://stackoverflow.com/a/43885372/450153 for an explanation of this syntax
 target_link_libraries(${MAIN_LIB_TARGET} Boost::graph)
+target_link_libraries(${MAIN_LIB_TARGET} spdlog)
 
 add_executable(${MAIN_EXE_TARGET} ${MAIN_SRC_FILE})
 target_link_libraries(${MAIN_EXE_TARGET} ${MAIN_LIB_TARGET})
@@ -156,5 +160,3 @@ endif()
 
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
-
-all_targets_link_libraries(spdlog)
