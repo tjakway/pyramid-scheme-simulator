@@ -12,6 +12,12 @@ class StaticConsumer : public Consumer
 {
     std::unique_ptr<ChanceContributor> salesChance;
     std::unique_ptr<ChanceContributor> conversionChance;
+
+protected:
+    StaticConsumer(Unique, Money,
+            std::unique_ptr<ChanceContributor>&&,
+            std::unique_ptr<ChanceContributor>&&);
+
 public:
     StaticConsumer(Unique, Money, 
             const double salesChance, const double conversionChance);
