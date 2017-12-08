@@ -186,23 +186,24 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     auto numSubgraphs = boost::connected_components(g, &components[0]);
 
     //initialize the vector of subgraphs and fill it with enough empty sets
-    std::vector<std::unordered_set<Pop>> subgraphs;
+    //use a typedef because have to frequently reference ::size_type
+    using SubgraphsT = std::vector<std::unordered_set<Pop>>;
+    SubgraphsT subgraphs;
 
     if(numSubgraphs > 0) {
         //if its >0 we can safely cast to an unsigned size type
-        const auto uNumSubgraphs = 
-            static_cast<std::vector<std::unordered_set<Pop>>::size_type>(numSubgraphs);
+        subgraphs.reserve(static_cast<SubgraphsT::size_type>(numSubgraphs));
 
-        subgraphs.reserve(uNumSubgraphs);
         //impossible to have negative subgraphs
     } else if(numSubgraphs < 0) {
-        throw ImplementationException(STRCAT("Error in boost::connected_components, ",
-                    "numSubgraphs is < 0"));
+        throw ImplementationException(STRCAT("Error in ", __func__, 
+                    " call to boost::connected_components, numSubgraphs is < 0"));
     }
     
     //create empty sets for the subgraphs
     for(int i = 0; i < numSubgraphs; i++)
     {
+        //TODO: use fill constructor
         subgraphs.emplace_back();
     }
 
@@ -215,7 +216,14 @@ std::vector<std::unordered_set<PopulationGraph::Pop>>
     for(std::vector<int>::size_type i = 0;
             i < components.size(); ++i)
     {
-        subgraphs.at(components[i]).insert(g[i]);
+        //check each connected component before casting to vector::size_type
+        if(components[i] < 0) {
+            throw ImplementationException(STRCAT("Error in ", __func__, 
+                        " components[", i, "] is ", i));
+        } else {
+            subgraphs[static_cast<SubgraphsT::size_type>(components[i])]
+                .insert(g[i]);
+        }
     }
     
     return subgraphs;
