@@ -1,0 +1,52 @@
+#include "TestConfig.hpp"
+#include "Util/Util.hpp"
+#include "ChanceContributor.hpp"
+
+#include <limits>
+#include <utility>
+
+namespace pyramid_scheme_simulator {
+
+const Money TestConfig::minStartingFunds = 10;
+const Money TestConfig::maxStartingFunds = 1000;
+
+const Config::ChanceDistribution TestConfig::tenPercentChanceDistribution = 
+    [](rd_ptr /*rd*/) -> std::unique_ptr<ChanceContributor> {
+        return make_unique<StaticChanceContributor>(0.1);
+    };
+
+
+const Config::ChanceDistribution TestConfig::randomChanceDistribution = 
+    [](rd_ptr /*rd*/) -> std::unique_ptr<ChanceContributor> {
+        return make_unique<StaticChanceContributor>(0.1);
+    };
+
+const std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
+{
+    return make_unique<Config>(
+            make_unique<Config::SimulationOptions>(
+                std::unique_ptr<Config::SimulationOptions::DistributorOptions>(),
+                std::numeric_limits<SimulationTick>::max(), 
+                //product cost of 1
+                1, 1,
+                //sample starting funds from a random distribution
+                [rd]() { 
+                    return Util::sampleRdInRange(rd, 
+                        std::make_pair(minStartingFunds, maxStartingFunds));
+                    }
+                ),
+            make_unique<Config::GraphGenerationOptions>(
+                false, //no disconnected subgraphs
+                100, //graph size
+                0.2, //link chance
+                std::numeric_limits<unsigned long>::max(), //no limit on max edges per vertex
+                tenPercentChanceDistribution, //sales chance
+                tenPercentChanceDistribution, //conversion chance
+                false //only initial onboarding
+                )
+            );
+}
+
+
+
+}
