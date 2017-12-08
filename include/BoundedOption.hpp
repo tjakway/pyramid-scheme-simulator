@@ -7,6 +7,7 @@
 #include <sstream> 
 #include <memory>
 
+#include "Util/Util.hpp"
 #include "Util/NewExceptionType.hpp"
 
 namespace pyramid_scheme_simulator {
@@ -32,7 +33,7 @@ private:
 public:
     void setOption(T opt) 
     {
-        option = std::unique_ptr<T>(new T(opt));
+        option = make_unique<T>(opt);
         checkOption();
     }
 
@@ -78,14 +79,30 @@ public:
     bool hasOption() { return option.get() == nullptr; };
     virtual T getOption() { return checkOption(); }
 
+protected:
+    /**
+     * passed type must be copy-constructable
+     */
     BoundedOption(T* opt, std::pair<T, T> _range, std::string onErrorMsg)
-        : option(std::unique_ptr<T>(opt)), range(_range), optionNotInRangeMsg(onErrorMsg)
+        : range(_range), optionNotInRangeMsg(onErrorMsg)
     {
         //don't throw if the option isn't set yet
-        if(opt != nullptr) {
+        if(opt != nullptr)
+        {
+            setOption(*opt);
             checkOption();
         }
     }
+
+public:
+
+    BoundedOption(T& opt, std::pair<T, T> _range, std::string onErrorMsg)
+        : BoundedOption(&opt, _range, onErrorMsg)
+    {}
+
+    BoundedOption(T& opt, std::pair<T, T> _range)
+        : BoundedOption(&opt, _range, defaultErrorMessage())
+    {}
 
     /**
     * constructor to pass the range in ahead of time
@@ -99,19 +116,12 @@ public:
     BoundedOption(std::pair<T, T> range, std::string onErrorMsg)
         : BoundedOption(nullptr, range, onErrorMsg)
     { }
-
-
-
-
-    BoundedOption(T* opt, std::pair<T, T> range)
-        : BoundedOption(opt, range, defaultErrorMessage())
-    { }
 };
 
 class PercentOption : public BoundedOption<double>
 {
 public:
-    PercentOption(double pc) : BoundedOption(new double(pc),
+    PercentOption(double pc) : BoundedOption(pc,
             std::pair<double, double>(0.0, 1.0))
         {}
 };
