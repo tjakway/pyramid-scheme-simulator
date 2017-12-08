@@ -68,10 +68,10 @@ public:
 
     //thin wrappers over the static methods
     const std::shared_ptr<Distributor> checkSellerPointer() {
-        SaleIsPossibleResult::checkSellerPointer(seller);
+        return SaleIsPossibleResult::checkSellerPointer(seller);
     }
     const std::shared_ptr<Consumer> checkBuyerPointer() {
-        SaleIsPossibleResult::checkBuyerPointer(buyer);
+        return SaleIsPossibleResult::checkBuyerPointer(buyer);
     }
 
     static SaleIsPossibleResult good(SalesResult r, 
