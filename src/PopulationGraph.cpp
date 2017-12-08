@@ -154,7 +154,7 @@ PopulationGraph::BGLPopulationGraph
     for(auto i : vertices)
     {
         insertPop(std::shared_ptr<CapitalHolder>(
-                    config.defaults->mkConsumer(rd, i)));
+                    config.defaults.mkConsumer(config, rd, i)));
     }
 
     //add edges using the saved vertex descriptors

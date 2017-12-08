@@ -167,18 +167,15 @@ public:
 
     class Defaults
     {
-    private:
-        std::shared_ptr<Config> config;
-
     public:
-        Defaults(Config* config);
+        Defaults();
 
         /**
         * Consumer factory
         */
-        std::shared_ptr<Consumer> mkConsumer(rd_ptr, Unique);
+        std::shared_ptr<Consumer> mkConsumer(Config&, rd_ptr, Unique);
     };
-    std::unique_ptr<Config::Defaults> defaults = make_unique<Config::Defaults>(this);
+    Defaults defaults;
 
 
     Config(const rd_seed_type seed,
