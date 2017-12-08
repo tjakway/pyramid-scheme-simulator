@@ -23,7 +23,7 @@ public:
 
 TEST_F(GenGraphTests, BasicBuildGraphTest)
 {
-    const std::unique_ptr<Config> configPtr(TestConfig::getBuildGraphConfig(rd));
+    const std::unique_ptr<Config> configPtr = TestConfig::getBuildGraphConfig(rd);
     PopulationGraph g(*configPtr);
 }
 
