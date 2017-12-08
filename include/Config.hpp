@@ -188,6 +188,7 @@ public:
     Config(std::unique_ptr<SimulationOptions>&&,
             std::unique_ptr<GraphGenerationOptions>&&);
 
+    virtual ~Config() {}
 
     /********************/
     /******Statics*******/
