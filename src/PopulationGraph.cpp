@@ -360,7 +360,7 @@ PopulationGraph::vertices_size_type
 PopulationGraph::vertices_size_type 
     PopulationGraph::mutateVertices(MutateVertexFunction mutate)
 {
-    PopulationGraph::mutateVerticesOfGraph(mutate, graph);
+    return PopulationGraph::mutateVerticesOfGraph(mutate, graph);
 }
 
 PopulationGraph::vertices_size_type
