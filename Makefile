@@ -27,7 +27,17 @@ find-shared-ptr-references:
 #TODO
 .PHONY: cmake
 cmake:
+	true #pass
 
+compile_commands.json: cmake
+	test -f compile_commands.json || ln -s $(BIN_DIR)/compile_commands.json $(MKFILE_DIR)/
+
+#run clang-check on the source folders
+#(obviously clang-check has to be on your PATH)
+.PHONY: clang-check
+clang-check: compile_commands.json
+	find src/ include/ test -regextype egrep -regex ".*\.(cpp|h|hpp|cxx|c)" -type f \
+	    -exec clang-check {} +
 
 #when I wrote this I didn't realize CMake generates
 #a help target that does the same thing with nicer formatting...

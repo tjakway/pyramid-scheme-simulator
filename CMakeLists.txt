@@ -17,6 +17,10 @@ set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
 #see http://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake for proper ways to enable C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+#enable exporting commands if supported
+#see https://cmake.org/cmake/help/v3.5/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
+#currently ignored unless using makefiles or Ninja
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #add a property to both the main library and the test target
 function(all_targets_compile_property)
