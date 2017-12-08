@@ -26,7 +26,7 @@ const Config::ChanceDistribution TestConfig::randomChanceDistribution =
         return make_unique<StaticChanceContributor>(0.1);
     };
 
-const std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
+std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
 {
     return make_unique<Config>(
             make_unique<Config::SimulationOptions>(
