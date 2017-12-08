@@ -17,6 +17,8 @@ TODO:
     * implement ```buyIn``` instead of just waiting for the restock phase next tick.
     * implement upstream profit transfer... this is what makes it a pyramid scheme, after all
 
+    * disable building dependency tests (xgtest, catch_tests)
+
 Config TODO:
     * have flags for default graph sizes: --verysmall --small --medium --big --verybig etc.
     * if we transition to database-backed transactions, have a flag for whether to commit what we have so far or rollback when interrupted
