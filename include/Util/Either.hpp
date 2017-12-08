@@ -175,7 +175,7 @@ private:
         return os.str();
     }
 
-    void throwTypeException(Type triedType) const
+    [[noreturn]] void throwTypeException(Type triedType) const
     {
         std::ostringstream os;
         os << getExceptionHeader()
@@ -185,13 +185,14 @@ private:
         throw EitherTypeException(os.str());
     }
 
-    void throwValueException() const
+    [[noreturn]] void throwValueException() const
     {
         std::ostringstream os;
         os << getExceptionHeader()
             << "Have type " << typeToString(type)
             << " but the underlying value is null"
             << std::endl;
+        throw EitherTypeException(os.str());
     }
 public:
     Either(std::unique_ptr<L>&& lPtr, 
