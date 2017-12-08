@@ -64,7 +64,7 @@ protected:
     std::string defaultErrorMessage()
     {
         std::ostringstream ss;
-        ss << "Option " << getOption() << " not in range " <<
+        ss << "Option not in range " <<
             range.first << " to " << range.second << 
             std::endl;
         return ss.str();
