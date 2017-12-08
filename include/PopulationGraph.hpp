@@ -35,6 +35,8 @@ public:
     using PopDescriptor = 
         boost::graph_traits<BGLPopulationGraph>::vertex_descriptor;
 
+    using vertices_size_type = BGLPopulationGraph::vertices_size_type;
+    using edges_size_type    = BGLPopulationGraph::edges_size_type;
 
     /** Exception types */
 
@@ -111,8 +113,8 @@ public:
 
     PopulationGraph(Config&);
 
-    int numVertices();
-    int numEdges();
+    vertices_size_type numVertices();
+    edges_size_type numEdges();
 
     std::vector<Pop> vertices();
 
@@ -121,9 +123,6 @@ public:
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
     using MutateVertexFunction = 
         std::function<const std::shared_ptr<CapitalHolder>(std::shared_ptr<CapitalHolder>)>;
-
-    /** an unsigned integer type */
-    using vertices_size_type = BGLPopulationGraph::vertices_size_type;
 
 protected:
     /**

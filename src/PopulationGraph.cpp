@@ -275,12 +275,12 @@ PopulationGraph::BGLPopulationGraph PopulationGraph::graphFromTuples(
     return g;
 }
 
-int PopulationGraph::numVertices()
+PopulationGraph::vertices_size_type PopulationGraph::numVertices()
 {
     return boost::num_vertices(graph);
 }
 
-int PopulationGraph::numEdges()
+PopulationGraph::edges_size_type PopulationGraph::numEdges()
 {
     return boost::num_edges(graph);
 }
