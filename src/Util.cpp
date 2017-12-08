@@ -6,28 +6,43 @@
 #include <array>
 #include <string>
 
+namespace {
+std::uniform_real_distribution<double> getUniformRealDistZeroToOne()
+{
+    //XXX: maybe overcomplicating this?
+    //sample on the interval [0, 1] instead of [0, 1)
+    return std::uniform_real_distribution<double>(0.0, 
+        std::nextafter(1.0, std::numeric_limits<double>::max()));
+}
+
+}
+
 namespace pyramid_scheme_simulator {
 
 /**
- * if probability > 1 this will always return true
- * (which is the expected behavior)
- */
+* if probability > 1 this will always return true
+* (which is the expected behavior)
+*/
 bool Util::sampleFrom(rd_ptr rng, double probability)
 {
-    if(probability < 0)
+if(probability < 0)
     {
         return false;
     }
     else
     {
-        //XXX: maybe overcomplicating this
-        //sample on the interval [0, 1] instead of [0, 1)
-
-        static auto dist = std::uniform_real_distribution<double>(0.0, 
-                std::nextafter(1.0, std::numeric_limits<double>::max()));
+        //uniform distributions are allowed to be static because it shouldn't matter how many
+        //times they've been sampled
+        static auto dist = getUniformRealDistZeroToOne();
 
         return dist(*rng) <= probability;
     }
+}
+
+double Util::sampleUniformDistributionZeroToOne(rd_ptr rng)
+{
+    static auto dist = getUniformRealDistZeroToOne();
+    return dist(rng);
 }
 
 const std::array<unsigned char, 16> Util::hashToArray(size_t hash)

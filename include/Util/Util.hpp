@@ -4,6 +4,9 @@
 #include <iterator>
 #include <array>
 
+#include "Util/NewExceptionType.hpp"
+#include "Util/Strcat.hpp"
+
 #include "Types.hpp"
 
 namespace pyramid_scheme_simulator {
@@ -20,6 +23,33 @@ public:
      * chance that bit is 1
      */
     static bool sampleFrom(rd_ptr, double);
+
+    static double sampleUniformDistributionZeroToOne(rd_ptr);
+
+    template <typename T>
+    static T sampleRdInRange(rd_ptr rng, std::pair<T, T> bounds)
+    {
+        NEW_EXCEPTION_TYPE(BoundsViolationException);
+        if(bounds.first > bounds.second) 
+        {
+            throw BoundsViolationException(
+                    STRCAT("Undefined behavior in ", __func__, " caused by passing",
+                        " bad bounds (expected first < second but ",
+                        "first = ", bounds.first, " and second = ",
+                        bounds.second));
+        }
+        else if(bounds.first == bounds.second)
+        {
+            //TODO: convert to warning
+            throw BoundsViolationException(
+                    STRCAT(__func__, " called with bounds lower == upper",
+                        " this is probably not what you want"));
+        }
+        else 
+        {
+            return std::uniform_int_distribution<T>(bounds.first, bounds.second)(rng);
+        }
+    }
 
     /**
      * from https://stackoverflow.com/questions/6942273/get-random-element-from-container
