@@ -3,7 +3,7 @@ Wishlist:
 
 Requires:
     * libuuid (for crossguid): install with `sudo apt-get install uuid-dev`
-
+    * Boost::graph (libboost-graph-dev)
 
 ----------------------------------
 
