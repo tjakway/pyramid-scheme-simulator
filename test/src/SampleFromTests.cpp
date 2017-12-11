@@ -25,7 +25,7 @@ namespace {
             }
         }
 
-        const double average = numProcs / numSamples;
+        const double average = ((double)numProcs) / ((double)numSamples);
 
         ASSERT_TRUE(Util::withinMargins(average, sampleChance, TestConfig::allowedMarginOfError));
     }
