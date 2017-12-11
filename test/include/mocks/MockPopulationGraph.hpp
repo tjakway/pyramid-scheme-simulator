@@ -20,6 +20,8 @@ public:
     {}
 
     PopulationGraph::BGLPopulationGraph* getGraphPtr() { return &graph; }
+
+    using MockUndirectedEdge = PopulationGraph::UndirectedEdge;
 };
 
 }
