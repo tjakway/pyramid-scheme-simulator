@@ -128,7 +128,8 @@ PopulationGraph::BGLPopulationGraph
     {
         for(auto j : vertices)
         {
-            if(testEdge())
+            //don't allow edges from a vertex to itself
+            if(testEdge() && i != j)
             {
                 edges.emplace(i, j);
             }
