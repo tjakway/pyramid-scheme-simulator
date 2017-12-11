@@ -6,6 +6,7 @@
 #include <array>
 #include <string>
 #include <chrono>
+#include <utility>
 
 #include "Util/Strcat.hpp"
 
@@ -82,10 +83,17 @@ const std::array<unsigned char, 16> Util::hashToArray(size_t hash)
 
 bool Util::withinMargins(double value, double expected, double margin)
 {
+    const auto margins = Util::getMargins(expected, margin);
+    return margins.first <= value && value <= margins.second;
+}
+
+
+std::pair<double, double> Util::getMargins(double expected, double margin)
+{
     const double max = (1.0 + (margin / 2.0)) * expected,
         min = (1.0 - (margin / 2.0)) * expected;
 
-    return min <= value && max >= value;
+    return std::make_pair(min, max);
 }
 
 rd_ptr Util::rdSeededWithCurrentTime()
