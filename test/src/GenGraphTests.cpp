@@ -26,6 +26,8 @@ public:
 TEST_F(GenGraphTests, TestLinkChance)
 {
     const std::unique_ptr<Config> configPtr = TestConfig::getBuildGraphConfig(rd);
+    ASSERT_LE(configPtr->graphGenerationOptions->linkChance->getOption(), 1.0);
+
     MockPopulationGraph g(*configPtr);
 
     auto graphPtr = g.getGraphPtr();
@@ -54,20 +56,22 @@ TEST_F(GenGraphTests, TestLinkChance)
     const double avgDegree = ((double)sumDegrees) / ((double)numVertices);
 
 
-    const auto gNumVertices = boost::num_vertices(*graphPtr);
-    
     //sanity checks that we didn't mess anything up while calculating degrees
-    ASSERT_EQ(numVertices, gNumVertices);
+    ASSERT_EQ(numVertices, boost::num_vertices(*graphPtr));
     ASSERT_EQ(numVertices, g.numVertices());
 
-    const double expectedAvgDegree = ((double)numVertices) * 
-        configPtr->graphGenerationOptions->linkChance->getOption();
+    const double dNumVertices = (double)numVertices;
+    const double expectedAvgDegree = 
+        (dNumVertices - 1) * configPtr->graphGenerationOptions->linkChance->getOption();
+
+    const double allowedMarginOfError = TestConfig::allowedMarginOfError / 2.0;
+    ASSERT_LE(TestConfig::allowedMarginOfError, 1.0);
 
     const double maxAllowedAvgDegree = 
-        expectedAvgDegree + (TestConfig::allowedMarginOfError / 2);
+        expectedAvgDegree * (1.0 + allowedMarginOfError);
 
     const double minAllowedAvgDegree =
-        expectedAvgDegree - (TestConfig::allowedMarginOfError / 2);
+        expectedAvgDegree * (1.0 - allowedMarginOfError);
 
     ASSERT_GE(avgDegree, minAllowedAvgDegree);
     ASSERT_LE(avgDegree, maxAllowedAvgDegree);
