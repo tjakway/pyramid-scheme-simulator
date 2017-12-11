@@ -19,6 +19,8 @@ class Util
      */
     Util() =delete;
 public:
+    NEW_EXCEPTION_TYPE(SampleFromException);
+
     /**
      * sample 1 bit using the passed RNG and the
      * chance that bit is 1

@@ -7,15 +7,13 @@
 #include <string>
 #include <chrono>
 
+#include "Util/Strcat.hpp"
+
 namespace {
 std::uniform_real_distribution<double> getUniformRealDistZeroToOne()
 {
-    //XXX: maybe overcomplicating this?
-    //sample on the interval [0, 1] instead of [0, 1)
-    return std::uniform_real_distribution<double>(0.0, 
-        std::nextafter(1.0, std::numeric_limits<double>::max()));
+    return std::uniform_real_distribution<double>(0.0, 1.0);
 }
-
 }
 
 namespace pyramid_scheme_simulator {
@@ -26,9 +24,14 @@ namespace pyramid_scheme_simulator {
 */
 bool Util::sampleFrom(rd_ptr rng, double probability)
 {
-    if(probability < 0)
+    if(probability < 0.0)
     {
         return false;
+    }
+    else if(probability > 1.0)
+    {
+        throw SampleFromException(STRCAT("Cannot sample from a probability >1.0 but got",
+                    probability));
     }
     else
     {
