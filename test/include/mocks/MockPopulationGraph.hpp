@@ -14,6 +14,12 @@ public:
     MockPopulationGraph(std::vector<std::pair<Pop, Pop>> tuples)
         : PopulationGraph(PopulationGraph::graphFromTuples(tuples))
     {}
+
+    MockPopulationGraph(Config& config)
+        : PopulationGraph(config)
+    {}
+
+    PopulationGraph::BGLPopulationGraph* getGraphPtr() { return &graph; }
 };
 
 }

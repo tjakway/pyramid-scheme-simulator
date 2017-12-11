@@ -47,14 +47,15 @@ public:
     [[noreturn]] static void throwVertexNotFoundException(const Unique&);
 
     /*****************/
+protected:
+    BGLPopulationGraph graph;
+
 private:
 
     //TODO: *maybe* make this a GraphGenerationOptions field
     unsigned int maxTries;
 
     bool checkGraph(const BGLPopulationGraph&);
-
-    BGLPopulationGraph graph;
 
 
     /**
