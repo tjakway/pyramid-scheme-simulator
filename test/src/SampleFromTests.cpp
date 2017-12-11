@@ -16,6 +16,19 @@
 
 namespace {
     using namespace pyramid_scheme_simulator;
+}
+
+
+namespace pyramid_scheme_simulator {
+
+class SampleFromTests : public ::testing::Test
+{
+public:
+    rd_seed_type seed = Util::getCurrentTimeMillis();
+    const unsigned int RD_LINE = __LINE__; rd_ptr rd = Util::rdFromSeed(seed);
+
+
+protected:
     void testSampleFrom(rd_ptr rd, double sampleChance, unsigned int numSamples)
     {
         unsigned int numProcs = 0;
@@ -30,17 +43,12 @@ namespace {
 
         const double average = ((double)numProcs) / ((double)numSamples);
 
-        ASSERT_TRUE(Util::withinMargins(average, sampleChance, TestConfig::allowedMarginOfError));
+        ASSERT_TRUE(Util::withinMargins(average, sampleChance, TestConfig::allowedMarginOfError)) 
+            << "Re-run test with seed: " << seed << " by changing the following code at line " << RD_LINE << std::endl
+            << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(seed);" << std::endl
+            << "to"
+            << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(" << seed << ");" << std::endl;
     }
-}
-
-
-namespace pyramid_scheme_simulator {
-
-class SampleFromTests : public ::testing::Test
-{
-public:
-    rd_ptr rd = Util::rdSeededWithCurrentTime();
 };
 
 TEST_F(SampleFromTests, TestGeneratedSampleChance)
