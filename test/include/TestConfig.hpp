@@ -26,7 +26,7 @@ public:
      */
     static const double allowedMarginOfError;
 
-    static const unsigned int numSampleFromTests = 2000;
+    static const unsigned int numSampleFromTests = 6000;
 };
 
 }
