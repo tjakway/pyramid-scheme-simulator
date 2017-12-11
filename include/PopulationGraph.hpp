@@ -15,7 +15,6 @@
 namespace pyramid_scheme_simulator {
 
 
-
 class PopulationGraph
 {
 public:
@@ -93,22 +92,22 @@ protected:
             std::vector<std::pair<Pop, Pop>>);
 
 public:
-    template <class T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
+    template <typename T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
     {
-        std::vector<T> results;
-
         //see http://www.boost.org/doc/libs/1_65_1/libs/graph/doc/quick_tour.html
         boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
 
-        for (std::tie(ei, ei_end) = boost::edges(graph); ei != ei_end; ++ei)
-        {
-            auto arg1 = source(*ei, graph);
-            auto arg2 = target(*ei, graph);
+        std::tie(ei, ei_end) = boost::edges(graph);
+        //see https://stackoverflow.com/questions/7895879/using-member-variable-in-lambda-capture-list-inside-a-member-function
+        auto& g = graph;
 
-            results.push_back(f(arg1, arg2));
-        }
+        return Util::accumulateWithVector(ei, ei_end, 
+                [&f, &g](BGLPopulationGraph::edge_iterator ei) -> T {
+                    auto arg1 = source(*ei, g);
+                    auto arg2 = target(*ei, g);
 
-        return results;
+                    return f(arg1, arg2);
+                });
     }
 
     PopulationGraph(Config&);

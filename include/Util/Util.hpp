@@ -3,6 +3,7 @@
 #include <random>
 #include <iterator>
 #include <array>
+#include <functional>
 
 #include "Util/NewExceptionType.hpp"
 #include "Util/Strcat.hpp"
@@ -83,6 +84,19 @@ public:
             //compare referands
             return *lhs == *rhs;
         }
+    }
+
+    template <typename T, typename It, typename U, typename V>
+    static std::vector<V> accumulateWithVector(It begin, It end, U operation)
+    {
+        std::vector<V> vec;
+
+        for(; begin != end; ++begin)
+        {
+            vec.emplace_back(operation(*begin));
+        }
+
+        return vec;
     }
 
     static const std::array<unsigned char, 16> hashToArray(size_t hash);
