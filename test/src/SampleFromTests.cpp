@@ -42,7 +42,8 @@ public:
 
 TEST_F(Util_SampleFromTests, TestGeneratedSampleChance)
 {
-    const double generatedSampleChance = std::uniform_int_distribution<unsigned int>{}(*rd) % 100;
+    const double generatedSampleChance = 
+        (std::uniform_int_distribution<unsigned int>{}(*rd) % 100) / 100;
     testSampleFrom(rd, generatedSampleChance, TestConfig::numSampleFromTests);
 }
 
