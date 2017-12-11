@@ -106,7 +106,6 @@ public:
     static rd_ptr rdSeededWithCurrentTime();
     static rd_ptr rdFromSeed(rd_seed_type);
 
-private:
     static rd_seed_type getCurrentTimeMillis();
 };
 

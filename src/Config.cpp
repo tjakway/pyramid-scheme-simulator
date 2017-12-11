@@ -24,7 +24,7 @@ Config::Config(const rd_seed_type seed,
 //if no seed is given use current time
 Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
         std::unique_ptr<GraphGenerationOptions>&& graphGenOptions)
-    : Config(getCurrentTimeMillis(), 
+    : Config(Util::getCurrentTimeMillis(), 
         std::move(simOptions), 
         std::move(graphGenOptions))
 { }
