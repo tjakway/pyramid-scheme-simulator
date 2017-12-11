@@ -45,7 +45,8 @@ TEST_F(GenGraphTests, TestLinkChance)
     std::for_each(vi, viEnd, 
             [&numVertices, &sumDegrees, graphPtr]
             (PopulationGraph::BGLPopulationGraph::vertex_descriptor v) {
-                sumDegrees += boost::degree(v, *graphPtr);
+                auto degreeOfVertex = boost::degree(v, *graphPtr);
+                sumDegrees += degreeOfVertex;
                 numVertices++;
             });
 
