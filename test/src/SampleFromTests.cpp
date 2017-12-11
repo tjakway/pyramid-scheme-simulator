@@ -46,7 +46,7 @@ protected:
         ASSERT_TRUE(Util::withinMargins(average, sampleChance, TestConfig::allowedMarginOfError)) 
             << "Re-run test with seed: " << seed << " by changing the following code at line " << RD_LINE << std::endl
             << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(seed);" << std::endl
-            << "to"
+            << "to" << std::endl
             << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(" << seed << ");" << std::endl;
     }
 };
