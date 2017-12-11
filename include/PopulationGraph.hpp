@@ -92,7 +92,8 @@ protected:
             std::vector<std::pair<Pop, Pop>>);
 
 public:
-    template <typename T> std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
+    template <typename T>
+    std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
     {
         //see http://www.boost.org/doc/libs/1_65_1/libs/graph/doc/quick_tour.html
         boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
@@ -102,13 +103,29 @@ public:
         auto& g = graph;
 
         return Util::accumulateWithVector(ei, ei_end, 
-                [&f, &g](BGLPopulationGraph::edge_iterator ei) -> T {
-                    auto arg1 = source(*ei, g);
-                    auto arg2 = target(*ei, g);
+                [&f, &g](BGLPopulationGraph::edge_iterator e) -> T {
+                    auto arg1 = source(*e, g);
+                    auto arg2 = target(*e, g);
 
                     return f(arg1, arg2);
                 });
     }
+
+    
+    template <typename T> 
+    std::vector<T> forEachVertex(std::function<T(Pop, Pop)> f)
+    {
+        boost::graph_traits<BGLPopulationGraph>::vertex_iterator vi, vi_end;
+
+        std::tie(vi, vi_end) = boost::vertices(graph);
+        auto& g = graph;
+
+        return Util::accumulateWithVector(vi, vi_end, 
+                [&f, &g](BGLPopulationGraph::vertex_iterator v){
+                    return f(g[*v]);
+                });
+    }
+    
 
     PopulationGraph(Config&);
 
