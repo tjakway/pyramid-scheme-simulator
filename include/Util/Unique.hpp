@@ -133,7 +133,9 @@ namespace {
     UniqueSet uniqueSetFromUniqueInitializerList(
             std::initializer_list<Unique> us)
     {
-        std::vector<xg::Guid> ids(us.size());
+        std::vector<xg::Guid> ids;
+        ids.reserve(us.size());
+
         for(auto i : us)
         {
             ids.push_back(i.id);

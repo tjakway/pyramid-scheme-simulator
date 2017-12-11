@@ -14,6 +14,12 @@ VERBOSE_VALGRIND_ARGS=--expensive-definedness-checks=yes --track-origins=yes --s
 #also print memory info at the end
 VERY_VERBOSE_VALGRIND_ARGS=--leak-check=full $(VERBOSE_VALGRIND_ARGS)
 
+GREP_OPTIONS=-i -I -P -R
+SRC_FOLDERS=src/ include/ test/
+
+#to match a C++ identifier (variable, function name, etc.)
+IDENTIFIER_PATTERN=[a-zA-Z[:punct:]]+
+
 .PHONY: all
 all: tags
 
@@ -23,7 +29,14 @@ tags:
 
 .PHONY: find-shared-ptr-references
 find-shared-ptr-references:
-	grep -i -I -P -R "std::shared_ptr<[a-zA-Z[:punct:]]+>\s*&" src/ include/ test/
+	grep $(GREP_OPTIONS) 'std::shared_ptr<$(IDENTIFIER_PATTERN)>\s*&' $(SRC_FOLDERS)
+
+#match things like `std::vector<Foo> bar(baz);`
+.PHONY: find-vector-fill-ctor-uses
+find-vector-fill-ctor-uses:
+	grep $(GREP_OPTIONS)  \
+	    'std::vector<$(IDENTIFIER_PATTERN)>\s+$(IDENTIFIER_PATTERN)\($(IDENTIFIER_PATTERN)\)\s*;' \
+	    $(SRC_FOLDERS)
 
 
 #TODO
