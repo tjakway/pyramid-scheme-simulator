@@ -11,23 +11,6 @@
 
 #include "TestConfig.hpp"
 
-namespace {
-    using namespace pyramid_scheme_simulator;
-    void testSampleFrom(rd_ptr rd, double sampleChance, unsigned int numSamples)
-    {
-        unsigned int numProcs = 0;
-
-        for(unsigned int i = 0; i < numSamples; i++)
-        {
-            //true = 1, false = 0
-            numProcs += Util::sampleFrom(rd, sampleChance);
-        }
-
-        const double average = numProcs / numSamples;
-
-        ASSERT_TRUE(Util::withinMargins(average, sampleChance, TestConfig::allowedMarginOfError));
-    }
-}
 
 namespace pyramid_scheme_simulator {
 
