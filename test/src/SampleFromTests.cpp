@@ -10,6 +10,9 @@
 
 #include "TestConfig.hpp"
 
+/**
+ * tests of the Util::sampleFrom method
+ */
 
 namespace {
     using namespace pyramid_scheme_simulator;
@@ -34,35 +37,35 @@ namespace {
 
 namespace pyramid_scheme_simulator {
 
-class Util_SampleFromTests : public ::testing::Test
+class SampleFromTests : public ::testing::Test
 {
 public:
     rd_ptr rd = Util::rdSeededWithCurrentTime();
 };
 
-TEST_F(Util_SampleFromTests, TestGeneratedSampleChance)
+TEST_F(SampleFromTests, TestGeneratedSampleChance)
 {
     const double generatedSampleChance = 
         (std::uniform_int_distribution<unsigned int>{}(*rd) % 100) / 100;
     testSampleFrom(rd, generatedSampleChance, TestConfig::numSampleFromTests);
 }
 
-TEST_F(Util_SampleFromTests, TestZeroSampleChance)
+TEST_F(SampleFromTests, TestZeroSampleChance)
 {
     testSampleFrom(rd, 0.0, TestConfig::numSampleFromTests);
 }
 
-TEST_F(Util_SampleFromTests, TestOneSampleChance)
+TEST_F(SampleFromTests, TestOneSampleChance)
 {
     testSampleFrom(rd, 1.0, TestConfig::numSampleFromTests);
 }
 
-TEST_F(Util_SampleFromTests, TestHalfSampleChance)
+TEST_F(SampleFromTests, TestHalfSampleChance)
 {
     testSampleFrom(rd, 0.5, TestConfig::numSampleFromTests);
 }
 
-TEST_F(Util_SampleFromTests, TestTwentyPctSampleChance)
+TEST_F(SampleFromTests, TestTwentyPctSampleChance)
 {
     testSampleFrom(rd, 0.2, TestConfig::numSampleFromTests);
 }
