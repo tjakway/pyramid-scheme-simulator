@@ -36,7 +36,7 @@ TEST_F(GenGraphTests, TestLinkChance)
     //average the degrees and check that they match what we would expect based
     //on the link chance
     int numVertices = 0;
-    PopulationGraph::BGLPopulationGraph::degree_size_type sumDegrees;
+    PopulationGraph::BGLPopulationGraph::degree_size_type sumDegrees = 0;
 
     //can't use PopulationGraph::forEachVertex because we need to pass the vertex_descriptor
     //to boost::degree, which requires access to the internal graph structure
@@ -48,6 +48,9 @@ TEST_F(GenGraphTests, TestLinkChance)
             });
 
     ASSERT_GT(numVertices, 0);
+    ASSERT_GT(sumDegrees, 0);
+
+    ASSERT_EQ(numVertices, configPtr->graphGenerationOptions->graphSize.getOption());
     const double avgDegree = ((double)sumDegrees) / ((double)numVertices);
 
 
