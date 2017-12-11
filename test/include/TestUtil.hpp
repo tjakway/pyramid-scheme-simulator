@@ -6,15 +6,6 @@
 #include <string>
 #include <utility>
 
-namespace {
-    //ASSERT/EXPECT_PRED need a function whose return type is bool
-    template <typename T>
-    bool isInRange(T value, T le, T ge)
-    {
-        return le <= value && value <= ge;
-    }
-}
-
 namespace pyramid_scheme_simulator {
 
 template <typename L, typename R>
@@ -32,9 +23,19 @@ R assertRight(Either<L, R> either, std::string msg = std::string())
 }
 
 template <typename T>
-::testing::AssertionResult assertBetweenInclusive(T value, std::pair<T, T> range)
+::testing::AssertionResult assertInRangeInclusive(T value, std::pair<T, T> range)
 {
-    return ASSERT_PRED3(isInRange, value, range.first, range.second);
+    const bool isInRange = range.first <= value && value <= range.second;
+
+    if(isInRange)
+    {
+        return ::testing::AssertionSuccess();
+    }
+    else
+    {
+        return ::testing::AssertionFailure() << value << " is not within the range [" << 
+            range.first << ", " << range.second << "]";
+    }
 }
 
 }
