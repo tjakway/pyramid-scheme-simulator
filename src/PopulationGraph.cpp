@@ -115,7 +115,9 @@ PopulationGraph::BGLPopulationGraph
     const auto graphSize = config.graphGenerationOptions->graphSize.getOption();
 
     std::unordered_set<UndirectedEdge> edges;
-    std::vector<Unique> vertices(graphSize);
+    std::vector<Unique> vertices;
+
+    vertices.reserve(graphSize);
     
     //generate vertices with random ids
     for(unsigned long i = 0; i < graphSize; i++)
