@@ -5,6 +5,7 @@
 #include <random>
 #include <array>
 #include <string>
+#include <chrono>
 
 namespace {
 std::uniform_real_distribution<double> getUniformRealDistZeroToOne()
@@ -82,6 +83,23 @@ bool Util::withinMargins(double value, double expected, double margin)
         min = (1.0 - (margin / 2.0)) * expected;
 
     return min <= value && max >= value;
+}
+
+rd_ptr Util::rdSeededWithCurrentTime()
+{
+    return rdFromSeed(getCurrentTimeMillis());
+}
+
+rd_ptr Util::rdFromSeed(rd_seed_type seed)
+{
+    return std::make_shared<std::mt19937_64>(seed);
+}
+
+rd_seed_type Util::getCurrentTimeMillis()
+{
+    return static_cast<rd_seed_type>(std::chrono::duration_cast< 
+            std::chrono::milliseconds >(
+        std::chrono::system_clock::now().time_since_epoch()).count());
 }
 
 }

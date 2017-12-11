@@ -102,6 +102,12 @@ public:
     static const std::array<unsigned char, 16> hashToArray(size_t hash);
 
     static bool withinMargins(double value, double expected, double margin);
+
+    static rd_ptr rdSeededWithCurrentTime();
+    static rd_ptr rdFromSeed(rd_seed_type);
+
+private:
+    static rd_seed_type getCurrentTimeMillis();
 };
 
 

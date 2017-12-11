@@ -9,21 +9,6 @@
 #include "Types.hpp"
 #include "CapitalHolderClassDecls.hpp"
 
-namespace {
-    using namespace pyramid_scheme_simulator;
-    rd_seed_type getCurrentTimeMillis()
-    {
-        return static_cast<rd_seed_type>(std::chrono::duration_cast< 
-                std::chrono::milliseconds >(
-            std::chrono::system_clock::now().time_since_epoch()).count());
-    }
-
-    rd_ptr rdFromSeed(const rd_seed_type seed)
-    {
-        return std::make_shared<std::mt19937_64>(seed);
-    }
-}
-
 namespace pyramid_scheme_simulator {
 
 Config::Config(const rd_seed_type seed, 
@@ -33,7 +18,7 @@ Config::Config(const rd_seed_type seed,
         simulationOptions(std::move(simOptions)),
         graphGenerationOptions(std::move(graphGenOptions)),
         //initialize the random generator from the passed seed
-        randomGen(rdFromSeed(randomSeed))
+        randomGen(Util::rdFromSeed(randomSeed))
 { }
 
 //if no seed is given use current time
