@@ -57,37 +57,4 @@ TEST(MiscTests, TestSTRCATWithDebuggingMacros)
     ASSERT_EQ(rfindRes + expected.length(), path.length());
 
 }
-
-class Util_SampleFromTests : public ::testing::Test
-{
-public:
-    rd_ptr rd = std::make_shared<std::mt19937_64>();
-};
-
-TEST_F(Util_SampleFromTests, TestGeneratedSampleChance)
-{
-    const double generatedSampleChance = std::uniform_int_distribution<unsigned int>{}(*rd) % 100;
-    testSampleFrom(rd, generatedSampleChance, TestConfig::numSampleFromTests);
-}
-
-TEST_F(Util_SampleFromTests, TestZeroSampleChance)
-{
-    testSampleFrom(rd, 0.0, TestConfig::numSampleFromTests);
-}
-
-TEST_F(Util_SampleFromTests, TestOneSampleChance)
-{
-    testSampleFrom(rd, 1.0, TestConfig::numSampleFromTests);
-}
-
-TEST_F(Util_SampleFromTests, TestHalfSampleChance)
-{
-    testSampleFrom(rd, 0.5, TestConfig::numSampleFromTests);
-}
-
-TEST_F(Util_SampleFromTests, TestTwentyPctSampleChance)
-{
-    testSampleFrom(rd, 0.2, TestConfig::numSampleFromTests);
-}
-
 }
