@@ -19,8 +19,10 @@ namespace {
 
         for(unsigned int i = 0; i < numSamples; i++)
         {
-            //true = 1, false = 0
-            numProcs += Util::sampleFrom(rd, sampleChance);
+            if(Util::sampleFrom(rd, sampleChance) == true)
+            {
+                numProcs++;
+            }
         }
 
         const double average = numProcs / numSamples;
@@ -35,7 +37,7 @@ namespace pyramid_scheme_simulator {
 class Util_SampleFromTests : public ::testing::Test
 {
 public:
-    rd_ptr rd = std::make_shared<std::mt19937_64>();
+    rd_ptr rd = Util::rdSeededWithCurrentTime();
 };
 
 TEST_F(Util_SampleFromTests, TestGeneratedSampleChance)
