@@ -19,6 +19,12 @@ public:
     static std::unique_ptr<Config> getBuildGraphConfig(rd_ptr);
 
     static const Money minStartingFunds, maxStartingFunds;
+
+    /**
+     * allowed margin of error (percent)
+     * this is the total value, i.e. plus or minus (allowedMarginOfError / 2)
+     */
+    static const double allowedMarginOfError;
 };
 
 }
