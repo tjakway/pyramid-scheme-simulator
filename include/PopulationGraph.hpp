@@ -4,6 +4,9 @@
 #include <unordered_set>
 #include <memory>
 #include <functional>
+#include <utility>
+#include <algorithm>
+#include <string>
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
@@ -166,7 +169,76 @@ public:
      * returns the number of vertices mutated
      */
     vertices_size_type mutateVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
+
+protected:
+    struct UndirectedEdge
+    {
+        const Unique v1, v2;
+
+        UndirectedEdge(Unique a, Unique b) : v1(a), v2(b) {}
+
+        bool operator==(const UndirectedEdge& other) const
+        {
+            //since it's undirected it's equivalent
+            //if the vertices are swapped
+            return (v1 == other.v1 && v2 == other.v2) ||
+                (v1 == other.v2 && v2 == other.v1);
+        }
+
+        bool operator!=(const UndirectedEdge& other) const
+        {
+            return !this->operator==(other);
+        }
+
+        Unique getLt() const
+        {
+            if(v1.str() < v2.str())
+                return v1;
+            else
+                return v2;
+        }
+
+        Unique getGt() const
+        {
+            if(v2.str() > v1.str())
+                return v2;
+            else
+                return v1;
+        }
+
+        std::pair<int, int> toIndicesPair(Unique* vertices, int length) const {
+            const Unique* begin = vertices;
+            const Unique* end = begin + length;
+
+            auto checkFind = [=](const Unique* const which, const Unique* res) { 
+                if(res == end) {
+                    PopulationGraph::throwVertexNotFoundException(*which);
+                }
+            };
+            
+            auto firstElem = std::find(begin, end, v1);
+            checkFind(&v1, firstElem);
+            auto secondElem = std::find(begin, end, v2);
+            checkFind(&v2, secondElem);
+
+            return std::make_pair(firstElem - begin, secondElem - begin);
+        }
+    };
+
+    template <typename T> friend struct std::hash;
 };
 
-
 } //pyramid_scheme_simulator
+
+
+
+//see https://stackoverflow.com/questions/8157937/how-to-specialize-stdhashkeyoperator-for-user-defined-type-in-unordered
+namespace std {
+  template <> struct hash<pyramid_scheme_simulator::PopulationGraph::UndirectedEdge>
+  {
+    size_t operator()(const pyramid_scheme_simulator::PopulationGraph::UndirectedEdge & x) const
+    {
+        return hash<std::string>{}(x.getLt().str() + x.getGt().str());
+    }
+  };
+}
