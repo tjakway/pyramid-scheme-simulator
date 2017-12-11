@@ -44,8 +44,8 @@ protected:
 
         const double average = ((double)numProcs) / ((double)numSamples);
 
-        assertInRangeInclusive(average, Util::getMargins(sampleChance, TestConfig::allowedMarginOfError))
-            << "Re-run test with seed: " << seed << " by changing the following code at line " << RD_LINE << std::endl
+        ASSERT_IN_RANGE_INCLUSIVE(average, Util::getMargins(sampleChance, TestConfig::allowedMarginOfError))
+            << "To reproduce, re-run test with seed: " << seed << " by changing the following code at line " << RD_LINE << std::endl
             << "\t\t" << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(seed);" << std::endl
             << "to" << std::endl
             << "\t\t" << RD_LINE << '\t' << "rd_ptr rd = Util::rdFromSeed(" << seed << ");" << std::endl;
