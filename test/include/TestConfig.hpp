@@ -25,6 +25,8 @@ public:
      * this is the total value, i.e. plus or minus (allowedMarginOfError / 2)
      */
     static const double allowedMarginOfError;
+
+    static const unsigned int numSampleFromTests = 2000;
 };
 
 }
