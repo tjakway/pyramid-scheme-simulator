@@ -25,7 +25,7 @@ namespace pyramid_scheme_simulator {
 */
 bool Util::sampleFrom(rd_ptr rng, double probability)
 {
-if(probability < 0)
+    if(probability < 0)
     {
         return false;
     }
