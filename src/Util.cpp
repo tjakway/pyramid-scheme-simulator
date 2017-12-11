@@ -75,4 +75,13 @@ const std::array<unsigned char, 16> Util::hashToArray(size_t hash)
     }};
 }
 
+
+bool Util::withinMargins(double value, double expected, double margin)
+{
+    const double max = (1.0 + (margin / 2.0)) * expected,
+        min = (1.0 - (margin / 2.0)) * expected;
+
+    return min <= value && max >= value;
+}
+
 }

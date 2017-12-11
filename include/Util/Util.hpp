@@ -100,6 +100,8 @@ public:
     }
 
     static const std::array<unsigned char, 16> hashToArray(size_t hash);
+
+    static bool withinMargins(double value, double expected, double margin);
 };
 
 
