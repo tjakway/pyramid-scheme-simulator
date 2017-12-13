@@ -452,7 +452,7 @@ void PopulationGraph::auditGraph()
 
         mutateEdgesWithPredicate(incNumEdges, 
                 //trivial predicate
-                [](const CapitalHolder&) { return true; });
+                [](std::pair<const CapitalHolder&, const CapitalHolder&>) { return true; });
         checkNumEdges("mutateEdgesWithPredicate");
         numEdges=0;
 
