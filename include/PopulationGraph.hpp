@@ -124,9 +124,11 @@ public:
         std::tie(vi, vi_end) = boost::vertices(graph);
         auto& g = graph;
 
-        return Util::accumulateWithVector(vi, vi_end, 
-                [&f, &g](BGLPopulationGraph::vertex_iterator v){
-                    return f(g[*v]);
+        return Util::accumulateWithVector<std::function<T(BGLPopulationGraph::vertex_descriptor)>, 
+               T, BGLPopulationGraph::vertex_iterator>
+            (vi, vi_end, 
+                [&f, &g](BGLPopulationGraph::vertex_descriptor v){
+                    return f(g[v]);
                 });
     }
     

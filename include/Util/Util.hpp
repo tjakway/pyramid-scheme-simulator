@@ -88,7 +88,7 @@ public:
         }
     }
 
-    template <typename T, typename It, typename U, typename V>
+    template <typename U, typename V, typename It>
     static std::vector<V> accumulateWithVector(It begin, It end, U operation)
     {
         std::vector<V> vec;
