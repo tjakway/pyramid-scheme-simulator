@@ -379,5 +379,47 @@ PopulationGraph::vertices_size_type
     return numMutated;
 }
 
+void PopulationGraph::auditGraph()
+{
+    NEW_EXCEPTION_TYPE(AuditGraphException);
+
+    //audit iteration functions
+    {
+        //setup expected values and checks
+        const auto expectedNumVertices = boost::num_vertices(graph);
+        const auto expectedNumEdges = boost::num_edges(graph);
+
+        BGLPopulationGraph::vertices_size_type numVertices = 0;
+        BGLPopulationGraph::edges_size_type    numEdges = 0;
+
+        const auto checkNumVertices = 
+            [&numVertices, expectedNumVertices](std::string fName) {
+                if(numVertices != expectedNumVertices)
+                {
+                    throw AuditGraphException(STRCAT("Graph failed audit because expected != actual in ", 
+                                fName, " expected = ", expectedNumVertices, "actual = numVertices"));
+                }
+        };
+
+        //these need to be functions we can pass to our iteration functions
+        const auto incNumVertices = [&numVertices](Pop x) { numVertices++; return x; };
+
+        //run iteration functions and assert against the results
+        forEachVertex(incNumVertices);
+        checkNumVertices("forEachVertex");
+        numVertices = 0;
+
+        mutateVertices(incNumVertices);
+        checkNumVertices("mutateVertices");
+        numVertices = 0;
+
+        mutateVerticesWithPredicate(incNumVertices, 
+                //trivial predicate
+                [](const CapitalHolder&) { return true; });
+        checkNumVertices("mutateVerticesWithPredicate");
+        numVertices=0;
+    }
+}
+
 
 }
