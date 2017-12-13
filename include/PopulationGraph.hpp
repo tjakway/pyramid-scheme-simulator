@@ -97,7 +97,7 @@ protected:
 
 public:
     template <typename T>
-    std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
+    std::vector<T> forEachEdge(std::function<T(std::pair<Pop, Pop>)> f)
     {
         //see http://www.boost.org/doc/libs/1_65_1/libs/graph/doc/quick_tour.html
         boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
@@ -142,16 +142,25 @@ public:
 
     CapitalHolder& findVertexByUnique(const Unique&);
 
+    /** TODO: use templates to reduce duplication between edge and vertex functions */
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
     using MutateVertexFunction = 
         std::function<const std::shared_ptr<CapitalHolder>(std::shared_ptr<CapitalHolder>)>;
 
+    using EdgePredicate = std::function<bool(
+            std::pair<const CapitalHolder&, const CapitalHolder&>)>;
+    using MutateEdgeFunction = 
+        std::function<const std::pair<const Pop, const Pop>(std::pair<Pop, Pop>)>;
 protected:
     /**
      * returns the number of vertices mutated
      */
     static vertices_size_type mutateVerticesOfGraph(MutateVertexFunction, 
             BGLPopulationGraph&);
+
+    static edges_size_type mutateEdgesOfGraph(MutateEdgeFunction,
+            BGLPopulationGraph&);
+
 
     void auditGraph();
 
@@ -167,12 +176,21 @@ public:
      */
     vertices_size_type mutateVertices(MutateVertexFunction);
 
+
+    /**
+     * returns the number of edges mutated
+     * ***see above***
+     */
+    edges_size_type mutateEdges(MutateEdgeFunction);
+
     /**
      * filters the graph then mutates it
      * more efficiently than trying to filter in the function passed to mutateVertices
      * returns the number of vertices mutated
      */
     vertices_size_type mutateVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
+
+    edges_size_type mutateEdgesWithPredicate(MutateEdgeFunction, EdgePredicate);
 
 protected:
     struct UndirectedEdge
