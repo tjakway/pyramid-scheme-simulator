@@ -392,19 +392,23 @@ void PopulationGraph::auditGraph()
         BGLPopulationGraph::vertices_size_type numVertices = 0;
         BGLPopulationGraph::edges_size_type    numEdges = 0;
 
+
+        /***vertex iteration checks***/
         const auto checkNumVertices = 
             [&numVertices, expectedNumVertices](std::string fName) {
                 if(numVertices != expectedNumVertices)
                 {
-                    throw AuditGraphException(STRCAT("Graph failed audit because expected != actual in ", 
-                                fName, " expected = ", expectedNumVertices, "actual = numVertices"));
+                    throw AuditGraphException(STRCAT(
+                                "Graph failed audit because expected != actual in ", 
+                                fName, " expected = ", expectedNumVertices, 
+                                "actual = ", numVertices));
                 }
         };
 
-        //these need to be functions we can pass to our iteration functions
-        const auto incNumVertices = [&numVertices](Pop x) { numVertices++; return x; };
+        const std::function<Pop(Pop)> incNumVertices = [&numVertices](Pop x)
+            { numVertices++; return x; };
 
-        //run iteration functions and assert against the results
+        //run vertex iteration functions and assert against the results
         forEachVertex(incNumVertices);
         checkNumVertices("forEachVertex");
         numVertices = 0;
@@ -418,6 +422,41 @@ void PopulationGraph::auditGraph()
                 [](const CapitalHolder&) { return true; });
         checkNumVertices("mutateVerticesWithPredicate");
         numVertices=0;
+        /*****************************/
+
+
+        /***edge iteration checks*****/
+        const auto checkNumEdges =
+            [&numEdges, expectedNumEdges](std::string fName) {
+                if(numEdges != expectedNumEdges) 
+                {
+                    throw AuditGraphException(STRCAT(
+                                "Graph failed audit because expected != actual in ", 
+                                fName, " expected = ", expectedNumEdges, 
+                                "actual = ", numEdges));
+                }
+            };
+
+        const std::function<std::pair<Pop, Pop>(std::pair<Pop, Pop>)> incNumEdges = 
+            [&numEdges](std::pair<Pop, Pop> p)
+            { numEdges++; return p; };
+
+        //run edge iteration functions and assert against the results
+        forEachEdge(incNumEdges);
+        checkNumEdges("forEachEdge");
+        numEdges = 0;
+
+        mutateEdges(incNumEdges);
+        checkNumEdges("mutateEdges");
+        numEdges = 0;
+
+        mutateEdgesWithPredicate(incNumEdges, 
+                //trivial predicate
+                [](const CapitalHolder&) { return true; });
+        checkNumEdges("mutateEdgesWithPredicate");
+        numEdges=0;
+
+        /*****************************/
     }
 }
 
