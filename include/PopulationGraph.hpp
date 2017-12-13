@@ -117,7 +117,7 @@ public:
 
     
     template <typename T> 
-    std::vector<T> forEachVertex(std::function<T(Pop, Pop)> f)
+    std::vector<T> forEachVertex(std::function<T(Pop)> f)
     {
         boost::graph_traits<BGLPopulationGraph>::vertex_iterator vi, vi_end;
 
@@ -150,6 +150,8 @@ protected:
      */
     static vertices_size_type mutateVerticesOfGraph(MutateVertexFunction, 
             BGLPopulationGraph&);
+
+    void auditGraph();
 
 public:
     /**
