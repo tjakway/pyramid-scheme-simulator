@@ -108,7 +108,7 @@ public:
         std::tie(ei, ei_end) = boost::edges(graph);
         auto& g = graph;
 
-        return Util::accumulateWithVector<std::function<T(std::pair<Pop, Pop>)>,
+        return Util::accumulateWithVector<std::function<T(BGLPopulationGraph::edge_descriptor)>,
                T,
                BGLPopulationGraph::edge_iterator
                >
