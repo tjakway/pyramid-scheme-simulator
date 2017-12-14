@@ -40,7 +40,7 @@ const std::function<ConversionHandler::RecordType(
 };
 
 
-bool testConversion(rd_ptr rd,
+bool ConversionHandler::testConversion(rd_ptr rd,
         const Consumer& consumer,
         const Distributor& distributor,
         const Money buyIn)
