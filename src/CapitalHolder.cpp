@@ -83,7 +83,7 @@ void Consumer::deductMoney(Money howMuch)
     }
 }
 
-bool Consumer::canBecomeDistributor(Money buyIn)
+bool Consumer::canBecomeDistributor(Money buyIn) const
 {
     return buyIn < getMoney();
 }

@@ -38,10 +38,10 @@ public:
     virtual std::shared_ptr<CapitalHolder> clone() const override;
 
     virtual ChanceContributor&
-        getSalesChanceContribution() override;
+        getSalesChanceContribution() const override;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() override;
+        getDistributorConversionChanceContribution() const override;
 };
 
 class Company : public Distributor
@@ -80,10 +80,10 @@ public:
     virtual ~StaticDistributor();
 
     virtual ChanceContributor&
-        getSalesChanceContribution() override;
+        getSalesChanceContribution() const override;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() override;
+        getDistributorConversionChanceContribution() const override;
 };
 
 }
