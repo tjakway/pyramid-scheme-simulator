@@ -9,6 +9,7 @@
 #include "Util/Either.hpp"
 #include "TransactionRecords.hpp"
 #include "SalesResult.hpp"
+#include "PopulationGraph.hpp"
 
 #include <memory>
 #include <set>
@@ -26,7 +27,18 @@ namespace pyramid_scheme_simulator {
 
 class ConversionHandler
 {
+    static bool testConversion(rd_ptr, 
+            const Consumer&, 
+            const Distributor&, 
+            const Money buyIn);
+
+    rd_ptr rd;
+    const Money buyIn;
+
+    bool predF(const CapitalHolder&, const CapitalHolder&);
 public:
+    ConversionHandler(rd_ptr _rd, const Money _buyIn)
+        : rd(_rd), buyIn(_buyIn) {}
 
     class Conversion : public UniqueRecord
     { 
@@ -55,6 +67,11 @@ public:
     static const ComparatorType comparator;
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
+
+    const PopulationGraph::EdgePredicate predicate = 
+        [this](const CapitalHolder& lhs, const CapitalHolder& rhs) { 
+            return predF(lhs, rhs);
+        };
 };
 
 

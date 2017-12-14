@@ -40,6 +40,52 @@ const std::function<ConversionHandler::RecordType(
 };
 
 
+bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
+{
+    const Consumer*    consumer = nullptr;
+    const Distributor* distributor = nullptr;
+
+    const auto tryCastConsumer = [&consumer](const CapitalHolder* which)
+    {
+        //skip if we're already found the consumer
+        if(consumer == nullptr)
+        {
+            const Consumer* castConsumer = dynamic_cast<const Consumer*>(which);
+            if(castConsumer != nullptr) {
+                consumer = castConsumer;
+            }
+        }
+    };
+
+    //unfortunately no template lambdas yet
+    const auto tryCastDistributor = [&distributor](const CapitalHolder* which)
+    {
+        if(distributor == nullptr)
+        {
+            const Distributor* castDistributor = dynamic_cast<const Distributor*>(which);
+            if(castDistributor != nullptr) {
+                distributor = castDistributor;
+            }
+        }
+    };
+
+    //try all combinations of consumers and distributors
+    tryCastConsumer(&lhs);
+    tryCastConsumer(&rhs);
+    tryCastDistributor(&lhs);
+    tryCastDistributor(&rhs);
+
+
+    if(consumer == nullptr || distributor == nullptr)
+    {
+        return false;
+    }
+    else
+    {
+        return testConversion(rd, *consumer, *distributor, buyIn);
+    }
+}
+
 const std::function<SaleHandler::RecordType(
         SaleHandler::RecordType&&, 
         SaleHandler::RecordType&&)> SaleHandler::reduce =
