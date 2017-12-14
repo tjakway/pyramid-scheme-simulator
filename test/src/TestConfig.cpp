@@ -52,6 +52,5 @@ std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
             );
 }
 
-const double TestConfig::allowedMarginOfError = 0.1;
-
+const double TestConfig::MarginsOfError::testLinkChance = 0.2;
 }

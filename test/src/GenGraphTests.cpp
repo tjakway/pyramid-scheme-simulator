@@ -67,8 +67,8 @@ TEST_F(GenGraphTests, TestLinkChance)
     const double expectedAvgDegree = 
         (dNumVertices - 1) * configPtr->graphGenerationOptions->linkChance->getOption();
 
-    const double allowedMarginOfError = TestConfig::allowedMarginOfError / 2.0;
-    ASSERT_LE(TestConfig::allowedMarginOfError, 1.0);
+    const double allowedMarginOfError = TestConfig::MarginsOfError::testLinkChance / 2.0;
+    ASSERT_LE(TestConfig::MarginsOfError::testLinkChance, 1.0);
 
     const double maxAllowedAvgDegree = 
         expectedAvgDegree * (1.0 + allowedMarginOfError);
