@@ -40,6 +40,16 @@ const std::function<ConversionHandler::RecordType(
 };
 
 
+bool testConversion(rd_ptr rd,
+        const Consumer& consumer,
+        const Distributor& distributor,
+        const Money buyIn)
+{
+    return consumer.canBecomeDistributor(buyIn) && 
+        (consumer.getDistributorConversionChanceContribution() +
+         distributor.getDistributorConversionChanceContribution())->sampleFrom(rd);
+}
+
 bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
 {
     const Consumer*    consumer = nullptr;
@@ -51,7 +61,9 @@ bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs
         if(consumer == nullptr)
         {
             const Consumer* castConsumer = dynamic_cast<const Consumer*>(which);
-            if(castConsumer != nullptr) {
+            if(castConsumer != nullptr 
+                    //a distributor can also be a consumer
+                    && !castConsumer->isDistributor()) {
                 consumer = castConsumer;
             }
         }

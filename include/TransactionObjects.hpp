@@ -35,6 +35,10 @@ class ConversionHandler
     rd_ptr rd;
     const Money buyIn;
 
+    /**
+     * wraps testConversion and makes sure the 2 capitalholders
+     * are a Consumer and Distributor
+     */
     bool predF(const CapitalHolder&, const CapitalHolder&);
 public:
     ConversionHandler(rd_ptr _rd, const Money _buyIn)
