@@ -385,13 +385,43 @@ PopulationGraph::vertices_size_type
     return numMutated;
 }
 
+PopulationGraph::edges_size_type
+    PopulationGraph::mutateEdgesOfGraph(MutateEdgeFunction mutate, 
+        BGLPopulationGraph& g)
+{
+    edges_size_type numMutated = 0;
+
+    BGLPopulationGraph::edge_iterator ei, eiEnd;
+
+    std::tie(ei, eiEnd) = boost::edges(g);
+
+    for(; ei != eiEnd; ++ei)
+    {
+        BGLPopulationGraph::edge_descriptor ed = *ei;
+        
+        Pop s, t;
+        std::tie(s, t) = mutate(getVerticesForEdge(ed, g));
+
+        //get the vertex descriptors so we can mutate the vertices in the edge we're
+        //currently modifying
+        BGLPopulationGraph::vertex_descriptor vdS = boost::source(ed, g);
+        BGLPopulationGraph::vertex_descriptor vdT = boost::target(ed, g);
+        
+        g[vdS] = s;
+        g[vdT] = t;
+        numMutated++;
+    }
+
+    return numMutated;
+}
 
 std::pair<PopulationGraph::Pop, PopulationGraph::Pop> 
-    PopulationGraph::getVertices(
-        PopulationGraph::BGLPopulationGraph::edge_descriptor ed)
+    PopulationGraph::getVerticesForEdge(
+        PopulationGraph::BGLPopulationGraph::edge_descriptor ed,
+        BGLPopulationGraph& g)
 {
-    Pop source = graph[boost::source(ed, graph)];
-    Pop target = graph[boost::target(ed, graph)];
+    Pop source = g[boost::source(ed, g)];
+    Pop target = g[boost::target(ed, g)];
     return std::make_pair(source, target);
 }
 
@@ -404,7 +434,7 @@ PopulationGraph::edges_size_type
 {
     class EdgePredicateObject
     {
-        PopulationGraph *pg;
+        BGLPopulationGraph* graphPtr;
 
         EdgePredicate pred;
 
@@ -413,26 +443,26 @@ PopulationGraph::edges_size_type
         EdgePredicateObject() = default;
 
         EdgePredicateObject(
-                PopulationGraph* _pg,
+                BGLPopulationGraph* _graphPtr,
                 EdgePredicate _pred
                 )
-            : pg(_pg),
+            : graphPtr(_graphPtr),
               pred(_pred)
         {}
 
         bool operator()(const BGLPopulationGraph::edge_descriptor& ed) const {
 
             Pop s, t;
-            std::tie(s, t) = pg->getVertices(ed);
+            std::tie(s, t) = PopulationGraph::getVerticesForEdge(ed, *graphPtr);
 
             //sanity check
             ASSERT_WITH_MESSAGE(s.get() != nullptr && t.get() != nullptr,
                     "The edges shouldn't have null pointers");
 
             //dereference the pointer and run the actual predicate
-            return pred(std::make_pair(*s, *t));
+            return pred(*s, *t);
         }
-    } predicateObject(this, predicate);
+    } predicateObject(&graph, predicate);
 
     //filter the graph using our predicate
     using FGraph = boost::filtered_graph<BGLPopulationGraph, EdgePredicateObject>;
@@ -449,7 +479,7 @@ PopulationGraph::edges_size_type
         FGraph::edge_descriptor ed = *ei;
         
         Pop s, t;
-        std::tie(s, t) = mutate(getVertices(ed));
+        std::tie(s, t) = mutate(getVerticesForEdge(ed, graph));
 
         //get the vertex descriptors so we can mutate the vertices in the edge we're
         //currently modifying
@@ -528,7 +558,7 @@ void PopulationGraph::auditGraph()
             { numEdges++; return p; };
 
         //run edge iteration functions and assert against the results
-        forEachEdge(incNumEdges);
+        forEachEdge<std::pair<Pop, Pop>>(incNumEdges);
         checkNumEdges("forEachEdge");
         numEdges = 0;
 
@@ -538,7 +568,7 @@ void PopulationGraph::auditGraph()
 
         mutateEdgesWithPredicate(incNumEdges, 
                 //trivial predicate
-                [](std::pair<const CapitalHolder&, const CapitalHolder&>) { return true; });
+                [](const CapitalHolder&, const CapitalHolder&) { return true; });
         checkNumEdges("mutateEdgesWithPredicate");
         numEdges=0;
 

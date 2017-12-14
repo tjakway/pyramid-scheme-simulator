@@ -95,6 +95,9 @@ protected:
     static BGLPopulationGraph graphFromTuples(
             std::vector<std::pair<Pop, Pop>>);
 
+    static std::pair<Pop, Pop> getVerticesForEdge(BGLPopulationGraph::edge_descriptor, 
+            BGLPopulationGraph&);
+
 public:
     template <typename T>
     std::vector<T> forEachEdge(std::function<T(std::pair<Pop, Pop>)> f)
@@ -103,15 +106,16 @@ public:
         boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
 
         std::tie(ei, ei_end) = boost::edges(graph);
-        //see https://stackoverflow.com/questions/7895879/using-member-variable-in-lambda-capture-list-inside-a-member-function
         auto& g = graph;
 
-        return Util::accumulateWithVector(ei, ei_end, 
-                [&f, &g](BGLPopulationGraph::edge_iterator e) -> T {
-                    auto arg1 = source(*e, g);
-                    auto arg2 = target(*e, g);
+        return Util::accumulateWithVector<std::function<T(std::pair<Pop, Pop>)>,
+               T,
+               BGLPopulationGraph::edge_iterator
+               >
+            (ei, ei_end, 
+                [&f, &g](BGLPopulationGraph::edge_descriptor e) -> T {
 
-                    return f(arg1, arg2);
+                    return f(getVerticesForEdge(e, g));
                 });
     }
 
@@ -124,8 +128,10 @@ public:
         std::tie(vi, vi_end) = boost::vertices(graph);
         auto& g = graph;
 
-        return Util::accumulateWithVector<std::function<T(BGLPopulationGraph::vertex_descriptor)>, 
-               T, BGLPopulationGraph::vertex_iterator>
+        return Util::accumulateWithVector<
+            std::function<T(BGLPopulationGraph::vertex_descriptor)>, 
+               T, 
+               BGLPopulationGraph::vertex_iterator>
             (vi, vi_end, 
                 [&f, &g](BGLPopulationGraph::vertex_descriptor v){
                     return f(g[v]);
@@ -148,10 +154,11 @@ public:
         std::function<const std::shared_ptr<CapitalHolder>(std::shared_ptr<CapitalHolder>)>;
 
     using EdgePredicate = std::function<bool(
-            std::pair<const CapitalHolder&, const CapitalHolder&>)>;
+            const CapitalHolder&, const CapitalHolder&)>;
     using MutateEdgeFunction = 
         std::function<const std::pair<const Pop, const Pop>(std::pair<Pop, Pop>)>;
 protected:
+
     /**
      * returns the number of vertices mutated
      */
