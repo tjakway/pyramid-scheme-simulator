@@ -42,10 +42,10 @@ public:
     virtual std::shared_ptr<CapitalHolder> clone() const = 0;
 
     virtual ChanceContributor&
-        getSalesChanceContribution() = 0;
+        getSalesChanceContribution() const = 0;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() = 0;
+        getDistributorConversionChanceContribution() const = 0;
 
     virtual bool isDistributor() const { return false; }
 
@@ -100,7 +100,7 @@ public:
                 NewDistributorFunction,
                 std::shared_ptr<Distributor> convertedBy);
 
-    virtual bool canBecomeDistributor(Money buyIn);
+    virtual bool canBecomeDistributor(Money buyIn) const;
 };
 
 class Distributor : public Consumer
@@ -127,7 +127,7 @@ public:
 
     void addMoney(Money);
 
-    virtual bool canBecomeDistributor(Money /*buyIn*/) override { return false; }
+    virtual bool canBecomeDistributor(Money /*buyIn*/) const override { return false; }
 
     virtual bool isDistributor() const override { return true; }
 
