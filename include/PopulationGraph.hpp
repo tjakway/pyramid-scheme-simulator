@@ -168,10 +168,9 @@ protected:
     static edges_size_type mutateEdgesOfGraph(MutateEdgeFunction,
             BGLPopulationGraph&);
 
-
+public:
     void auditGraph();
 
-public:
     /**
      * returns the number of vertices mutated
      * 
