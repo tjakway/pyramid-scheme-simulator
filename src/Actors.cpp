@@ -54,11 +54,11 @@ std::shared_ptr<CapitalHolder> StaticConsumer::clone() const
     return std::make_shared<StaticConsumer>(*this);
 }
 
-ChanceContributor& StaticConsumer::getSalesChanceContribution()
+ChanceContributor& StaticConsumer::getSalesChanceContribution() const
 {
     return *salesChance.get();
 }
-ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution()
+ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution() const
 {
     return *conversionChance.get();
 }
@@ -143,7 +143,7 @@ StaticDistributor::StaticDistributor(Unique id,
 
 StaticDistributor::~StaticDistributor() {}
 
-ChanceContributor& StaticDistributor::getSalesChanceContribution()
+ChanceContributor& StaticDistributor::getSalesChanceContribution() const
 {
     return *salesChance;
 }
@@ -152,7 +152,7 @@ const std::unique_ptr<ChanceContributor> StaticDistributor::conversionChance =
     make_unique<StaticChanceContributor>(0.0);
 
 ChanceContributor&
-        StaticDistributor::getDistributorConversionChanceContribution()
+        StaticDistributor::getDistributorConversionChanceContribution() const
 {
     return *StaticDistributor::conversionChance;
 }
