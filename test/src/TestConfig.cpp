@@ -42,7 +42,7 @@ std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
                 ),
             make_unique<Config::GraphGenerationOptions>(
                 false, //no disconnected subgraphs
-                100, //graph size
+                600, //graph size
                 0.2, //link chance
                 std::numeric_limits<unsigned long>::max(), //no limit on max edges per vertex
                 tenPercentChanceDistribution, //sales chance
