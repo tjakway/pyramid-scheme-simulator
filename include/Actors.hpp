@@ -64,22 +64,28 @@ public:
 
 class StaticDistributor : public Distributor
 {
-    static const Inventory defaultDesiredRestockAmount;
+    //make StaticConsumer a friend so it can turn itself into a StaticDistributor
+    //using StaticDistributor(Consumer&, std::shared_ptr<Distributor>)
+    friend StaticConsumer;
+
     std::unique_ptr<ChanceContributor> salesChance;
 
 protected:
     const Inventory desiredRestockAmount;
+    const Inventory restockThreshold;
 
     StaticDistributor(Unique, Money, Inventory, Inventory);
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : Distributor(self, convBy), 
-          desiredRestockAmount(defaultDesiredRestockAmount)
+          desiredRestockAmount(Config::Defaults::defaultDesiredRestockAmount),
+          restockThreshold(Config::Defaults::defaultRestockThreshold)
     {}
     //used by other constructors
     StaticDistributor(
             Unique, 
             Money, 
             Inventory, 
+            Inventory,
             Inventory,
             std::unique_ptr<ChanceContributor>&&);
 
@@ -99,6 +105,9 @@ public:
 
     virtual ChanceContributor&
         getDistributorConversionChanceContribution() const override;
+
+    virtual Inventory getDesiredRestockAmount() const override;
+    virtual Inventory getRestockThreshold() const override;
 
     virtual std::shared_ptr<CapitalHolder> clone() const override;
 };

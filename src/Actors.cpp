@@ -94,6 +94,8 @@ unsigned int Company::getInventory() const
 void Company::deductMoney(Money)
 { return; }
 
+
+
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
         Inventory startingInventory,
@@ -102,6 +104,7 @@ StaticDistributor::StaticDistributor(Unique id,
     : StaticDistributor(id, startingMoney,
             startingInventory,
             _desiredRestockAmount,
+            Config::Defaults::defaultRestockThreshold,
             _salesChance->clone())
 { }
 
@@ -116,11 +119,13 @@ StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney,
         Inventory startingInventory,
         Inventory _desiredRestockAmount,
+        Inventory _restockThreshold,
         std::unique_ptr<ChanceContributor>&& _salesChance)
     : Distributor(id, startingMoney, 
             std::shared_ptr<Distributor>(nullptr)),
         salesChance(std::move(_salesChance)),
-        desiredRestockAmount(_desiredRestockAmount)
+        desiredRestockAmount(_desiredRestockAmount),
+        restockThreshold(_restockThreshold)
 {
     setInventory(startingInventory);
 }
@@ -133,6 +138,7 @@ StaticDistributor::StaticDistributor(Unique id,
         const double _salesChance)
     : StaticDistributor(id, startingMoney, startingInventory,
         _desiredRestockAmount,
+        Config::Defaults::defaultRestockThreshold,
         make_unique<StaticChanceContributor>(_salesChance))
 { }
 
@@ -171,6 +177,17 @@ ChanceContributor&
         StaticDistributor::getDistributorConversionChanceContribution() const
 {
     return *StaticDistributor::conversionChance;
+}
+
+
+Inventory StaticDistributor::getDesiredRestockAmount() const
+{
+    return desiredRestockAmount;
+}
+
+Inventory StaticDistributor::getRestockThreshold() const
+{
+    return restockThreshold;
 }
 
 std::shared_ptr<CapitalHolder> StaticDistributor::clone() const

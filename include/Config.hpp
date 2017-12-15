@@ -174,6 +174,9 @@ public:
         * Consumer factory
         */
         std::shared_ptr<Consumer> mkConsumer(Config&, rd_ptr, Unique);
+
+        static const Inventory defaultDesiredRestockAmount;
+        static const Inventory defaultRestockThreshold;
     };
     Defaults defaults;
 
