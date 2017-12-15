@@ -70,19 +70,24 @@ class StaticDistributor : public Distributor
 protected:
     const Inventory desiredRestockAmount;
 
-    StaticDistributor(Unique, Money, Inventory);
+    StaticDistributor(Unique, Money, Inventory, Inventory);
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : Distributor(self, convBy), 
           desiredRestockAmount(defaultDesiredRestockAmount)
     {}
     //used by other constructors
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&&);
+    StaticDistributor(
+            Unique, 
+            Money, 
+            Inventory, 
+            Inventory,
+            std::unique_ptr<ChanceContributor>&&);
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:
-    StaticDistributor(Unique, Money, Inventory, const double salesChance);
-    StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&);
+    StaticDistributor(Unique, Money, Inventory, Inventory, const double salesChance);
+    StaticDistributor(Unique, Money, Inventory, Inventory, ChanceContributor*);
+    StaticDistributor(Unique, Money, Inventory, Inventory, std::unique_ptr<ChanceContributor>&);
 
     //copy constructor
     StaticDistributor(const StaticDistributor&);

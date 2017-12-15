@@ -97,24 +97,30 @@ void Company::deductMoney(Money)
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
         Inventory startingInventory,
+        Inventory _desiredRestockAmount,
         ChanceContributor* _salesChance)
     : StaticDistributor(id, startingMoney,
             startingInventory,
+            _desiredRestockAmount,
             _salesChance->clone())
 { }
 
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
-        Inventory startingInventory)
-    : StaticDistributor(id, startingMoney, startingInventory, nullptr)
+        Inventory startingInventory,
+        Inventory _desiredRestockAmount)
+    : StaticDistributor(id, startingMoney, startingInventory, _desiredRestockAmount, nullptr)
 { }
 
 StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney,
         Inventory startingInventory,
+        Inventory _desiredRestockAmount,
         std::unique_ptr<ChanceContributor>&& _salesChance)
-    : Distributor(id, startingMoney, std::shared_ptr<Distributor>(nullptr)),
-        salesChance(std::move(_salesChance))
+    : Distributor(id, startingMoney, 
+            std::shared_ptr<Distributor>(nullptr)),
+        salesChance(std::move(_salesChance)),
+        desiredRestockAmount(_desiredRestockAmount)
 {
     setInventory(startingInventory);
 }
@@ -123,8 +129,10 @@ StaticDistributor::StaticDistributor(Unique id,
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
         Inventory startingInventory,
+        Inventory _desiredRestockAmount,
         const double _salesChance)
     : StaticDistributor(id, startingMoney, startingInventory,
+        _desiredRestockAmount,
         make_unique<StaticChanceContributor>(_salesChance))
 { }
 
@@ -132,6 +140,7 @@ StaticDistributor::StaticDistributor(Unique id,
 //copy constructor
 StaticDistributor::StaticDistributor(const StaticDistributor& other)
     : StaticDistributor(other.id, other.getMoney(), other.getInventory(),
+            other.getDesiredRestockAmount(),
             other.salesChance.get())
 {
     recruitedBy = other.recruitedBy;
@@ -141,8 +150,10 @@ StaticDistributor::StaticDistributor(const StaticDistributor& other)
 StaticDistributor::StaticDistributor(Unique id, 
         Money startingMoney, 
         Inventory startingInventory,
+        Inventory _desiredRestockAmount,
         std::unique_ptr<ChanceContributor>& _salesChance)
     : StaticDistributor(id, startingMoney, startingInventory,
+        _desiredRestockAmount,
         _salesChance.get())
 {}
 
