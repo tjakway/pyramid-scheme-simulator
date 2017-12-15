@@ -24,7 +24,8 @@ protected:
             ConversionHandler::RecordType&,
             Unique);
 
-    void processConversions(ConversionHandler::RecordType&);
+    PopulationGraph::vertices_size_type 
+        processConversions(ConversionHandler::RecordType&);
 
 public:
     Simulation(Config*);

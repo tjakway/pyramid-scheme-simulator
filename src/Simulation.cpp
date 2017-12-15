@@ -44,7 +44,8 @@ ConversionHandler::Conversion* Simulation::lookupConversionRecord(
 }
 
 
-void Simulation::processConversions(ConversionHandler::RecordType& recs)
+PopulationGraph::vertices_size_type 
+    Simulation::processConversions(ConversionHandler::RecordType& recs)
 {
     NEW_EXCEPTION_TYPE(ProcessConversionException);
 
@@ -77,7 +78,7 @@ void Simulation::processConversions(ConversionHandler::RecordType& recs)
             return lookupConversionRecord(recs, x.id) != nullptr;
         };
 
-    graph->mutateVerticesWithPredicate(mutate, predicate);
+    return graph->mutateVerticesWithPredicate(mutate, predicate);
 }
 
 
