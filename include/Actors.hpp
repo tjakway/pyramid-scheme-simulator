@@ -37,6 +37,11 @@ public:
 
     virtual std::shared_ptr<CapitalHolder> clone() const override;
 
+    virtual std::shared_ptr<Distributor> 
+        becomeDistributor(
+                std::shared_ptr<Distributor> convertedBy) override;
+
+
     virtual ChanceContributor&
         getSalesChanceContribution() const override;
 
@@ -84,6 +89,8 @@ public:
 
     virtual ChanceContributor&
         getDistributorConversionChanceContribution() const override;
+
+    virtual std::shared_ptr<CapitalHolder> clone() const override;
 };
 
 }

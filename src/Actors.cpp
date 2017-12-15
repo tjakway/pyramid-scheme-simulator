@@ -63,6 +63,11 @@ ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution() 
     return *conversionChance.get();
 }
 
+std::shared_ptr<Distributor> 
+    StaticConsumer::becomeDistributor(std::shared_ptr<Distributor> convertedBy)
+{
+    return std::make_shared<StaticDistributor>(*this, convertedBy);
+}
 
 const unsigned int Company::inventory = std::numeric_limits<unsigned int>::max();
 
@@ -156,5 +161,12 @@ ChanceContributor&
 {
     return *StaticDistributor::conversionChance;
 }
+
+std::shared_ptr<CapitalHolder> StaticDistributor::clone() const
+{
+    return std::make_shared<StaticDistributor>(*this);
+}
+
+
 
 }
