@@ -66,7 +66,9 @@ ChanceContributor& StaticConsumer::getDistributorConversionChanceContribution() 
 std::shared_ptr<Distributor> 
     StaticConsumer::becomeDistributor(std::shared_ptr<Distributor> convertedBy)
 {
-    return std::make_shared<StaticDistributor>(*this, convertedBy);
+    //can't use make_shared here because we're calling a protected constructor
+    //of a class that StaticConsumer is a friend of
+    return std::shared_ptr<StaticDistributor>(new StaticDistributor(*this, convertedBy));
 }
 
 const unsigned int Company::inventory = std::numeric_limits<unsigned int>::max();
