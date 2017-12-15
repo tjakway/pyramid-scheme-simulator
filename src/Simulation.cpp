@@ -55,7 +55,7 @@ PopulationGraph::vertices_size_type
             assert(!toConvert->isDistributor());
 
             ConversionHandler::Conversion* thisConvertsRecord = 
-                Simulation::lookupConversionRecord(recs.records, toConvert->id);
+                Simulation::lookupConversionRecord(recs, toConvert->id);
 
             if(thisConvertsRecord == nullptr)
             {
