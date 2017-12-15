@@ -26,10 +26,11 @@ void Simulation::tick()
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
         ConversionHandler::RecordType& recs,
-        Unique possibleConvertId)
+        const Unique possibleConvertId)
 {
-    auto res = std::find_if(recs.records.begin(), recs.records.end(),
-            [=](const PopulationGraph::Pop x){
+    using RecIt = ConversionHandler::RecordType::ContainerType::iterator;
+    RecIt res = std::find_if(recs.records.begin(), recs.records.end(),
+            [possibleConvertId](const std::unique_ptr<ConversionHandler::ElementType>& x){
                 return x->id == possibleConvertId;
             });
 
