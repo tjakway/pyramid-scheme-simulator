@@ -48,7 +48,7 @@ public:
         return 5;
     }
 
-    virtual Inventory getRestockThreshold() override {
+    virtual Inventory getRestockThreshold() const override {
         return 1;
     }
 };
