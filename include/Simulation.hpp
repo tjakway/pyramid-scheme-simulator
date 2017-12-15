@@ -14,7 +14,12 @@ class Simulation
 {
 private:
     std::shared_ptr<Config> config;
-    std::unique_ptr<PopulationGraph> graph;
+    std::unique_ptr<PopulationGraph> populationGraph;
+
+    ConversionHandler conversionHandler;
+
+    SimulationTick now = 0;
+    SimulationTick when() const { return now; }
 
     std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config>);
     void tick();

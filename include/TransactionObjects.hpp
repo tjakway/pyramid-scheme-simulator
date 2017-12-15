@@ -60,7 +60,6 @@ public:
     using RecordType = ListTransactionRecord<ElementType>;
 
     virtual RecordType operator()(SimulationTick,
-            Money, 
             CapitalHolder&, 
             CapitalHolder&);
 

@@ -26,9 +26,19 @@ public:
         : records(std::move(l))
     { }
 
+    ListTransactionRecord(ListTransactionRecord<X>&& other)
+        : records(std::move(other.records))
+    {}
+
+
 private:
+    //these functions exist so ListTransactionRecord can be the Container in leftFold
+    bool empty() const { return records.empty(); }
+    X front() { return records.front; }
+    void pop_front() { records.pop_front(); }
+
     template <typename Container, typename Reducer>
-    ListTransactionRecord<X>&& leftFoldHelper(Container toMerge, Reducer reducer, 
+    ListTransactionRecord<X> leftFoldHelper(Container&& toMerge, Reducer reducer, 
             ListTransactionRecord<X>&& acc)
     {
         if(toMerge.empty())
@@ -37,18 +47,18 @@ private:
         }
         else
         {
-            ListTransactionRecord<X>&& newAcc = reducer(std::move(acc), toMerge.front);
             toMerge.pop_front();
-            return leftFoldHelper(toMerge, reducer, std::move(newAcc));
+            return leftFoldHelper(std::move(toMerge), reducer, 
+                        reducer(std::move(acc), std::move(toMerge.front())));
         }
     }
 
 public:
     //calls leftFoldHelper with this as the starting accumulator
     template <typename Container, typename Reducer>
-    ListTransactionRecord<X>&& leftFold(Container toMerge, Reducer reducer)
+    ListTransactionRecord<X> leftFold(Container&& toMerge, Reducer reducer)
     {
-        return leftFoldHelper(toMerge, reducer, std::move(*this));
+        return leftFoldHelper<Container, Reducer>(std::move(toMerge), reducer, std::move(*this));
     }
 };
 
