@@ -2,6 +2,8 @@
 
 #include <functional>
 
+namespace pyramid_scheme_simulator {
+
 template <typename It, typename T, typename U>
 class TransformationIterator
 {
@@ -19,18 +21,17 @@ public:
     {}
 
     //increment operators
-    U& operator++()
+    TransformationIterator<It, T, U> operator++()
     {
-        // actual increment takes place here
         it++;
-        return transformIt(it);
+        return *this;
     }
 
-    U operator++(int)
+    TransformationIterator<It, T, U> operator++(int)
     {
-        TransformationIterator tmp(*this); // copy
-        operator++(); // pre-increment
-        return tmp;   // return old value
+        TransformationIterator tmp(*this);
+        operator++();
+        return tmp;
     }
 
     //equality comparison operators
@@ -57,3 +58,16 @@ public:
         return transformIt(*it);
     }
 };
+
+
+/**
+ * for type inference
+ */
+template <typename It, typename T, typename U>
+TransformationIterator<It, T, U> mkTransformationIterator(It _it, 
+            const std::function<U(T)> _transformIt)
+{
+    return TransformationIterator<It, T, U>(_it, _transformIt);
+}
+
+}
