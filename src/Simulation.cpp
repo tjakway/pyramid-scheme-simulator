@@ -24,4 +24,23 @@ void Simulation::tick()
     //add the SalesResult if success or if we need it for logging
 }
 
+ConversionHandler::Conversion* Simulation::lookupConversionRecord(
+        ConversionHandler::RecordType recs,
+        Unique possibleConvertId)
+{
+    auto res = std::find_if(recs.records.begin(), recs.records.end(),
+            [=](const PopulationGraph::Pop x){
+                return x->id == possibleConvertId;
+            });
+
+    if(res == recs.records.end())
+    {
+        return nullptr;
+    }
+    else
+    {
+        return (*res).get();
+    }
+}
+
 }
