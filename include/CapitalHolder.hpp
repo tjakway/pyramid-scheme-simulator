@@ -113,11 +113,17 @@ protected:
     Distributor(Consumer&, std::shared_ptr<Distributor>);
 
 public:
+    NEW_EXCEPTION_TYPE(AlreadyDistributorException);
+
     virtual ~Distributor() {}
 
     void addMoney(Money);
 
     virtual bool canBecomeDistributor(Money /*buyIn*/) const override { return false; }
+
+    virtual std::shared_ptr<Distributor> 
+        becomeDistributor(
+                std::shared_ptr<Distributor> convertedBy) override;
 
     virtual bool isDistributor() const override { return true; }
 

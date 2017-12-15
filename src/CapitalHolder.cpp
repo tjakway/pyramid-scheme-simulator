@@ -109,6 +109,13 @@ Distributor::Distributor(Consumer& from, std::shared_ptr<Distributor> convertedB
     setInventory(from.getInventory());
 }
 
+
+std::shared_ptr<Distributor> Distributor::becomeDistributor(std::shared_ptr<Distributor>)
+{
+    throw AlreadyDistributorException(
+            STRCAT("CapitalHolder with id ", id, " is already a distributor"));
+}
+
 bool Distributor::canPurchase(Money cost, const CapitalHolder& from)
 {
     if(getMoney() < cost)
