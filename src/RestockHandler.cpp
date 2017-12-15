@@ -9,7 +9,7 @@ RestockHandler::RecordType RestockHandler::operator()(
 {
     Distributor* dist = dynamic_cast<Distributor*>(&who);
 
-    auto empty = emptyListTransactionRecord<RestockHandler::ElemType>();
+    auto empty = emptyListTransactionRecord<RestockHandler::ElementType>();
     if(dist == nullptr)
     {
         return empty;
@@ -18,7 +18,7 @@ RestockHandler::RecordType RestockHandler::operator()(
     {
         //copy the unique
         return singleElementListTransactionRecord<
-            RestockHandler::ElemType>(make_unique<Unique>(dist->id));
+            RestockHandler::ElementType>(make_unique<Unique>(dist->id));
     }
     else
     {

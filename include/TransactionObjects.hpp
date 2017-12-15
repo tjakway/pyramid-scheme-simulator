@@ -56,8 +56,8 @@ public:
         {}
     };
 
-    using ElemType = Conversion;
-    using RecordType = ListTransactionRecord<ElemType>;
+    using ElementType = Conversion;
+    using RecordType = ListTransactionRecord<ElementType>;
 
     virtual RecordType operator()(SimulationTick,
             Money, 
@@ -65,8 +65,8 @@ public:
             CapitalHolder&);
 
 
-    using ComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&, 
-            const std::unique_ptr<ElemType>&)>;
+    using ComparatorType = const std::function<bool(const std::unique_ptr<ElementType>&, 
+            const std::unique_ptr<ElementType>&)>;
 
     static const ComparatorType comparator;
 
@@ -84,8 +84,8 @@ public:
 class RestockHandler
 {
 public:
-    using ElemType = Unique;
-    using RecordType = ListTransactionRecord<ElemType>;
+    using ElementType = Unique;
+    using RecordType = ListTransactionRecord<ElementType>;
 
     //operates on vertices
     virtual RecordType operator()(SimulationTick,
@@ -93,12 +93,12 @@ public:
             CapitalHolder&);
 
     
-    using SetComparatorType = const std::function<bool(const ElemType&,
-            const ElemType&)>;
+    using SetComparatorType = const std::function<bool(const ElementType&,
+            const ElementType&)>;
     static const SetComparatorType setComparator;
     
-    using ListComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&,
-            const std::unique_ptr<ElemType>&)>;
+    using ListComparatorType = const std::function<bool(const std::unique_ptr<ElementType>&,
+            const std::unique_ptr<ElementType>&)>;
     static const ListComparatorType listComparator;
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
@@ -106,7 +106,7 @@ public:
     /**
      * the final output of this class
      */
-    using RestockSet = std::set<ElemType>;
+    using RestockSet = std::set<ElementType>;
     static const RestockSet toSet(RecordType&&);
 };
 
@@ -146,8 +146,8 @@ public:
         bool operator==(const Sale&);
     };
 
-    using ElemType = Either<SalesResult, Sale>;
-    using RecordType = ListTransactionRecord<ElemType>;
+    using ElementType = Either<SalesResult, Sale>;
+    using RecordType = ListTransactionRecord<ElementType>;
 
     SaleHandler(RestockHandler::RestockSet&&);
 
@@ -158,8 +158,8 @@ public:
             CapitalHolder&);
 
 
-    using ComparatorType = const std::function<bool(const std::unique_ptr<ElemType>&, 
-            const std::unique_ptr<ElemType>&)>;
+    using ComparatorType = const std::function<bool(const std::unique_ptr<ElementType>&, 
+            const std::unique_ptr<ElementType>&)>;
 
     static const ComparatorType comparator;
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
