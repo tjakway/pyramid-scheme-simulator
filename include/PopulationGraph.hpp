@@ -14,6 +14,7 @@
 #include "Config.hpp"
 #include "CapitalHolder.hpp"
 #include "Util/NewExceptionType.hpp"
+#include "Util/TransformationIterator.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -197,6 +198,47 @@ public:
     vertices_size_type mutateVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
 
     edges_size_type mutateEdgesWithPredicate(MutateEdgeFunction, EdgePredicate);
+
+
+    /***************************************/
+    /********iterator functions*************/
+    /***************************************/
+protected:
+    //iterator transformation functions
+    const std::function<const CapitalHolder&(BGLPopulationGraph::vertex_descriptor)> 
+        transformVertexIt = [this](BGLPopulationGraph::vertex_descriptor vd) 
+        -> const CapitalHolder& {
+            return *(this->graph[vd]);
+        };
+    const std::function<std::pair<const CapitalHolder&, const CapitalHolder&>(
+            BGLPopulationGraph::edge_descriptor)> transformEdgeIt = 
+        [this](BGLPopulationGraph::edge_descriptor ed)
+        -> std::pair<const CapitalHolder&, const CapitalHolder&> {
+            std::pair<Pop, Pop> edge = this->getVerticesForEdge(ed, this->graph);
+            return std::pair<const CapitalHolder&, const CapitalHolder&>(
+                    *edge.first, *edge.second);
+        };
+
+public:
+    using VertexIt = 
+        TransformationIterator<BGLPopulationGraph::vertex_iterator,
+                               BGLPopulationGraph::vertex_descriptor,
+                               const CapitalHolder&>;
+
+    using EdgeIt = 
+        TransformationIterator<BGLPopulationGraph::edge_iterator,
+                               BGLPopulationGraph::edge_descriptor,
+                               std::pair<const CapitalHolder&, const CapitalHolder&>>;
+
+
+    VertexIt vBegin();
+    VertexIt vEnd();
+    EdgeIt eBegin();
+    EdgeIt eEnd();
+
+    /***************************************/
+    /***************************************/
+    /***************************************/
 
 protected:
     struct UndirectedEdge

@@ -576,5 +576,34 @@ void PopulationGraph::auditGraph()
     }
 }
 
+/***************************************/
+/********iterator functions*************/
+/***************************************/
+
+PopulationGraph::VertexIt PopulationGraph::vBegin()
+{
+    return mkTransformationIterator(boost::vertices(graph).first,
+            transformVertexIt);
+}
+PopulationGraph::VertexIt PopulationGraph::vEnd()
+{
+    return mkTransformationIterator(boost::vertices(graph).second,
+            transformVertexIt);
+}
+PopulationGraph::EdgeIt PopulationGraph::eBegin()
+{
+    return mkTransformationIterator(boost::edges(graph).first,
+            transformEdgeIt);
+}
+PopulationGraph::EdgeIt PopulationGraph::eEnd()
+{
+    return mkTransformationIterator(boost::edges(graph).second,
+            transformEdgeIt);
+}
+
+
+/***************************************/
+/***************************************/
+/***************************************/
 
 }
