@@ -14,18 +14,17 @@
 namespace pyramid_scheme_simulator {
 
 
-template <typename U>
+template <typename X>
 class ListTransactionRecord 
 {
 public:
-    using ElementType = std::unique_ptr<U>;
+    using ElementType = std::unique_ptr<X>;
     using ContainerType = std::list<ElementType>;
     ContainerType records;
 
     ListTransactionRecord(ContainerType&& l) 
         : records(std::move(l))
     { }
-
 };
 
 
