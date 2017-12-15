@@ -64,11 +64,16 @@ public:
 
 class StaticDistributor : public Distributor
 {
+    static const Inventory defaultDesiredRestockAmount;
     std::unique_ptr<ChanceContributor> salesChance;
+
 protected:
+    const Inventory desiredRestockAmount;
+
     StaticDistributor(Unique, Money, Inventory);
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
-        : Distributor(self, convBy)
+        : Distributor(self, convBy), 
+          desiredRestockAmount(defaultDesiredRestockAmount)
     {}
     //used by other constructors
     StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&&);
