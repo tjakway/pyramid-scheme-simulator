@@ -1,4 +1,5 @@
 #include <memory>
+#include <iterator>
 
 #include "Tick.hpp"
 #include "Config.hpp"
@@ -8,7 +9,9 @@
 namespace pyramid_scheme_simulator {
 
 Simulation::Simulation(Config* c) 
-    : config(std::shared_ptr<Config>(c)) 
+    : config(std::shared_ptr<Config>(c)),
+    conversionHandler(config->randomGen,
+            config->simulationOptions->distributionOptions->buyIn)
 {
     populationGraph = buildGraph(config);
 }
@@ -30,13 +33,26 @@ void Simulation::tick()
             CapitalHolder& a = *(pops.first);
             CapitalHolder& b = *(pops.second);
             return this->conversionHandler.operator()(this->when(), 
-                    this->config->simulationOptions->distributionOptions->buyIn,
                     a,
                     b);
                     
         };
-    std::vector<ConversionHandler::RecordType> conversions = 
+
+    std::vector<ConversionHandler::RecordType> vecConversions = 
         populationGraph->forEachEdge(f);
+
+    //TODO: specialize foldLeft for vectors to avoid the vector -> list conversion
+    //or overload foldLeft to take a begin and end iterator that it can construct a
+    //collection out of
+    
+    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold
+        <std::list<ConversionHandler::RecordType>, 
+            std::function<ConversionHandler::RecordType(ConversionHandler::RecordType&&, 
+                    ConversionHandler::RecordType&&)>>(
+            std::list<ConversionHandler::RecordType>(
+                std::make_move_iterator(vecConversions.begin()),
+                std::make_move_iterator(vecConversions.end())),
+            conversionHandler.reduce);
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
@@ -94,7 +110,7 @@ PopulationGraph::vertices_size_type
             return lookupConversionRecord(recs, x.id) != nullptr;
         };
 
-    return graph->mutateVerticesWithPredicate(mutate, predicate);
+    return populationGraph->mutateVerticesWithPredicate(mutate, predicate);
 }
 
 
