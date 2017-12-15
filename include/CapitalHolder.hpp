@@ -86,19 +86,9 @@ public:
 
     virtual void deductMoney(Money);
 
-    /**
-     * this method is a little odd
-     * it takes a NewDistributorFunction so that a default one can be set
-     * without every Consumer having to know about it, but is also virtual
-     * so that it can be overridden by subclasses (who are free to ignore the
-     * passed function and return a different distributor type)
-     *
-     * This is to allow maximize customizability of consumers
-     */
     virtual std::shared_ptr<Distributor> 
         becomeDistributor(
-                NewDistributorFunction,
-                std::shared_ptr<Distributor> convertedBy);
+                std::shared_ptr<Distributor> convertedBy) = 0;
 
     virtual bool canBecomeDistributor(Money buyIn) const;
 };

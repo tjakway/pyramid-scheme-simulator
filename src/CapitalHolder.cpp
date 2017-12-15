@@ -88,14 +88,6 @@ bool Consumer::canBecomeDistributor(Money buyIn) const
     return buyIn < getMoney();
 }
 
-std::shared_ptr<Distributor> Consumer::becomeDistributor(
-            NewDistributorFunction newDistributorFunction,
-            std::shared_ptr<Distributor> convertedBy)
-{
-    return newDistributorFunction(*this, convertedBy);
-}
-
-
 Distributor::Distributor(Unique id, Money m, std::shared_ptr<Distributor> _recruitedBy)
     : Consumer(id, m),
     recruitedBy(_recruitedBy)
