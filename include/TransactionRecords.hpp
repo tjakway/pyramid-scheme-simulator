@@ -25,8 +25,32 @@ public:
     ListTransactionRecord(ContainerType&& l) 
         : records(std::move(l))
     { }
-};
 
+private:
+    template <typename Container, typename Reducer>
+    ListTransactionRecord<X>&& leftFoldHelper(Container toMerge, Reducer reducer, 
+            ListTransactionRecord<X>&& acc)
+    {
+        if(toMerge.empty())
+        {
+            return std::move(acc);
+        }
+        else
+        {
+            ListTransactionRecord<X>&& newAcc = reducer(std::move(acc), toMerge.front);
+            toMerge.pop_front();
+            return leftFoldHelper(toMerge, reducer, std::move(newAcc));
+        }
+    }
+
+public:
+    //calls leftFoldHelper with this as the starting accumulator
+    template <typename Container, typename Reducer>
+    ListTransactionRecord<X>&& leftFold(Container toMerge, Reducer reducer)
+    {
+        return leftFoldHelper(toMerge, reducer, std::move(*this));
+    }
+};
 
 template <typename X>
 ListTransactionRecord<X> emptyListTransactionRecord() 
