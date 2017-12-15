@@ -25,7 +25,7 @@ void Simulation::tick()
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
-        ConversionHandler::RecordType recs,
+        ConversionHandler::RecordType& recs,
         Unique possibleConvertId)
 {
     auto res = std::find_if(recs.records.begin(), recs.records.end(),
@@ -42,5 +42,43 @@ ConversionHandler::Conversion* Simulation::lookupConversionRecord(
         return (*res).get();
     }
 }
+
+
+void Simulation::processConversions(ConversionHandler::RecordType& recs)
+{
+    NEW_EXCEPTION_TYPE(ProcessConversionException);
+
+    PopulationGraph::MutateVertexFunction mutate = 
+        [&recs](PopulationGraph::Pop toConvert)
+        {
+            assert(!toConvert->isDistributor());
+
+            ConversionHandler::Conversion* thisConvertsRecord = 
+                Simulation::lookupConversionRecord(recs.records, toConvert->id);
+
+            if(thisConvertsRecord == nullptr)
+            {
+                throw ProcessConversionException(
+                        STRCAT("Could not find conversion record for ",
+                            toConvert->id, " despite the predicate returning true"));
+            }
+            else
+            {
+                //throw an exception on error rather than sigsegv
+                return dynamic_cast<Consumer&>(*toConvert)
+                    .becomeDistributor(thisConvertsRecord->convertedBy);
+            }
+        };
+
+    PopulationGraph::VertexPredicate predicate = 
+        [&recs](const CapitalHolder& x)
+        {
+            //filter for any CapitalHolder's we have conversion records for
+            return lookupConversionRecord(recs, x.id) != nullptr;
+        };
+
+    graph->mutateVerticesWithPredicate(mutate, predicate);
+}
+
 
 }
