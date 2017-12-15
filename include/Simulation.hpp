@@ -21,8 +21,10 @@ private:
     
 protected:
     static ConversionHandler::Conversion* lookupConversionRecord(
-            ConversionHandler::RecordType,
+            ConversionHandler::RecordType&,
             Unique);
+
+    void processConversions(ConversionHandler::RecordType&);
 
 public:
     Simulation(Config*);
