@@ -45,10 +45,7 @@ void Simulation::tick()
     //or overload foldLeft to take a begin and end iterator that it can construct a
     //collection out of
     
-    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold
-        <std::list<ConversionHandler::RecordType>, 
-            std::function<ConversionHandler::RecordType(ConversionHandler::RecordType&&, 
-                    ConversionHandler::RecordType&&)>>(
+    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
             std::list<ConversionHandler::RecordType>(
                 std::make_move_iterator(vecConversions.begin()),
                 std::make_move_iterator(vecConversions.end())),
