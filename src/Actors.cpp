@@ -110,13 +110,6 @@ StaticDistributor::StaticDistributor(Unique id,
             _salesChance->clone())
 { }
 
-StaticDistributor::StaticDistributor(Unique id, 
-        Money startingMoney, 
-        Inventory startingInventory,
-        Inventory _desiredRestockAmount)
-    : StaticDistributor(id, startingMoney, startingInventory, _desiredRestockAmount, nullptr)
-{ }
-
 StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney,
         Inventory startingInventory,

@@ -74,7 +74,6 @@ protected:
     const Inventory desiredRestockAmount;
     const Inventory restockThreshold;
 
-    StaticDistributor(Unique, Money, Inventory, Inventory);
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : Distributor(self, convBy), 
           desiredRestockAmount(Config::Defaults::defaultDesiredRestockAmount),
