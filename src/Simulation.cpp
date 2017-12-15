@@ -7,9 +7,10 @@
 
 namespace pyramid_scheme_simulator {
 
-Simulation::Simulation(Config* c) : config(std::shared_ptr<Config>(c)) 
+Simulation::Simulation(Config* c) 
+    : config(std::shared_ptr<Config>(c)) 
 {
-    graph = buildGraph(config);
+    populationGraph = buildGraph(config);
 }
 
 std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
@@ -20,8 +21,22 @@ std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
 
 void Simulation::tick()
 {
-    //for each edge,
-    //add the SalesResult if success or if we need it for logging
+    const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop,
+            PopulationGraph::Pop>)> f =
+        [this](std::pair<PopulationGraph::Pop,
+            PopulationGraph::Pop> pops)
+            -> ConversionHandler::RecordType
+        {
+            CapitalHolder& a = *(pops.first);
+            CapitalHolder& b = *(pops.second);
+            return this->conversionHandler.operator()(this->when(), 
+                    this->config->simulationOptions->distributionOptions->buyIn,
+                    a,
+                    b);
+                    
+        };
+    std::vector<ConversionHandler::RecordType> conversions = 
+        populationGraph->forEachEdge(f);
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
