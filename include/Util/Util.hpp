@@ -101,6 +101,19 @@ public:
         return vec;
     }
 
+    template <typename OldCollection, typename NewCollection>
+    static NewCollection mapCollection(
+            OldCollection src, 
+            std::function<typename NewCollection::value_type(typename OldCollection::value_type)> f)
+    {
+        NewCollection dst;
+        for(auto i : src)
+        {
+            dst.insert(f(i));
+        }
+        return dst;
+    }
+
     static const std::array<unsigned char, 16> hashToArray(size_t hash);
 
     static bool withinMargins(double value, double expected, double margin);
