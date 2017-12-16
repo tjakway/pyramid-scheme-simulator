@@ -132,7 +132,7 @@ public:
     virtual bool hasInventory() const { return getInventory() > 0; }
 
     virtual Inventory getRestockThreshold() const = 0;
-    virtual bool needsRestock() { return getInventory() > getRestockThreshold(); }
+    virtual bool needsRestock() const { return getInventory() > getRestockThreshold(); }
 };
 
 
