@@ -109,7 +109,7 @@ public:
         NewCollection dst;
         for(auto i : src)
         {
-            dst.insert(f(i));
+            dst.insert(dst.end(), f(i));
         }
         return dst;
     }
