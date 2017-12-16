@@ -63,7 +63,7 @@ void testXToAll(int param = (rand() % 100))
     testMapCollection<X, std::vector<int>>(param);
     testMapCollection<X, std::list<int>>(param);
     testMapCollection<X, std::deque<int>>(param);
-    testMapCollection<X, std::set<int>>(param);
+    testMapCollection<X, std::set<int>>(0);
 }
 
 //tests mapping a category to itself
@@ -82,7 +82,9 @@ TEST(UtilTests, testMapCollectionOrdered)
     testXToAll<std::vector<int>>();
     testXToAll<std::list<int>>();
     testXToAll<std::deque<int>>();
-    testXToAll<std::set<int>>();
+
+    //have to pass 0 for set because it will sort itself
+    testXToAll<std::set<int>>(0);
 }
 
 
