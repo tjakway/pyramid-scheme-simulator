@@ -88,9 +88,9 @@ public:
     using RecordType = ListTransactionRecord<ElemType>;
 
     //operates on vertices
-    virtual RecordType operator()(SimulationTick,
-            Money, 
-            CapitalHolder&);
+    virtual RecordType operator()(const SimulationTick,
+            const Money, 
+            const CapitalHolder&);
 
     
     using SetComparatorType = const std::function<bool(const ElemType&,
