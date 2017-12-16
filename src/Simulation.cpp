@@ -1,4 +1,5 @@
 #include <memory>
+#include <iterator>
 
 #include "Tick.hpp"
 #include "Config.hpp"
@@ -7,9 +8,12 @@
 
 namespace pyramid_scheme_simulator {
 
-Simulation::Simulation(Config* c) : config(std::shared_ptr<Config>(c)) 
+Simulation::Simulation(Config* c) 
+    : config(std::shared_ptr<Config>(c)),
+    conversionHandler(config->randomGen,
+            config->simulationOptions->distributionOptions->buyIn)
 {
-    graph = buildGraph(config);
+    populationGraph = buildGraph(config);
 }
 
 std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
@@ -20,16 +24,41 @@ std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
 
 void Simulation::tick()
 {
-    //for each edge,
-    //add the SalesResult if success or if we need it for logging
+    const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop,
+            PopulationGraph::Pop>)> f =
+        [this](std::pair<PopulationGraph::Pop,
+            PopulationGraph::Pop> pops)
+            -> ConversionHandler::RecordType
+        {
+            CapitalHolder& a = *(pops.first);
+            CapitalHolder& b = *(pops.second);
+            return this->conversionHandler.operator()(this->when(), 
+                    a,
+                    b);
+                    
+        };
+
+    std::vector<ConversionHandler::RecordType> vecConversions = 
+        populationGraph->forEachEdge(f);
+
+    //TODO: specialize foldLeft for vectors to avoid the vector -> list conversion
+    //or overload foldLeft to take a begin and end iterator that it can construct a
+    //collection out of
+    
+    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
+            std::list<ConversionHandler::RecordType>(
+                std::make_move_iterator(vecConversions.begin()),
+                std::make_move_iterator(vecConversions.end())),
+            conversionHandler.reduce);
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
         ConversionHandler::RecordType& recs,
-        Unique possibleConvertId)
+        const Unique possibleConvertId)
 {
-    auto res = std::find_if(recs.records.begin(), recs.records.end(),
-            [=](const PopulationGraph::Pop x){
+    using RecIt = ConversionHandler::RecordType::ContainerType::iterator;
+    RecIt res = std::find_if(recs.records.begin(), recs.records.end(),
+            [possibleConvertId](const std::unique_ptr<ConversionHandler::ElementType>& x){
                 return x->id == possibleConvertId;
             });
 
@@ -55,7 +84,7 @@ PopulationGraph::vertices_size_type
             assert(!toConvert->isDistributor());
 
             ConversionHandler::Conversion* thisConvertsRecord = 
-                Simulation::lookupConversionRecord(recs.records, toConvert->id);
+                Simulation::lookupConversionRecord(recs, toConvert->id);
 
             if(thisConvertsRecord == nullptr)
             {
@@ -78,7 +107,7 @@ PopulationGraph::vertices_size_type
             return lookupConversionRecord(recs, x.id) != nullptr;
         };
 
-    return graph->mutateVerticesWithPredicate(mutate, predicate);
+    return populationGraph->mutateVerticesWithPredicate(mutate, predicate);
 }
 
 

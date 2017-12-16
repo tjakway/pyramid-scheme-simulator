@@ -82,6 +82,9 @@ const std::shared_ptr<spdlog::logger> Config::logger = [](){
     }
 }();
 
+//arbitrary, tweak as needed
+const Inventory Config::Defaults::defaultDesiredRestockAmount = 10;
+const Inventory Config::Defaults::defaultRestockThreshold = 1;
 
 
 

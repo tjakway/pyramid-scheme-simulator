@@ -31,7 +31,7 @@ class EagerDistributor : public StaticDistributor
 {
 public:
     EagerDistributor(Unique u, Money m, Inventory i)
-        : StaticDistributor(u, m, i, 1.0)
+        : StaticDistributor(u, m, i, Config::Defaults::defaultRestockThreshold, 1.0)
     {}
 
     EagerDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
@@ -48,7 +48,7 @@ public:
         return 5;
     }
 
-    virtual Inventory getRestockThreshold() override {
+    virtual Inventory getRestockThreshold() const override {
         return 1;
     }
 };

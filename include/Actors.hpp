@@ -64,25 +64,35 @@ public:
 
 class StaticDistributor : public Distributor
 {
-    static const Inventory defaultDesiredRestockAmount;
+    //make StaticConsumer a friend so it can turn itself into a StaticDistributor
+    //using StaticDistributor(Consumer&, std::shared_ptr<Distributor>)
+    friend StaticConsumer;
+
     std::unique_ptr<ChanceContributor> salesChance;
 
 protected:
     const Inventory desiredRestockAmount;
+    const Inventory restockThreshold;
 
-    StaticDistributor(Unique, Money, Inventory);
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
         : Distributor(self, convBy), 
-          desiredRestockAmount(defaultDesiredRestockAmount)
+          desiredRestockAmount(Config::Defaults::defaultDesiredRestockAmount),
+          restockThreshold(Config::Defaults::defaultRestockThreshold)
     {}
     //used by other constructors
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&&);
+    StaticDistributor(
+            Unique, 
+            Money, 
+            Inventory, 
+            Inventory,
+            Inventory,
+            std::unique_ptr<ChanceContributor>&&);
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:
-    StaticDistributor(Unique, Money, Inventory, const double salesChance);
-    StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&);
+    StaticDistributor(Unique, Money, Inventory, Inventory, const double salesChance);
+    StaticDistributor(Unique, Money, Inventory, Inventory, ChanceContributor*);
+    StaticDistributor(Unique, Money, Inventory, Inventory, std::unique_ptr<ChanceContributor>&);
 
     //copy constructor
     StaticDistributor(const StaticDistributor&);
@@ -94,6 +104,9 @@ public:
 
     virtual ChanceContributor&
         getDistributorConversionChanceContribution() const override;
+
+    virtual Inventory getDesiredRestockAmount() const override;
+    virtual Inventory getRestockThreshold() const override;
 
     virtual std::shared_ptr<CapitalHolder> clone() const override;
 };

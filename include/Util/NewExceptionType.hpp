@@ -13,8 +13,25 @@
 #define STRINGIFY_MACRO__(a) #a
 
 
+//suppress clang's -Winconsistent-missing-override warning just for 
+//NEW_EXCEPTION_TYPE_WITH_BASE because we have no way in the #define
+//of telling if we're extending from an exception that was defined with
+//NEW_EXCEPTION_TYPE or just a random exception that takes a string
+//in its constructor
+//this way both will work without spitting out huge numbers of warnings
+#ifdef __clang__
+#define BEGIN_SUPPRESS_OVERRIDE_WARNING _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Winconsistent-missing-override\"") \
+
+#define END_SUPPRESS_OVERRIDE_WARNING _Pragma("GCC diagnostic pop")
+#else
+#define BEGIN_SUPPRESS_OVERRIDE_WARNING 
+#define END_SUPPRESS_OVERRIDE_WARNING
+#endif
+
 //NOTE: the base class must have a constructor that takes a std::string
 #define NEW_EXCEPTION_TYPE_WITH_BASE(A, B) \
+    BEGIN_SUPPRESS_OVERRIDE_WARNING \
     class A : public B \
     { \
         const std::string msg;\
@@ -34,7 +51,8 @@
             " thrown: " << msg << std::endl;\
             return os.str().c_str();\
         }\
-    };
+    }; \
+    END_SUPPRESS_OVERRIDE_WARNING
 
 //runtime_error is a reasonable default base
 #define NEW_EXCEPTION_TYPE(A) NEW_EXCEPTION_TYPE_WITH_BASE(A, std::runtime_error)

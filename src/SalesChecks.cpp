@@ -256,7 +256,7 @@ SaleHandler::RecordType
 
     if(!result)
     {
-        return singleElementListTransactionRecord<SaleHandler::ElemType>(
+        return singleElementListTransactionRecord<SaleHandler::ElementType>(
                 make_unique<Either<SalesResult, Sale>>(
                         Either<SalesResult, Sale>::left(
                 make_unique<SalesResult>(result.result))));
@@ -270,7 +270,7 @@ SaleHandler::RecordType
 
         CapitalHolder::atomicallyDoSaleSideEffects(price, seller.get(), buyer.get());
 
-        return singleElementListTransactionRecord<SaleHandler::ElemType>(
+        return singleElementListTransactionRecord<SaleHandler::ElementType>(
             make_unique<Either<SalesResult, Sale>>(
                     Either<SalesResult, Sale>::right(std::move(sale))));
     }

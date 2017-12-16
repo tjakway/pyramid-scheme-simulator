@@ -35,7 +35,7 @@ const std::function<ConversionHandler::RecordType(
         ConversionHandler::RecordType&&)> 
     ConversionHandler::reduce =
 [](ConversionHandler::RecordType&& lhs, ConversionHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<ConversionHandler::ElemType>(
+    return mergeListTransactionRecords<ConversionHandler::ElementType>(
             std::move(lhs), std::move(rhs), ConversionHandler::comparator);
 };
 
@@ -102,7 +102,7 @@ const std::function<SaleHandler::RecordType(
         SaleHandler::RecordType&&, 
         SaleHandler::RecordType&&)> SaleHandler::reduce =
 [](SaleHandler::RecordType&& lhs, SaleHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<SaleHandler::ElemType>(
+    return mergeListTransactionRecords<SaleHandler::ElementType>(
             std::move(lhs), std::move(rhs), SaleHandler::comparator);
 };
 
@@ -110,7 +110,7 @@ const std::function<RestockHandler::RecordType(
         RestockHandler::RecordType&&, 
         RestockHandler::RecordType&&)> RestockHandler::reduce =
 [](RestockHandler::RecordType&& lhs, RestockHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<RestockHandler::ElemType>(
+    return mergeListTransactionRecords<RestockHandler::ElementType>(
             std::move(lhs), std::move(rhs), RestockHandler::listComparator);
 };
 
@@ -119,10 +119,10 @@ const RestockHandler::ListComparatorType RestockHandler::listComparator =
     cmpUniquePtrsToUnique;
 
 
-const std::set<RestockHandler::ElemType> 
+const std::set<RestockHandler::ElementType> 
     RestockHandler::toSet(RestockHandler::RecordType&& rec)
 {
-    std::set<RestockHandler::ElemType> uniques;
+    std::set<RestockHandler::ElementType> uniques;
 
     for(std::unique_ptr<Unique>& x : rec.records)
     {
@@ -134,6 +134,6 @@ const std::set<RestockHandler::ElemType>
 }
 
 const SaleHandler::ComparatorType SaleHandler::comparator =
-    Util::deepCompareUniquePtrs<SaleHandler::ElemType>;
+    Util::deepCompareUniquePtrs<SaleHandler::ElementType>;
 
 }
