@@ -18,11 +18,11 @@ class LoggingBackend : public Simulation::Backend
     std::atomic_bool interruptedFlag;
 
 public:
-    virtual void interrupt() override;
-    virtual bool interrupted() const override;
+    virtual void interrupt() noexcept override;
+    virtual bool interrupted() const noexcept override;
 
 protected:
-    virtual void onInterrupt() = 0;
+    virtual void onInterrupt() const noexcept = 0;
 
     LoggingBackend();
     virtual ~LoggingBackend() {}
@@ -38,7 +38,7 @@ protected:
     static const spdlog::level::level_enum defaultLogLevel;
     std::shared_ptr<spdlog::logger> logger;
 
-    virtual void onInterrupt() override;
+    virtual void onInterrupt() const noexcept override;
     virtual void writeLine(const std::string&);
 
 public:

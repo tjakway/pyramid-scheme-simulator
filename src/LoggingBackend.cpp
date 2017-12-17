@@ -5,12 +5,12 @@
 
 namespace pyramid_scheme_simulator {
 
-void LoggingBackend::interrupt() 
+void LoggingBackend::interrupt() noexcept
 {
     interruptedFlag.store(true);
 }
 
-bool LoggingBackend::interrupted() const
+bool LoggingBackend::interrupted() const noexcept
 {
     return interruptedFlag.load();
 }
@@ -31,7 +31,7 @@ const spdlog::level::level_enum SpdLoggingBackend::defaultLogLevel
 //just flush if we're interrupted
 //destructors take care of anything important anyway,
 //probably don't even need to explicitly do this
-void SpdLoggingBackend::onInterrupt()
+void SpdLoggingBackend::onInterrupt() const noexcept
 {
     logger->flush();
 }

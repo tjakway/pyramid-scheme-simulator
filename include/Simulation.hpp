@@ -25,8 +25,8 @@ public:
         //base class for any backend-related exceptions
         NEW_EXCEPTION_TYPE(BackendException);
 
-        virtual void interrupt() = 0;
-        virtual bool interrupted() const = 0;
+        virtual void interrupt() noexcept = 0;
+        virtual bool interrupted() const noexcept = 0;
 
         virtual void exportGraph(std::shared_ptr<PopulationGraph>, const SimulationTick) = 0;
     };
@@ -36,6 +36,8 @@ private:
 
 public:
     Simulation(Config*, std::vector<std::unique_ptr<Backend>>&&);
+
+    void interrupt() const noexcept;
 };
 
 } //namespace pyramid_scheme_simulator
