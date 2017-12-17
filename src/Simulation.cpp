@@ -7,7 +7,9 @@
 
 namespace pyramid_scheme_simulator {
 
-Simulation::Simulation(Config* c) : config(std::shared_ptr<Config>(c)) 
+Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backends) 
+    : config(std::shared_ptr<Config>(c)),
+    backends(std::move(_backends))
 {
     graph = buildGraph(config);
 }

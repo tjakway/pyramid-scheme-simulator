@@ -39,10 +39,10 @@ protected:
     std::shared_ptr<spdlog::logger> logger;
 
     virtual void onInterrupt() override;
-    virtual void writeLine(const std::string&) = 0;
+    virtual void writeLine(const std::string&);
 
 public:
-    virtual void exportGraph(std::shared_ptr<PopulationGraph>) override;
+    virtual void exportGraph(std::shared_ptr<PopulationGraph>, const SimulationTick) override;
 
     SpdLoggingBackend(std::shared_ptr<spdlog::logger>,
             spdlog::level::level_enum);

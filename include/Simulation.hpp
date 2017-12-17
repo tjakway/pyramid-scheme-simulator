@@ -28,10 +28,14 @@ public:
         virtual void interrupt() = 0;
         virtual bool interrupted() const = 0;
 
-        virtual void exportGraph(std::shared_ptr<PopulationGraph>) = 0;
+        virtual void exportGraph(std::shared_ptr<PopulationGraph>, const SimulationTick) = 0;
     };
 
-    Simulation(Config*, std::vector<Backend>);
+private:
+    std::vector<std::unique_ptr<Backend>> backends;
+
+public:
+    Simulation(Config*, std::vector<std::unique_ptr<Backend>>&&);
 };
 
 } //namespace pyramid_scheme_simulator

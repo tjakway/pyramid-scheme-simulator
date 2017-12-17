@@ -49,6 +49,9 @@ public:
     
     [[noreturn]] static void throwVertexNotFoundException(const Unique&);
 
+
+    std::string toString();
+
     /*****************/
 protected:
     BGLPopulationGraph graph;
@@ -137,6 +140,7 @@ public:
     edges_size_type numEdges();
 
     std::vector<Pop> vertices();
+    std::vector<std::pair<Pop, Pop>> edges();
 
     CapitalHolder& findVertexByUnique(const Unique&);
 

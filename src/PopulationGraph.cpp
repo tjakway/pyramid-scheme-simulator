@@ -18,8 +18,10 @@
 #include <exception>
 #include <tuple>
 #include <vector>
+#include <sstream>
 
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/graph_utility.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/copy.hpp>
@@ -27,6 +29,21 @@
 
 
 namespace pyramid_scheme_simulator {
+
+std::string PopulationGraph::toString()
+{
+    std::ostringstream os;
+
+
+    std::vector<std::pair<Pop, Pop>> edges = edges();
+
+    std::unordered_set<Unique> printedVertices;
+
+
+
+
+    return os.str();
+}
 
 [[noreturn]] void PopulationGraph::throwVertexNotFoundException(const Unique& which)
 {
@@ -245,6 +262,28 @@ std::vector<PopulationGraph::Pop> PopulationGraph::vertices()
     }
 
     return allPops;
+}
+
+std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
+    PopulationGraph::edges()
+{
+    std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
+        allEdges;
+
+    allEdges.reserve(numEdges());
+
+    BGLPopulationGraph::edge_iterator ei, eiEnd;
+    std::tie(ei, eiEnd) = boost::edges(graph);
+
+    for(; ei != eiEnd; ++ei)
+    {
+        allEdges.emplace_back(
+            std::make_pair(
+                boost::source(*ei, graph),
+                boost::target(*ei, graph)));
+    }
+
+    return allEdges;
 }
 
 

@@ -1,5 +1,6 @@
 #include "LoggingBackend.hpp"
 
+#include "Util/Strcat.hpp"
 #include <sstream>
 
 namespace pyramid_scheme_simulator {
@@ -56,6 +57,12 @@ void SpdLoggingBackend::writeString(const std::string& toWrite)
     }
 }
 
+//the smallest non-interruptible amount of work
+void SpdLoggingBackend::writeLine(const std::string& line)
+{
+    logger->info(line);
+}
+
 SpdLoggingBackend::SpdLoggingBackend(
         std::shared_ptr<spdlog::logger> _logger,
         spdlog::level::level_enum _lvl)
@@ -79,5 +86,21 @@ const std::string FileLoggingBackend::loggerName = "graph_file_logger";
 FileLoggingBackend::FileLoggingBackend(const std::string& filename)
     : SpdLoggingBackend(spdlog::basic_logger_mt(loggerName, filename))
 {}
+
+
+/**
+ * the important part
+ * actually writing the graph as a string
+ */
+void SpdLoggingBackend::exportGraph(std::shared_ptr<PopulationGraph> graph,
+        const SimulationTick when)
+{
+    writeString(
+        STRCAT("PopulationGraph, tick #", when, 
+                std::endl, 
+                graph->toString(), 
+                std::endl));
+
+}
 
 }
