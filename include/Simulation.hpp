@@ -4,6 +4,7 @@
 
 #include "Config.hpp"
 #include "PopulationGraph.hpp"
+#include "Util/NewExceptionType.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -17,6 +18,21 @@ private:
     void tick();
 
 public:
+    class Backend
+    {
+    public:
+        //base class for any backend-related exceptions
+        //NEW_EXCEPTION_TYPE(BackendException);
+
+        virtual void interrupt() = 0;
+        virtual bool interrupted() const = 0;
+
+        virtual bool success() const = 0;
+        virtual bool done()    const = 0;
+
+        virtual void exportGraph(std::shared_ptr<PopulationGraph>) = 0;
+    };
+
     Simulation(Config*);
 };
 
