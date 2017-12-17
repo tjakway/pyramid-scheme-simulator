@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Config.hpp"
 #include "PopulationGraph.hpp"
@@ -30,7 +31,7 @@ public:
         virtual void exportGraph(std::shared_ptr<PopulationGraph>) = 0;
     };
 
-    Simulation(Config*);
+    Simulation(Config*, std::vector<Backend>);
 };
 
 } //namespace pyramid_scheme_simulator
