@@ -35,12 +35,48 @@ std::string PopulationGraph::toString()
     std::ostringstream os;
 
 
-    std::vector<std::pair<Pop, Pop>> edges = edges();
+    std::vector<std::pair<Pop, Pop>> allEdges = edges();
 
-    std::unordered_set<Unique> printedVertices;
+    std::multimap<Unique, Unique> edgeMap;
+    for(const auto e: allEdges)
+    {
+        edgeMap.emplace(std::make_pair(e.first->id, e.second->id));
+    }
 
+    std::set<Unique> printedSourceVertices;
 
+    //the edge map will sort the uniques
+    for(auto e : edgeMap)
+    {
+        os << e.first << " ---> " << e.second << std::endl;
+        printedSourceVertices.emplace(e.first);
+    }
 
+    //print the vertices that don't have any edges
+    
+    std::set<Unique> allIds;
+
+    {
+        const auto allVertices = vertices();
+        for(auto v : allVertices)
+        {
+            allIds.emplace(v->id);
+        }
+    }
+
+    std::set<Unique> unprintedIds;
+    for(auto i : allIds)
+    {
+        if(printedSourceVertices.find(i) == printedSourceVertices.end())
+        {
+            unprintedIds.emplace(i);
+        }
+    }
+
+    for(auto u : unprintedIds)
+    {
+        os << u << std::endl;
+    }
 
     return os.str();
 }
@@ -279,8 +315,8 @@ std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
     {
         allEdges.emplace_back(
             std::make_pair(
-                boost::source(*ei, graph),
-                boost::target(*ei, graph)));
+                graph[boost::source(*ei, graph)],
+                graph[boost::target(*ei, graph)]));
     }
 
     return allEdges;
