@@ -151,7 +151,15 @@ protected:
     static vertices_size_type mutateVerticesOfGraph(MutateVertexFunction, 
             BGLPopulationGraph&);
 
+
+    std::unique_ptr<PopulationGraph> cloneWithCopyVertexFunction(
+            std::function<const Pop(const Pop)>);
+
+
 public:
+    std::unique_ptr<PopulationGraph> clone();
+    
+
     /**
      * returns the number of vertices mutated
      * 

@@ -380,4 +380,35 @@ PopulationGraph::vertices_size_type
 }
 
 
+
+std::unique_ptr<PopulationGraph> 
+    PopulationGraph::cloneWithCopyVertexFunction(
+            std::function<const Pop(const Pop)> copyVertex)
+{
+    BGLPopulationGraph newGraph;
+    
+    //shallow copy
+    boost::copy_graph(graph, newGraph);
+
+    std::unique_ptr<PopulationGraph> newPopulationGraph
+        = make_unique<PopulationGraph>(newGraph);
+
+    //the MutateVertexFunction can change what the boost vertex property
+    //(the std::shared_ptr) is pointing to by returning a new shared_ptr object
+    newPopulationGraph->mutateVertices(copyVertex);
+
+    return newPopulationGraph;
+}
+
+std::unique_ptr<PopulationGraph> PopulationGraph::clone()
+{
+    const std::function<const Pop(const Pop)> clonePop =
+        [](const Pop in) -> const Pop
+        {
+            return in->clone();
+        };
+    return cloneWithCopyVertexFunction(clonePop);
+}
+
+
 }
