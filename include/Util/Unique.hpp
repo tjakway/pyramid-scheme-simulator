@@ -114,6 +114,10 @@ public:
     Unique(const Unique& u): UniqueSet(u.id), id(u.id)
     {}
 
+    Unique(Unique&& u)
+        : Unique(std::move(u.id))
+    {}
+
     Unique(): UniqueSet()
     {}
 
