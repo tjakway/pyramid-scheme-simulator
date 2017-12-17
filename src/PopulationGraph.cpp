@@ -391,7 +391,8 @@ std::unique_ptr<PopulationGraph>
     boost::copy_graph(graph, newGraph);
 
     std::unique_ptr<PopulationGraph> newPopulationGraph
-        = make_unique<PopulationGraph>(newGraph);
+        //can't use make_unique because we're calling a protected constructor
+        = std::unique_ptr<PopulationGraph>(new PopulationGraph(newGraph));
 
     //the MutateVertexFunction can change what the boost vertex property
     //(the std::shared_ptr) is pointing to by returning a new shared_ptr object
