@@ -8,9 +8,13 @@ set(MAIN_LIB_TARGET "pyramid")
 set(MAIN_EXE_TARGET "pyramid-simulator")
 set(TEST_TARGET "test-pyramid-simulator")
 
+option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
 
-include("cmake/default_build_type.cmake" OPTIONAL)
-include("cmake/build_spdlog_dep.cmake" REQUIRED)
+include("cmake/default_build_type.cmake"    OPTIONAL)
+include("cmake/build_spdlog_dep.cmake"      REQUIRED)
+include("cmake/all_targets_functions.cmake" REQUIRED)
+include("cmake/signal_handler_option.cmake" REQUIRED)
+
 
 #the name of the file containing main() that shouldn't be included in MAIN_LIB_TARGET
 set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
@@ -23,27 +27,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #currently ignored unless using makefiles or Ninja
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-#add a property to both the main library and the test target
-function(all_targets_compile_property)
-    #see http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags 
-    target_compile_options(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
-    target_compile_options(${MAIN_EXE_TARGET} PRIVATE ${ARGN})
-    target_compile_options(${TEST_TARGET} PRIVATE ${ARGN})
-endfunction()
-
-function(all_targets_compile_definitions def)
-    target_compile_definitions(${MAIN_LIB_TARGET} PRIVATE ${def})
-    target_compile_definitions(${MAIN_EXE_TARGET} PRIVATE ${def})
-    target_compile_definitions(${TEST_TARGET} PRIVATE ${def})
-endfunction()
-
-#NOTE: this function probably isn't needed since you can link everything to the main
-#lib target and then link that to other targets
-function(all_targets_link_libraries)
-    target_link_libraries(${MAIN_LIB_TARGET} PRIVATE ${ARGN})
-    target_link_libraries(${MAIN_EXE_TARGET} PRIVATE ${ARGN})
-    target_link_libraries(${TEST_TARGET} PRIVATE ${ARGN})
-endfunction()
 
 #divide debug fields into common (i.e. non compiler-specific) debug flags, GCC-specific flags and clang-specific flags
 ########################################
@@ -127,7 +110,7 @@ target_include_directories(${TEST_TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/test/includ
 all_targets_compile_definitions("-DTESTING")
 #change to -DEITHER_HPP_DEMANGLE_NAMES to enable
 all_targets_compile_definitions("-DNO_EITHER_HPP_DEMANGLE_NAMES")
-
+set_signal_handling_definition()
 
 if((${CMAKE_BUILD_TYPE} STREQUAL "DEBUG") OR (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
     message("Building in debug mode without warnings.")
