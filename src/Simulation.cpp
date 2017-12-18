@@ -20,6 +20,21 @@ std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
 }
 
 
+void Simulation::interrupt() const noexcept
+{
+    //interrupt each backend to give them a chance to shut down
+    for(const auto& backend : backends)
+    {
+        backend->interrupt();
+    }
+
+    //wait for them to finish shutting down
+    for(const auto& backend: backends)
+    {
+        backend->join();
+    }
+}
+
 void Simulation::tick()
 {
     //for each edge,

@@ -28,6 +28,8 @@ public:
         virtual void interrupt() noexcept = 0;
         virtual bool interrupted() const noexcept = 0;
 
+        virtual void join() noexcept {}
+
         virtual void exportGraph(std::shared_ptr<PopulationGraph>, const SimulationTick) = 0;
     };
 
