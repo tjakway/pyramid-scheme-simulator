@@ -25,7 +25,7 @@ all: tags
 
 .PHONY: tags
 tags:
-	ctags -R --c++-kinds=+p --fields=+iaS --extras=+q --language-force=C++ .
+	ctags -R --exclude=bin --c++-kinds=+p --fields=+iaS --extras=+q --language-force=C++ .
 
 .PHONY: find-shared-ptr-references
 find-shared-ptr-references:
