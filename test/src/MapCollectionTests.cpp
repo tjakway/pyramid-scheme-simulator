@@ -51,7 +51,7 @@ namespace {
      * from a random distribution to fill them properly
      */
     template <typename T>
-    void fillContainer(std::set<T> col, int add)
+    void insertRandomElement(std::set<T> col, int add)
     {
         genUniqueInt(col, add);
     }
