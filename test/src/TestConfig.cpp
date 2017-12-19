@@ -33,7 +33,7 @@ std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
                 std::unique_ptr<Config::SimulationOptions::DistributorOptions>(),
                 std::numeric_limits<SimulationTick>::max(), 
                 //product cost of 1
-                1, 1,
+                static_cast<Money>(1), static_cast<Money>(1),
                 //sample starting funds from a random distribution
                 [rd]() { 
                     return Util::sampleRdInRange(rd, 
