@@ -10,6 +10,7 @@ set(MAIN_EXE_TARGET "pyramid-simulator")
 set(TEST_TARGET "test-pyramid-simulator")
 
 option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
+option(BUILD_TESTS "whether to build unit tests" ON)
 
 include("cmake/default_build_type.cmake"    OPTIONAL)
 include("cmake/build_spdlog_dep.cmake"      REQUIRED)
@@ -33,4 +34,8 @@ add_definitions("-DNO_EITHER_HPP_DEMANGLE_NAMES")
 set_signal_handling_definition()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-add_subdirectory(${CMAKE_SOURCE_DIR}/test)
+
+set(TESTS_BIN_DIR ${CMAKE_BINARY_DIR}/test)
+if(BUILD_TESTS)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/test ${TESTS_BIN_DIR})
+endif(BUILD_TESTS)
