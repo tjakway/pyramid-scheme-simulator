@@ -80,9 +80,13 @@ std::string demangle(const char* mangledName)
 
 #else
 //demangling is a no-op
+//don't warn about emitting an unused function
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunneeded-internal-declaration"
 std::string demangle(const char* mangledName) {
     return std::string(mangledName);
 }
+#pragma GCC diagnostic pop
 #endif
 }
 
