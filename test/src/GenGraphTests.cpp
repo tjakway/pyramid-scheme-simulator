@@ -53,9 +53,11 @@ TEST_F(GenGraphTests, TestLinkChance)
     g.auditGraph();
 
     ASSERT_GT(numVertices, 0);
-    ASSERT_GT(sumDegrees, 0);
+    ASSERT_GT(sumDegrees, 
+            static_cast<PopulationGraph::BGLPopulationGraph::degree_size_type>(0));
 
-    ASSERT_EQ(numVertices, configPtr->graphGenerationOptions->graphSize.getOption());
+    ASSERT_EQ(numVertices, 
+            static_cast<int>(configPtr->graphGenerationOptions->graphSize.getOption()));
     const double avgDegree = ((double)sumDegrees) / ((double)numVertices);
 
 

@@ -72,12 +72,12 @@ TEST_F(BasicGraphTests, BasicNoInventoryTest)
 {
     //sale shouldn't happen if there's no inventory
     distributor->setInventory(0);
-    EXPECT_EQ(distributor->getInventory(), 0);
+    EXPECT_EQ(distributor->getInventory(), static_cast<Inventory>(0));
 
     auto recordResult = (*saleHandler)(when, price, 
             rd, *distributor, *consumer1);
 
-    ASSERT_EQ(recordResult.records.size(), 1);
+    ASSERT_EQ(recordResult.records.size(), 1L);
     auto& rec = recordResult.records.front();
 
     EXPECT_TRUE(rec->isLeft());
@@ -112,7 +112,7 @@ TEST_F(BasicGraphTests, TestVertices)
 TEST_F(BasicGraphTests, MutateVertices_MoneyTest)
 {
     //change everyone's money and see if it sticks
-    const int numVerticesPrev = tinyGraph->numVertices();
+    const unsigned long numVerticesPrev = tinyGraph->numVertices();
     
     std::unordered_map<Unique, Money> newMoneyMap;
 

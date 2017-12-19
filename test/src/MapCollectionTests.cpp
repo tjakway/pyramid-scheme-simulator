@@ -35,7 +35,7 @@ namespace {
             int lowerBound = RAND_BOUNDED_LOWER,
             int upperBound = RAND_BOUNDED_UPPER)
     {
-        int i = 0;
+        unsigned long i = 0;
         while(true)
         {
             const int u = randBounded(lowerBound, upperBound);
@@ -181,7 +181,7 @@ void testGenUnique(std::function<void(Collection&)> sortF,
     Collection uniformCol,
         generatedCol;
 
-    int numIterations = 0;
+    unsigned long numIterations = 0;
     for(int i = lowerBound; i < upperBound; i++)
     {
         TestGenUniqueEmplacer<Collection>().doEmplace(uniformCol, i);

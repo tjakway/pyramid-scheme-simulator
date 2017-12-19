@@ -31,10 +31,10 @@ TEST_F(UndirectedEdgeTests, TestUnorderedSetMembership)
     std::unordered_set<MockUndirectedEdge> edgeSet;
 
     edgeSet.insert(uv);
-    ASSERT_EQ(edgeSet.size(), 1);
+    ASSERT_EQ(edgeSet.size(), 1L);
 
     edgeSet.insert(vu);
-    ASSERT_EQ(edgeSet.size(), 1);
+    ASSERT_EQ(edgeSet.size(), 1L);
 
     ASSERT_TRUE(*edgeSet.find(uv) == vu);
 }
