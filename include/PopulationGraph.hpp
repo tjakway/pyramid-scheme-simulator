@@ -50,7 +50,7 @@ public:
     [[noreturn]] static void throwVertexNotFoundException(const Unique&);
 
 
-    std::string toString();
+    std::string toString() const;
 
     /*****************/
 protected:
