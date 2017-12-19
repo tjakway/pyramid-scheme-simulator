@@ -195,6 +195,10 @@ private:
 class RestockSaleHandler
 {
 public:
+    //thrown if a Unique in RestockSet doesn't
+    //correspond to a vertex in PopulationGraph
+    NEW_EXCEPTION_TYPE(RestockPopNotFoundException);
+
     RestockSaleHandler(const Money, 
             std::shared_ptr<Company>,
             RestockHandler::RestockSet);

@@ -27,4 +27,37 @@ SaleHandler::RecordType RestockSaleHandler::processRestocksWithPops(
             saleHandler.reduce);
 }
 
+
+std::set<PopulationGraph::Pop> RestockSaleHandler::lookupRestockPops(
+        const PopulationGraph& graph,
+        const RestockHandler::RestockSet& restockSet)
+{
+    std::set<PopulationGraph::Pop> restockPops;
+
+    const auto vertices = graph.vertices();
+    std::set<PopulationGraph::Pop> allPops(vertices.begin(), vertices.end());
+
+    for(const Unique& thisId : restockSet)
+    {
+        const auto foundRes = std::find_if(allPops.begin(), allPops.end(),
+                [&thisId](PopulationGraph::Pop x)
+                {
+                    return x->id == thisId;
+                });
+
+        if(foundRes == allPops.end())
+        {
+            throw RestockPopNotFoundException(
+                    STRCAT("Unique ", thisId, " has no corresponding ",
+                        "pop in passed PopulationGraph"));
+        }
+        else
+        {
+            restockPops.emplace(*foundRes);
+        }
+    }
+
+    return restockPops;
+}
+
 }
