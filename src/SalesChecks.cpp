@@ -27,10 +27,11 @@ public:
     const std::shared_ptr<Distributor> seller;
     const std::shared_ptr<Consumer> buyer;
 private:
-    SaleIsPossibleResult(SalesResult r, 
-            const std::shared_ptr<Distributor> seller,
-            const std::shared_ptr<Consumer> buyer)
-        : result(r), success(r.success), seller(seller), buyer(buyer)
+    SaleIsPossibleResult(SalesResult _result, 
+            const std::shared_ptr<Distributor> _seller,
+            const std::shared_ptr<Consumer> _buyer)
+        : result(_result), seller(_seller), buyer(_buyer),
+            success(_result.success)
     {}
 
 public:
