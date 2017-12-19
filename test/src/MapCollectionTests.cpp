@@ -231,8 +231,12 @@ TEST(MapCollectionTests, testGenUniqueSequenceContainers)
 TEST(MapCollectionTests, testGenUniqueSet)
 {
     //can't sort a set, it's already ordered
-    const std::function<void(std::set<int>&)> no_op = [](std::set<int>&){};
-    testGenUnique<std::set<int>>(no_op);
+    const std::function<void(std::set<int>&)> set_no_op = [](std::set<int>&){};
+    testGenUnique<std::set<int>>(set_no_op);
+
+    const std::function<void(std::unordered_set<int>&)> unordered_set_no_op = 
+        [](std::unordered_set<int>&){};
+    testGenUnique<std::unordered_set<int>>(unordered_set_no_op);
 }
 
 //tests mapping a category to itself
