@@ -7,20 +7,71 @@
 #include <unordered_set>
 #include <deque>
 #include <list>
+#include <stdexcept>
 
 #include "Util/Util.hpp"
 
 namespace {
+    int randBounded(int lowerBound = 1, int upperBound = 100)
+    {
+        assert(upperBound > lowerBound);
+        return (rand() % (upperBound - lowerBound)) + lowerBound;
+    }
+
+    template <typename Collection>
+    int genUniqueInt(Collection& col, int add)
+    {
+        int i = 0;
+        while(true)
+        {
+            const int u = randBounded();
+            //make sure that the collection of (element + add) is unique
+            //i.e. that out call to mapCollection will be a bijection
+            if(std::find(col.begin(), col.end(), u) == col.end()
+                    && std::find(col.begin(), col.end(), u + add) == col.end())
+            {
+                return u;
+            }
+
+            if(i >= (col.size() * 100))
+            {
+                throw std::runtime_error("Too many iterations in genUniqueInt, probably an infinite loop");
+            }
+        }
+    }
+
+    template <typename Collection>
+    void fillContainer(Collection& col, const int size, int /*add*/)
+    {
+        for(int i = 0; i < size; i++)
+        {
+            col.insert(col.end(), randBounded());
+        }
+    }
+
+    /**
+     * sets delete nonunique values so we need to sample without replacement
+     * from a random distribution to fill them properly
+     */
+    template <typename T>
+    void fillContainer(std::set<T> col, const int size, int add)
+    {
+        for(int i = 0; i < size; i++)
+        {
+            genUniqueInt(col, add);
+        }
+    }
+
     template <typename FromCollection, typename ToCollection>
-    void testMapCollection(int add = (rand() % 100))
+    void testMapCollection(int add = randBounded())
     {
         //generate & fill the source collection
         FromCollection from;
-        const int generatedSize = (rand() % 100) + 1;
-        for(int i = 0; i < generatedSize; i++)
-        {
-            from.insert(from.end(), rand());
-        }
+        EXPECT_EQ(from.size(), 0);
+
+        const int maxSize = 10;
+        const int generatedSize = randBounded(1, maxSize);
+        fillContainer(from, generatedSize, add);
 
         EXPECT_EQ(from.size(), generatedSize);
 
@@ -37,6 +88,7 @@ namespace {
                                                         ToCollection>(from, mapping);
 
         EXPECT_EQ(to.size(), generatedSize);
+        EXPECT_EQ(from.size(), to.size());
 
         typename FromCollection::iterator fIt = from.begin(),
                  fEnd = from.end();
@@ -45,7 +97,7 @@ namespace {
 
         while(fIt != fEnd)
         {
-            //the mapping added 1
+            //the mapping added some value
             ASSERT_EQ((*fIt) + add, *tIt);
             ++tIt;
             ++fIt;
@@ -58,7 +110,7 @@ namespace {
 namespace pyramid_scheme_simulator {
 
 template <typename X>
-void testXToAll(int param = (rand() % 100))
+void testXToAll(int param = randBounded())
 {
     testMapCollection<X, std::vector<int>>(param);
     testMapCollection<X, std::list<int>>(param);
