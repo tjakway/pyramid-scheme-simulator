@@ -28,3 +28,7 @@ process_warnings(${MAIN_LIB_TARGET})
 
 #build the executable (it depends on this library)
 add_subdirectory(exe)
+
+if(${BUILD_OPENGL_BACKEND})
+    add_subdirectory(gl)
+endif(${BUILD_OPENGL_BACKEND})
