@@ -30,11 +30,17 @@ public:
         : records(std::move(other.records))
     {}
 
+protected:
+    ListTransactionRecord(ElementType&& x)
+        : records()
+    {
+        records.emplace_back(std::move(x));
+    }
 
 private:
     //these functions exist so ListTransactionRecord can be the Container in leftFold
     bool empty() const { return records.empty(); }
-    X front() { return records.front; }
+    ElementType& front() { return records.front(); }
     void pop_front() { records.pop_front(); }
 
     template <typename Container, typename Reducer>
@@ -47,9 +53,11 @@ private:
         }
         else
         {
+            auto elem = std::move(toMerge.front());
+            ListTransactionRecord<X> newList(std::move(elem));
             toMerge.pop_front();
             return leftFoldHelper(std::move(toMerge), reducer, 
-                        reducer(std::move(acc), std::move(toMerge.front())));
+                        reducer(std::move(acc), std::move(newList)  ));
         }
     }
 
@@ -61,6 +69,7 @@ public:
         return leftFoldHelper<Container, Reducer>(std::move(toMerge), reducer, std::move(*this));
     }
 
+    /*
     template <typename Reducer>
     ListTransactionRecord<X> leftFold(std::vector<X>&& toMerge, Reducer reducer)
     {
@@ -68,7 +77,7 @@ public:
             std::list<X>(std::make_move_iterator(toMerge.begin()), 
                 std::make_move_iterator(toMerge.end())),
             reducer);
-    }
+    }*/
 };
 
 template <typename X>

@@ -60,7 +60,9 @@ PopulationGraph::vertices_size_type Simulation::applySales()
 
     const RestockHandler::RestockSet restockSet = RestockHandler::toSet(
             emptyListTransactionRecord<RestockHandler::ElementType>().leftFold(
-                std::move(restockRecords),
+                std::list<RestockHandler::RecordType>(
+                    std::make_move_iterator(restockRecords.begin()),
+                    std::make_move_iterator(restockRecords.end())),
                 RestockHandler::reduce));
 
     SaleHandler saleHandler(restockSet);
@@ -77,9 +79,11 @@ PopulationGraph::vertices_size_type Simulation::applySales()
                     *edge.second);
             });
 
-    const SaleHandler::RecordType saleRecords =
+    SaleHandler::RecordType saleRecords =
         emptyListTransactionRecord<SaleHandler::ElementType>().leftFold(
-                        std::move(saleRecordsVec),
+                        std::list<SaleHandler::RecordType>(
+                            std::make_move_iterator(saleRecordsVec.begin()),
+                            std::make_move_iterator(saleRecordsVec.end())),
                         SaleHandler::reduce);
 
     RestockSaleHandler restockSaleHandler(
@@ -87,7 +91,7 @@ PopulationGraph::vertices_size_type Simulation::applySales()
             company,
             restockSet);
 
-    const SaleHandler::RecordType allSalesRecords = 
+    SaleHandler::RecordType allSalesRecords = 
         restockSaleHandler(when(), *populationGraph, this->config->randomGen)
             .leftFold(std::move(saleRecords), SaleHandler::reduce);
 
