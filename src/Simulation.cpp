@@ -40,6 +40,61 @@ void Simulation::interrupt() const noexcept
 
 void Simulation::tick()
 {
+    const PopulationGraph::vertices_size_type numConversions = applyConversions();
+
+
+
+
+}
+
+PopulationGraph::vertices_size_type Simulation::applySales()
+{
+    std::vector<RestockHandler::RecordType> restockRecords = 
+        populationGraph->forEachVertex<RestockHandler::RecordType>
+        ([this](PopulationGraph::Pop p) -> RestockHandler::RecordType {
+            return this->restockHandler(
+                    this->when(),
+                    this->config->simulationOptions->wholesaleProductCost,
+                    *p);
+            });
+
+    const RestockHandler::RestockSet restockSet = RestockHandler::toSet(
+            emptyListTransactionRecord<RestockHandler::ElementType>().leftFold(
+                std::move(restockRecords),
+                RestockHandler::reduce));
+
+    SaleHandler saleHandler(restockSet);
+
+    std::vector<SaleHandler::RecordType> saleRecordsVec = 
+        populationGraph->forEachEdge<SaleHandler::RecordType>
+        ([&saleHandler, this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> edge) 
+            -> SaleHandler::RecordType {
+            return saleHandler(
+                    this->when(),
+                    this->config->simulationOptions->standardProductCost,
+                    this->config->randomGen,
+                    *edge.first,
+                    *edge.second);
+            });
+
+    const SaleHandler::RecordType saleRecords =
+        emptyListTransactionRecord<SaleHandler::ElementType>().leftFold(
+                        std::move(saleRecordsVec),
+                        SaleHandler::reduce);
+
+    RestockSaleHandler restockSaleHandler(
+            config->simulationOptions->wholesaleProductCost,
+            company,
+            restockSet);
+
+    const SaleHandler::RecordType allSalesRecords = 
+        restockSaleHandler(when, populationGraph, this->config->randomGen)
+            .leftFold(std::move(saleRecords), SaleHandler::reduce);
+
+}
+
+PopulationGraph::vertices_size_type Simulation::applyConversions()
+{
     const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop,
             PopulationGraph::Pop>)> f =
         [this](std::pair<PopulationGraph::Pop,
@@ -61,11 +116,14 @@ void Simulation::tick()
     //or overload foldLeft to take a begin and end iterator that it can construct a
     //collection out of
     
-    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
-            std::list<ConversionHandler::RecordType>(
-                std::make_move_iterator(vecConversions.begin()),
-                std::make_move_iterator(vecConversions.end())),
-            conversionHandler.reduce);
+    auto conversionRecs = 
+        emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
+                std::list<ConversionHandler::RecordType>(
+                    std::make_move_iterator(vecConversions.begin()),
+                    std::make_move_iterator(vecConversions.end())),
+                conversionHandler.reduce);
+
+    return processConversions(conversionRecs);
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(
