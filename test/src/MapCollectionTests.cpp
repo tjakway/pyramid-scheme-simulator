@@ -254,11 +254,12 @@ TEST(MapCollectionTests, testEndofunctors)
     testMapCollection<std::list<int>, std::list<int>>();
     testMapCollection<std::deque<int>, std::deque<int>>();
     testMapCollection<std::set<int>, std::set<int>>();
+    testMapCollection<std::unordered_set<int>, std::unordered_set<int>>();
 }
 
 //should be able to map ordered collections when changing elements and still
 //be able to test for equality
-TEST(MapCollectionTests, testOrdered)
+TEST(MapCollectionTests, testXToAllCollections)
 {
     testXToAll<std::vector<int>>();
     testXToAll<std::list<int>>();
@@ -266,6 +267,7 @@ TEST(MapCollectionTests, testOrdered)
 
     //have to pass 0 for set because it will sort itself
     testXToAll<std::set<int>>(0);
+    testXToAll<std::unordered_set<int>>(0);
 }
 
 
