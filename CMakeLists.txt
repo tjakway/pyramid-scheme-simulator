@@ -1,7 +1,8 @@
 project(project_name)
 
+#CXX_STANDARD property is only available in 3.1+
 #target_compile_options and add_compile_options only available since cmake 2.8.12
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.1)
 
 #target definitions
 set(MAIN_LIB_TARGET "pyramid")
@@ -14,13 +15,12 @@ include("cmake/default_build_type.cmake"    OPTIONAL)
 include("cmake/build_spdlog_dep.cmake"      REQUIRED)
 include("cmake/all_targets_functions.cmake" REQUIRED)
 include("cmake/signal_handler_option.cmake" REQUIRED)
+include("cmake/target_require_cxx11.cmake"             REQUIRED)
 
+#globally_require_cxx11()
 
 #the name of the file containing main() that shouldn't be included in MAIN_LIB_TARGET
 set(MAIN_SRC_FILE ${CMAKE_SOURCE_DIR}/src/main.cpp)
-
-#see http://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake for proper ways to enable C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 #enable exporting commands if supported
 #see https://cmake.org/cmake/help/v3.5/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
@@ -143,3 +143,5 @@ endif()
 
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
+
+all_targets_require_cxx11()

@@ -1,3 +1,5 @@
+set(ALL_TARGETS ${MAIN_LIB_TARGET} ${MAIN_EXE_TARGET} ${TEST_TARGET})
+
 #add a property to both the main library and the test target
 function(all_targets_compile_property)
     #see http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags 

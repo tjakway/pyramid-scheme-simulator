@@ -1,0 +1,6 @@
+function(all_targets_require_cxx11)
+    set(CXX_STANDARD_REQUIRED CACHE FORCE ON)
+    foreach(loop_var ${ALL_TARGETS})
+        set_property(TARGET ${loop_var} PROPERTY CXX_STANDARD 11)
+    endforeach(loop_var)
+endfunction()
