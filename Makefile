@@ -29,13 +29,13 @@ tags:
 
 .PHONY: find-shared-ptr-references
 find-shared-ptr-references:
-	grep $(GREP_OPTIONS) 'std::shared_ptr<$(IDENTIFIER_PATTERN)>\s*&' $(SRC_FOLDERS)
+	! grep $(GREP_OPTIONS) 'std::shared_ptr<$(IDENTIFIER_PATTERN)>\s*&' $(SRC_FOLDERS)
 
 #match things like `std::vector<Foo> bar(baz);`
 #you'll have to manually figure out which lines are actually function calls
 .PHONY: find-vector-fill-ctor-uses
 find-vector-fill-ctor-uses:
-	grep $(GREP_OPTIONS)  \
+	! grep $(GREP_OPTIONS)  \
 	    'std::vector<$(IDENTIFIER_PATTERN)>\s+$(IDENTIFIER_PATTERN)\($(IDENTIFIER_PATTERN)\)\s*;' \
 	    $(SRC_FOLDERS)
 
