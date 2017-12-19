@@ -54,20 +54,3 @@ compile_commands.json: cmake
 clang-check: compile_commands.json
 	find src/ include/ test -regextype egrep -regex ".*\.(cpp|h|hpp|cxx|c)" -type f \
 	    -exec clang-check $(CLANG_CHECK_ARGS) {} +
-
-#when I wrote this I didn't realize CMake generates
-#a help target that does the same thing with nicer formatting...
-#-----------------------------------------------
-#append the list rule to the Makefile that cmake generates
-#so you can run `make list` to get a list of the generated targets
-
-#note: need to write to a temp file because:
-# https://stackoverflow.com/questions/6696842/bash-redirect-input-from-file-back-into-same-file
-# see also https://askubuntu.com/questions/752174/reading-and-writing-a-file-tee-command/752451#752451
-.PHONY: cmake-append-list-rule
-cmake-append-list-rule: cmake
-	grep ".PHONY: list" $(CMAKE_GENERATED_MAKEFILE) || ( \
-	    TMP=$$(mktemp) &&  \
-	    cat $(CMAKE_GENERATED_MAKEFILE) $(LIST_RULE_PATH) \
-		> "$$TMP" && \
-		mv "$$TMP" $(CMAKE_GENERATED_MAKEFILE) )
