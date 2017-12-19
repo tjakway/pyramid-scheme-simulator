@@ -15,10 +15,10 @@ Config::Config(const rd_seed_type seed,
     std::unique_ptr<SimulationOptions>&& simOptions,
     std::unique_ptr<GraphGenerationOptions>&& graphGenOptions)
     : randomSeed(seed), 
-        simulationOptions(std::move(simOptions)),
-        graphGenerationOptions(std::move(graphGenOptions)),
         //initialize the random generator from the passed seed
-        randomGen(Util::rdFromSeed(randomSeed))
+        randomGen(Util::rdFromSeed(randomSeed)),
+        simulationOptions(std::move(simOptions)),
+        graphGenerationOptions(std::move(graphGenOptions))
 { }
 
 //if no seed is given use current time
@@ -45,11 +45,11 @@ Config::SimulationOptions::SimulationOptions(
         const unsigned int _standardProductCost,
         const unsigned int _wholesaleProductCost,
         const std::function<Money()> _startingFunds)
-    : distributionOptions(std::move(ops)),
-        maxTicks(_maxTicks),
+    :  maxTicks(_maxTicks),
         standardProductCost(_standardProductCost),
         wholesaleProductCost(_wholesaleProductCost),
-        startingFunds(_startingFunds)
+        startingFunds(_startingFunds),
+        distributionOptions(std::move(ops))
       {}
 
 Config::GraphGenerationOptions::GraphGenerationOptions(
