@@ -11,20 +11,34 @@
 
 #include "Util/Util.hpp"
 
+#define RAND_BOUNDED_LOWER 1
+#define RAND_BOUNDED_UPPER 100
+
 namespace {
-    int randBounded(int lowerBound = 1, int upperBound = 100)
+    int randBounded(int lowerBound = RAND_BOUNDED_LOWER, 
+            int upperBound = RAND_BOUNDED_UPPER)
     {
         assert(upperBound > lowerBound);
-        return (rand() % (upperBound - lowerBound)) + lowerBound;
+        const int gen = (rand() % (upperBound - lowerBound)) + lowerBound;
+        if(gen > upperBound)
+        {
+            return upperBound;
+        }
+        else
+        {
+            return gen;
+        }
     }
 
     template <typename Collection>
-    int genUniqueInt(Collection& col, int add)
+    int genUniqueInt(Collection& col, int add, 
+            int lowerBound = RAND_BOUNDED_LOWER,
+            int upperBound = RAND_BOUNDED_UPPER)
     {
         int i = 0;
         while(true)
         {
-            const int u = randBounded();
+            const int u = randBounded(lowerBound, upperBound);
             //make sure that the collection of (element + add) is unique
             //i.e. that out call to mapCollection will be a bijection
             if(std::find(col.begin(), col.end(), u) == col.end()
@@ -35,7 +49,8 @@ namespace {
 
             if(i >= (col.size() * 100))
             {
-                throw std::runtime_error("Too many iterations in genUniqueInt, probably an infinite loop");
+                throw std::runtime_error("Too many iterations "
+                         "in genUniqueInt, probably an infinite loop");
             }
         }
     }
@@ -50,8 +65,7 @@ namespace {
      * sets delete nonunique values so we need to sample without replacement
      * from a random distribution to fill them properly
      */
-    template <typename T>
-    void insertRandomElement(std::set<T> col, int add)
+    void insertRandomElement(std::set<int> col, int add)
     {
         genUniqueInt(col, add);
     }
@@ -112,7 +126,39 @@ void testXToAll(int param = randBounded())
     testMapCollection<X, std::vector<int>>(param);
     testMapCollection<X, std::list<int>>(param);
     testMapCollection<X, std::deque<int>>(param);
-    testMapCollection<X, std::set<int>>(0);
+    testMapCollection<X, std::set<int>>();
+}
+
+//internal test
+TEST(MapCollectionTests, testGenUnique)
+{
+    std::vector<int> uniformVec,
+        generatedVec;
+
+    const int lowerBound = 1,
+          upperBound = 100;
+
+    int numIterations = 0;
+    for(int i = lowerBound; i < upperBound; i++)
+    {
+        uniformVec.emplace_back(i);
+
+        const int genElem = genUniqueInt(generatedVec, 0, lowerBound, upperBound);
+        generatedVec.emplace_back(genElem);
+
+        numIterations++;
+    }
+
+    EXPECT_EQ(uniformVec.size(), numIterations);
+    EXPECT_EQ(uniformVec.size(), generatedVec.size());
+
+    //sorting the uniform vec shouldn't do anything
+    std::vector<int> uniformVecPreSort = uniformVec;
+    std::sort(uniformVec.begin(), uniformVec.end());
+    EXPECT_EQ(uniformVecPreSort, uniformVec);
+
+    std::sort(generatedVec.begin(), generatedVec.end());
+    ASSERT_EQ(uniformVec, generatedVec);
 }
 
 //tests mapping a category to itself
@@ -133,7 +179,7 @@ TEST(MapCollectionTests, testOrdered)
     testXToAll<std::deque<int>>();
 
     //have to pass 0 for set because it will sort itself
-    testXToAll<std::set<int>>(0);
+    testXToAll<std::set<int>>();
 }
 
 
