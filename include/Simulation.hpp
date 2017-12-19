@@ -17,16 +17,22 @@ class Simulation
 private:
     std::shared_ptr<Config> config;
     std::unique_ptr<PopulationGraph> populationGraph;
+    std::shared_ptr<Company> company;
 
     ConversionHandler conversionHandler;
+    RestockHandler restockHandler;
 
     SimulationTick now = 0;
     SimulationTick when() const { return now; }
 
     std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config>);
     void tick();
+
     
 protected:
+    PopulationGraph::vertices_size_type applyConversions();
+    PopulationGraph::vertices_size_type applySales();
+
     static ConversionHandler::Conversion* lookupConversionRecord(
             ConversionHandler::RecordType&,
             Unique);
@@ -50,6 +56,8 @@ public:
             const std::shared_ptr<ConversionHandler::RecordType> conversionRecords;
             const std::shared_ptr<RestockHandler::RecordType> restockRecords;
             const std::shared_ptr<SaleHandler::RecordType> saleRecords;
+
+            const PopulationGraph::vertices_size_type numConversions;
         };
 
         virtual void interrupt() noexcept = 0;

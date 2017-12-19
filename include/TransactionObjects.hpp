@@ -149,7 +149,7 @@ public:
     using ElementType = Either<SalesResult, Sale>;
     using RecordType = ListTransactionRecord<ElementType>;
 
-    SaleHandler(RestockHandler::RestockSet&&);
+    SaleHandler(const RestockHandler::RestockSet&);
 
     virtual RecordType operator()(SimulationTick,
             Money, 
@@ -201,7 +201,7 @@ public:
 
     RestockSaleHandler(const Money, 
             std::shared_ptr<Company>,
-            RestockHandler::RestockSet);
+            const RestockHandler::RestockSet&);
 
     //synonym for processRestocks
     virtual SaleHandler::RecordType operator()(

@@ -11,8 +11,8 @@
 
 namespace pyramid_scheme_simulator {
 
-SaleHandler::SaleHandler(RestockHandler::RestockSet&& restockSet)
-    : restockSet(restockSet)
+SaleHandler::SaleHandler(const RestockHandler::RestockSet& _restockSet)
+    : restockSet(_restockSet)
 { }
 
 /**

@@ -88,7 +88,7 @@ PopulationGraph::vertices_size_type Simulation::applySales()
             restockSet);
 
     const SaleHandler::RecordType allSalesRecords = 
-        restockSaleHandler(when, populationGraph, this->config->randomGen)
+        restockSaleHandler(when(), *populationGraph, this->config->randomGen)
             .leftFold(std::move(saleRecords), SaleHandler::reduce);
 
 }

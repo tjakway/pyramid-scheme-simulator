@@ -60,6 +60,15 @@ public:
     {
         return leftFoldHelper<Container, Reducer>(std::move(toMerge), reducer, std::move(*this));
     }
+
+    template <typename Reducer>
+    ListTransactionRecord<X> leftFold(std::vector<X>&& toMerge, Reducer reducer)
+    {
+        return leftFoldHelper<std::list<X>, Reducer>(
+            std::list<X>(std::make_move_iterator(toMerge.begin()), 
+                std::make_move_iterator(toMerge.end())),
+            reducer);
+    }
 };
 
 template <typename X>

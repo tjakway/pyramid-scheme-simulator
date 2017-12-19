@@ -83,7 +83,7 @@ SaleHandler::RecordType RestockSaleHandler::operator()(
 RestockSaleHandler::RestockSaleHandler(
     const Money _wholesalePrice, 
     std::shared_ptr<Company> _company,
-    RestockHandler::RestockSet _restockSet)
+    const RestockHandler::RestockSet& _restockSet)
     : company(_company),
     wholesalePrice(_wholesalePrice),
     restockSet(_restockSet)
