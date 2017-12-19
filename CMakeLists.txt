@@ -1,4 +1,4 @@
-project(project_name)
+project(pyramid_scheme_simulator)
 
 #CXX_STANDARD property is only available in 3.1+
 #target_compile_options and add_compile_options only available since cmake 2.8.12
