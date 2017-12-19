@@ -130,6 +130,8 @@ void testXToAll(int param = randBounded())
 }
 
 //internal test
+//test that filling a container with genUniqueInt 
+//works as expected
 TEST(MapCollectionTests, testGenUnique)
 {
     std::vector<int> uniformVec,
