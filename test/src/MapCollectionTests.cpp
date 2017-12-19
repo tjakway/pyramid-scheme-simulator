@@ -116,7 +116,7 @@ void testXToAll(int param = randBounded())
 }
 
 //tests mapping a category to itself
-TEST(MapColletionTests, testEndofunctors)
+TEST(MapCollectionTests, testEndofunctors)
 {
     testMapCollection<std::vector<int>, std::vector<int>>();
     testMapCollection<std::list<int>, std::list<int>>();
@@ -126,7 +126,7 @@ TEST(MapColletionTests, testEndofunctors)
 
 //should be able to map ordered collections when changing elements and still
 //be able to test for equality
-TEST(MapColletionTests, testOrdered)
+TEST(MapCollectionTests, testOrdered)
 {
     testXToAll<std::vector<int>>();
     testXToAll<std::list<int>>();
