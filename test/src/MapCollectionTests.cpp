@@ -170,30 +170,30 @@ void testGenUnique(std::function<void(Collection&)> sortF,
         int lowerBound = 1, 
         int upperBound = 100)
 {
-    Collection uniformVec,
-        generatedVec;
+    Collection uniformCol,
+        generatedCol;
 
     int numIterations = 0;
     for(int i = lowerBound; i < upperBound; i++)
     {
-        TestGenUniqueEmplacer<Collection>().doEmplace(uniformVec, i);
+        TestGenUniqueEmplacer<Collection>().doEmplace(uniformCol, i);
 
-        const int genElem = genUniqueInt(generatedVec, 0, lowerBound, upperBound);
-        TestGenUniqueEmplacer<Collection>().doEmplace(generatedVec, genElem);
+        const int genElem = genUniqueInt(generatedCol, 0, lowerBound, upperBound);
+        TestGenUniqueEmplacer<Collection>().doEmplace(generatedCol, genElem);
 
         numIterations++;
     }
 
-    EXPECT_EQ(uniformVec.size(), numIterations);
-    EXPECT_EQ(uniformVec.size(), generatedVec.size());
+    EXPECT_EQ(uniformCol.size(), numIterations);
+    EXPECT_EQ(uniformCol.size(), generatedCol.size());
 
-    //sorting the uniform vec shouldn't do anything
-    Collection uniformVecPreSort = uniformVec;
-    sortF(uniformVec);
-    EXPECT_EQ(uniformVecPreSort, uniformVec);
+    //sorting the uniform collection shouldn't do anything
+    Collection uniformColPreSort = uniformCol;
+    sortF(uniformCol);
+    EXPECT_EQ(uniformColPreSort, uniformCol);
 
-    sortF(generatedVec);
-    ASSERT_EQ(uniformVec, generatedVec);
+    sortF(generatedCol);
+    ASSERT_EQ(uniformCol, generatedCol);
 }
 
 //had to refactor out container sorting code because
