@@ -1,5 +1,7 @@
 #include "TransactionObjects.hpp"
 
+namespace pyramid_scheme_simulator {
+
 SaleHandler::RecordType RestockSaleHandler::processRestocksWithPops(
         const SimulationTick when,
         const Money wholesalePrice, 
@@ -10,19 +12,19 @@ SaleHandler::RecordType RestockSaleHandler::processRestocksWithPops(
     //we'll use this to compute the actual sales records
     SaleHandler saleHandler(RestockHandler::RestockSet{});
 
-    std::vector<SaleHandler::RecordType> restockSaleRecords = 
-        Util::mapCollection(restockPops, 
-        [when, &saleHandler, wholesalePrice, rd, this](PopulationGraph::Pop thisPop){
-            return saleHandler(when, 
-                    wholesalePrice, 
-                    rd, 
-                    *this->company,
-                    *thisPop);
-        });
+    std::list<SaleHandler::RecordType> restockSaleRecords;
+    for(const auto& thisPop : restockPops)
+    {
+        restockSaleRecords.emplace_back(saleHandler(when, 
+            wholesalePrice, 
+            rd, 
+            *this->company,
+            *thisPop));
+    }
 
-    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
-            std::list<ConversionHandler::RecordType>(
-                std::make_move_iterator(vecConversions.begin()),
-                std::make_move_iterator(vecConversions.end())),
-            conversionHandler.reduce);
+    return emptyListTransactionRecord<SaleHandler::ElementType>().leftFold(
+            std::move(restockSaleRecords),
+            saleHandler.reduce);
+}
+
 }

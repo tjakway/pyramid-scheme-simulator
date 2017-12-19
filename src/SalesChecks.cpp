@@ -289,27 +289,4 @@ SaleHandler::RecordType
     return doSale(when, price, rd, seller, buyer);
 }
 
-
-SaleHandler::SaleHandler(
-        const Money _wholesalePrice,
-        std::shared_ptr<Company> _company, 
-        RestockHandler::RestockSet&& _restockSet)
-    : company(_company),
-    wholesalePrice(_wholesalePrice),
-    restockSet(_restockSet)
-{ }
-
-SaleHandler::RecordType SaleHandler::processRestocks(const Money price, 
-        std::set<PopulationGraph::Pop> restockPops, 
-        rd_ptr rd)
-{
-
-    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
-            std::list<ConversionHandler::RecordType>(
-                std::make_move_iterator(vecConversions.begin()),
-                std::make_move_iterator(vecConversions.end())),
-            conversionHandler.reduce);
-}
-
-
 }

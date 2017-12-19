@@ -149,10 +149,7 @@ public:
     using ElementType = Either<SalesResult, Sale>;
     using RecordType = ListTransactionRecord<ElementType>;
 
-    SaleHandler(const Money,
-            std::shared_ptr<Company>, 
-            const PopulationGraph&,
-            RestockHandler::RestockSet&&);
+    SaleHandler(RestockHandler::RestockSet&&);
 
     virtual RecordType operator()(SimulationTick,
             Money, 
@@ -167,9 +164,6 @@ public:
     static const ComparatorType comparator;
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
-
-    RecordType getRestockRecords();
-
 protected:
     virtual RecordType doSale(SimulationTick,
             Money, 
@@ -180,12 +174,6 @@ protected:
 
 private:
     class SaleIsPossibleResult;
-    std::shared_ptr<Company> company;
-    const Money wholesalePrice;
-
-    std::set<PopulationGraph::Pop> lookupRestockPops(
-            const PopulationGraph&,
-            const RestockHandler::RestockSet&);
 
     /**
      * return SalesResult objects to give more information about why the sale
@@ -200,7 +188,43 @@ private:
             CapitalHolder&);
 
     SalesResult needsRestock(Distributor&);
-    RecordType processRestocks();
+
+    RestockHandler::RestockSet restockSet;
+};
+
+class RestockSaleHandler
+{
+public:
+    RestockSaleHandler(const Money, 
+            std::shared_ptr<Company>,
+            RestockHandler::RestockSet);
+
+    virtual SaleHandler::RecordType operator()(
+                const SimulationTick,
+                const PopulationGraph&,
+                rd_ptr);
+
+    SaleHandler::RecordType processRestocks(
+            const SimulationTick, 
+            const PopulationGraph&,
+            rd_ptr);
+
+private:
+    std::shared_ptr<Company> company;
+    const Money wholesalePrice;
+
+    std::set<PopulationGraph::Pop> lookupRestockPops(
+            const PopulationGraph&,
+            const RestockHandler::RestockSet&);
+
+    /**
+     * called after we've looked up the Pops that need to be restocked
+     */
+    SaleHandler::RecordType processRestocksWithPops(
+            const SimulationTick, 
+            const Money,
+            std::set<PopulationGraph::Pop> restockPops,
+            rd_ptr);
 
     RestockHandler::RestockSet restockSet;
 };
