@@ -14,7 +14,7 @@
 #define RAND_BOUNDED_LOWER 1
 #define RAND_BOUNDED_UPPER 100
 
-namespace {
+//namespace {
     int randBounded(int lowerBound = RAND_BOUNDED_LOWER, 
             int upperBound = RAND_BOUNDED_UPPER)
     {
@@ -67,7 +67,7 @@ namespace {
      */
     void insertRandomElement(std::set<int> col, int add)
     {
-        genUniqueInt(col, add);
+        col.emplace(genUniqueInt(col, add));
     }
 
     template <typename FromCollection, typename ToCollection>
@@ -116,7 +116,7 @@ namespace {
 
         ASSERT_TRUE(tIt == tEnd);
     }
-}
+//}
 
 namespace pyramid_scheme_simulator {
 
@@ -230,7 +230,7 @@ TEST(MapCollectionTests, testGenUniqueSequenceContainers)
 
 TEST(MapCollectionTests, testGenUniqueSet)
 {
-    //can't sort a set, it's already ordered
+    //can't sort a set
     const std::function<void(std::set<int>&)> set_no_op = [](std::set<int>&){};
     testGenUnique<std::set<int>>(set_no_op);
 
