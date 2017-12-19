@@ -203,6 +203,7 @@ public:
             std::shared_ptr<Company>,
             RestockHandler::RestockSet);
 
+    //synonym for processRestocks
     virtual SaleHandler::RecordType operator()(
                 const SimulationTick,
                 const PopulationGraph&,
@@ -226,7 +227,6 @@ private:
      */
     SaleHandler::RecordType processRestocksWithPops(
             const SimulationTick, 
-            const Money,
             std::set<PopulationGraph::Pop> restockPops,
             rd_ptr);
 

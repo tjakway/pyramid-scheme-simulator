@@ -4,7 +4,6 @@ namespace pyramid_scheme_simulator {
 
 SaleHandler::RecordType RestockSaleHandler::processRestocksWithPops(
         const SimulationTick when,
-        const Money wholesalePrice, 
         std::set<PopulationGraph::Pop> restockPops, 
         rd_ptr rd)
 {
@@ -59,5 +58,35 @@ std::set<PopulationGraph::Pop> RestockSaleHandler::lookupRestockPops(
 
     return restockPops;
 }
+
+
+SaleHandler::RecordType RestockSaleHandler::processRestocks(
+        const SimulationTick when, 
+        const PopulationGraph& graph,
+        rd_ptr rd)
+{
+    return processRestocksWithPops(
+            when, 
+            lookupRestockPops(graph, restockSet),
+            rd);
+}
+
+//synonym for processRestocks
+SaleHandler::RecordType RestockSaleHandler::operator()(
+        const SimulationTick when, 
+        const PopulationGraph& graph,
+        rd_ptr rd)
+{
+    return processRestocks(when, graph, rd);
+}
+
+RestockSaleHandler::RestockSaleHandler(
+    const Money _wholesalePrice, 
+    std::shared_ptr<Company> _company,
+    RestockHandler::RestockSet _restockSet)
+    : company(_company),
+    wholesalePrice(_wholesalePrice),
+    restockSet(_restockSet)
+{ }
 
 }
