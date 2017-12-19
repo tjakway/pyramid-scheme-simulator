@@ -129,24 +129,57 @@ void testXToAll(int param = randBounded())
     testMapCollection<X, std::set<int>>();
 }
 
+//need to have different behavior for set and unordered_set,
+//which don't have an emplace method that takes an iterator
+//(they use emplace_hint instead)
+template <typename T>
+class TestGenUniqueEmplacer
+{
+public:
+    void doEmplace(T& collection, int i)
+    {
+        collection.emplace(collection.begin(), i);
+    }
+};
+
+template <>
+class TestGenUniqueEmplacer<std::set<int>>
+{
+public:
+    void doEmplace(std::set<int>& collection, int i)
+    {
+        collection.emplace_hint(collection.begin(), i);
+    }
+};
+
+template <>
+class TestGenUniqueEmplacer<std::unordered_set<int>>
+{
+public:
+    void doEmplace(std::unordered_set<int>& collection, int i)
+    {
+        collection.emplace_hint(collection.begin(), i);
+    }
+};
+
 //internal test
 //test that filling a container with genUniqueInt 
 //works as expected
-TEST(MapCollectionTests, testGenUnique)
+template <typename Collection>
+void testGenUnique(std::function<void(Collection&)> sortF, 
+        int lowerBound = 1, 
+        int upperBound = 100)
 {
-    std::vector<int> uniformVec,
+    Collection uniformVec,
         generatedVec;
-
-    const int lowerBound = 1,
-          upperBound = 100;
 
     int numIterations = 0;
     for(int i = lowerBound; i < upperBound; i++)
     {
-        uniformVec.emplace_back(i);
+        TestGenUniqueEmplacer<Collection>().doEmplace(uniformVec, i);
 
         const int genElem = genUniqueInt(generatedVec, 0, lowerBound, upperBound);
-        generatedVec.emplace_back(genElem);
+        TestGenUniqueEmplacer<Collection>().doEmplace(generatedVec, genElem);
 
         numIterations++;
     }
@@ -155,12 +188,51 @@ TEST(MapCollectionTests, testGenUnique)
     EXPECT_EQ(uniformVec.size(), generatedVec.size());
 
     //sorting the uniform vec shouldn't do anything
-    std::vector<int> uniformVecPreSort = uniformVec;
-    std::sort(uniformVec.begin(), uniformVec.end());
+    Collection uniformVecPreSort = uniformVec;
+    sortF(uniformVec);
     EXPECT_EQ(uniformVecPreSort, uniformVec);
 
-    std::sort(generatedVec.begin(), generatedVec.end());
+    sortF(generatedVec);
     ASSERT_EQ(uniformVec, generatedVec);
+}
+
+//had to refactor out container sorting code because
+//std::sort doesn't work for std::list (std::sort
+//needs a random access iterator)
+template <typename T>
+class Sorter
+{
+public:
+    const std::function<void(T&)> sortF =
+        [](T& col)
+        {
+            std::sort(col.begin(), col.end());
+        };
+};
+
+template<>
+class Sorter<std::list<int>>
+{
+public:
+    const std::function<void(std::list<int>&)> sortF =
+        [](std::list<int>& s)
+        {
+            s.sort();
+        };
+};
+
+TEST(MapCollectionTests, testGenUniqueSequenceContainers)
+{
+    testGenUnique<std::vector<int>>(Sorter<std::vector<int>>().sortF);
+    testGenUnique<std::list<int>>(Sorter<std::list<int>>().sortF);
+    testGenUnique<std::deque<int>>(Sorter<std::deque<int>>().sortF);
+}
+
+TEST(MapCollectionTests, testGenUniqueSet)
+{
+    //can't sort a set, it's already ordered
+    const std::function<void(std::set<int>&)> no_op = [](std::set<int>&){};
+    testGenUnique<std::set<int>>(no_op);
 }
 
 //tests mapping a category to itself
