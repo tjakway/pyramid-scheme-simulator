@@ -3,8 +3,8 @@
 namespace pyramid_scheme_simulator {
 
 RestockHandler::RecordType RestockHandler::operator()(
-    const SimulationTick when,
-    const Money price, 
+    const SimulationTick /*when*/,
+    const Money /*price*/, 
     const CapitalHolder& who)
 {
     const Distributor* dist = dynamic_cast<const Distributor*>(&who);
