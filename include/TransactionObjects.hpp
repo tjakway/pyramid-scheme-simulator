@@ -10,6 +10,7 @@
 #include "TransactionRecords.hpp"
 #include "SalesResult.hpp"
 #include "PopulationGraph.hpp"
+#include "Actors.hpp"
 
 #include <memory>
 #include <set>
@@ -148,7 +149,10 @@ public:
     using ElementType = Either<SalesResult, Sale>;
     using RecordType = ListTransactionRecord<ElementType>;
 
-    SaleHandler(RestockHandler::RestockSet&&);
+    SaleHandler(const Money,
+            std::shared_ptr<Company>, 
+            const PopulationGraph&,
+            RestockHandler::RestockSet&&);
 
     virtual RecordType operator()(SimulationTick,
             Money, 
@@ -164,8 +168,24 @@ public:
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
 
+    RecordType getRestockRecords();
+
+protected:
+    virtual RecordType doSale(SimulationTick,
+            Money, 
+            rd_ptr,
+            CapitalHolder&, 
+            CapitalHolder&);
+
+
 private:
     class SaleIsPossibleResult;
+    std::shared_ptr<Company> company;
+    const Money wholesalePrice;
+
+    std::set<PopulationGraph::Pop> lookupRestockPops(
+            const PopulationGraph&,
+            const RestockHandler::RestockSet&);
 
     /**
      * return SalesResult objects to give more information about why the sale
@@ -180,14 +200,9 @@ private:
             CapitalHolder&);
 
     SalesResult needsRestock(Distributor&);
+    RecordType processRestocks();
 
     RestockHandler::RestockSet restockSet;
 };
-
-/**
- * takes the output of RestockHandler and chains it into sales using
- * SaleHandler
- */
-class RestockSaleHandler;
 
 }

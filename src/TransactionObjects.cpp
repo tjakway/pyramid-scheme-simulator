@@ -135,5 +135,4 @@ const std::set<RestockHandler::ElementType>
 
 const SaleHandler::ComparatorType SaleHandler::comparator =
     Util::deepCompareUniquePtrs<SaleHandler::ElementType>;
-
 }

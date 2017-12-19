@@ -46,6 +46,10 @@ public:
         public:
             const std::shared_ptr<PopulationGraph> graph;
             const SimulationTick when;
+
+            const std::shared_ptr<ConversionHandler::RecordType> conversionRecords;
+            const std::shared_ptr<RestockHandler::RecordType> restockRecords;
+            const std::shared_ptr<SaleHandler::RecordType> saleRecords;
         };
 
         virtual void interrupt() noexcept = 0;

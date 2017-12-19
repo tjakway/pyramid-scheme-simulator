@@ -244,8 +244,9 @@ SalesResult SaleHandler::needsRestock(Distributor& seller)
     }
 }
 
+
 SaleHandler::RecordType 
-    SaleHandler::operator()(
+    SaleHandler::doSale(
             SimulationTick when, 
             Money price,
             rd_ptr rd,
@@ -276,5 +277,39 @@ SaleHandler::RecordType
                     Either<SalesResult, Sale>::right(std::move(sale))));
     }
 }
+
+SaleHandler::RecordType 
+    SaleHandler::operator()(
+            SimulationTick when, 
+            Money price,
+            rd_ptr rd,
+            CapitalHolder& seller,
+            CapitalHolder& buyer)
+{
+    return doSale(when, price, rd, seller, buyer);
+}
+
+
+SaleHandler::SaleHandler(
+        const Money _wholesalePrice,
+        std::shared_ptr<Company> _company, 
+        RestockHandler::RestockSet&& _restockSet)
+    : company(_company),
+    wholesalePrice(_wholesalePrice),
+    restockSet(_restockSet)
+{ }
+
+SaleHandler::RecordType SaleHandler::processRestocks(const Money price, 
+        std::set<PopulationGraph::Pop> restockPops, 
+        rd_ptr rd)
+{
+
+    emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
+            std::list<ConversionHandler::RecordType>(
+                std::make_move_iterator(vecConversions.begin()),
+                std::make_move_iterator(vecConversions.end())),
+            conversionHandler.reduce);
+}
+
 
 }
