@@ -138,7 +138,7 @@ class TestGenUniqueEmplacer
 public:
     void doEmplace(T& collection, int i)
     {
-        collection.emplace(collection.begin(), i);
+        collection.emplace(collection.end(), i);
     }
 };
 
@@ -148,7 +148,7 @@ class TestGenUniqueEmplacer<std::set<int>>
 public:
     void doEmplace(std::set<int>& collection, int i)
     {
-        collection.emplace_hint(collection.begin(), i);
+        collection.emplace_hint(collection.end(), i);
     }
 };
 
@@ -158,7 +158,7 @@ class TestGenUniqueEmplacer<std::unordered_set<int>>
 public:
     void doEmplace(std::unordered_set<int>& collection, int i)
     {
-        collection.emplace_hint(collection.begin(), i);
+        collection.emplace_hint(collection.end(), i);
     }
 };
 
