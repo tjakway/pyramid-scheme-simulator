@@ -41,12 +41,9 @@ namespace {
     }
 
     template <typename Collection>
-    void fillContainer(Collection& col, const int size, int /*add*/)
+    void insertRandomElement(Collection& col, int /*add*/)
     {
-        for(int i = 0; i < size; i++)
-        {
-            col.insert(col.end(), randBounded());
-        }
+        col.insert(col.end(), randBounded());
     }
 
     /**
@@ -54,12 +51,9 @@ namespace {
      * from a random distribution to fill them properly
      */
     template <typename T>
-    void fillContainer(std::set<T> col, const int size, int add)
+    void fillContainer(std::set<T> col, int add)
     {
-        for(int i = 0; i < size; i++)
-        {
-            genUniqueInt(col, add);
-        }
+        genUniqueInt(col, add);
     }
 
     template <typename FromCollection, typename ToCollection>
@@ -71,7 +65,10 @@ namespace {
 
         const int maxSize = 10;
         const int generatedSize = randBounded(1, maxSize);
-        fillContainer(from, generatedSize, add);
+        for(int i = 0; i < generatedSize; i++)
+        {
+            insertRandomElement(from, add);
+        }
 
         EXPECT_EQ(from.size(), generatedSize);
 
