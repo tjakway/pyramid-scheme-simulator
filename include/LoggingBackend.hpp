@@ -42,7 +42,7 @@ protected:
     virtual void writeLine(const std::string&);
 
 public:
-    virtual void exportGraph(std::shared_ptr<PopulationGraph>, const SimulationTick) override;
+    virtual void exportData(const std::shared_ptr<Data>) override;
 
     SpdLoggingBackend(std::shared_ptr<spdlog::logger>,
             spdlog::level::level_enum);

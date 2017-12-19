@@ -92,13 +92,12 @@ FileLoggingBackend::FileLoggingBackend(const std::string& filename)
  * the important part
  * actually writing the graph as a string
  */
-void SpdLoggingBackend::exportGraph(std::shared_ptr<PopulationGraph> graph,
-        const SimulationTick when)
+void SpdLoggingBackend::exportData(std::shared_ptr<Data> data)
 {
     writeString(
-        STRCAT("PopulationGraph, tick #", when, 
+        STRCAT("PopulationGraph, tick #", data->when, 
                 std::endl, 
-                graph->toString(), 
+                data->graph->toString(), 
                 std::endl));
 
 }
