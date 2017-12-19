@@ -47,7 +47,7 @@ void Simulation::tick()
 
 }
 
-PopulationGraph::vertices_size_type Simulation::applySales()
+SaleHandler::RecordType Simulation::applySales()
 {
     std::vector<RestockHandler::RecordType> restockRecords = 
         populationGraph->forEachVertex<RestockHandler::RecordType>
@@ -95,9 +95,12 @@ PopulationGraph::vertices_size_type Simulation::applySales()
         restockSaleHandler(when(), *populationGraph, this->config->randomGen)
             .leftFold(std::move(saleRecords), SaleHandler::reduce);
 
+
+    //TODO: apply sales side effects
+    return allSalesRecords;
 }
 
-PopulationGraph::vertices_size_type Simulation::applyConversions()
+ConversionHandler::RecordType Simulation::applyConversions()
 {
     const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop,
             PopulationGraph::Pop>)> f =
@@ -116,10 +119,6 @@ PopulationGraph::vertices_size_type Simulation::applyConversions()
     std::vector<ConversionHandler::RecordType> vecConversions = 
         populationGraph->forEachEdge(f);
 
-    //TODO: specialize foldLeft for vectors to avoid the vector -> list conversion
-    //or overload foldLeft to take a begin and end iterator that it can construct a
-    //collection out of
-    
     auto conversionRecs = 
         emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
                 std::list<ConversionHandler::RecordType>(
@@ -127,7 +126,9 @@ PopulationGraph::vertices_size_type Simulation::applyConversions()
                     std::make_move_iterator(vecConversions.end())),
                 conversionHandler.reduce);
 
-    return processConversions(conversionRecs);
+    const auto numConversions = processConversions(conversionRecs);
+    assert(numConversions == conversionRecs.size());
+    return conversionRecs;
 }
 
 ConversionHandler::Conversion* Simulation::lookupConversionRecord(

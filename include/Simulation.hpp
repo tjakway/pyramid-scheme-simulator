@@ -30,8 +30,8 @@ private:
 
     
 protected:
-    PopulationGraph::vertices_size_type applyConversions();
-    PopulationGraph::vertices_size_type applySales();
+    ConversionHandler::RecordType applyConversions();
+    SaleHandler::RecordType applySales();
 
     static ConversionHandler::Conversion* lookupConversionRecord(
             ConversionHandler::RecordType&,
