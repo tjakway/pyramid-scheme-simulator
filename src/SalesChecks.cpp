@@ -139,15 +139,15 @@ const std::shared_ptr<Consumer>
 
 SaleHandler::SaleIsPossibleResult 
     SaleHandler::processPotentialSale(
-            Money price,
+            Money /*price*/,
             rd_ptr rd,
-            CapitalHolder& seller,
-            CapitalHolder& buyer)
+            CapitalHolder& _seller,
+            CapitalHolder& _buyer)
 {
-    auto saleIsPossibleResult = saleIsPossible(seller, buyer);
+    auto saleIsPossibleResult = saleIsPossible(_seller, _buyer);
     if(saleIsPossibleResult)
     {
-        auto chanceProc = sampleSalesChance(rd, seller, buyer);
+        auto chanceProc = sampleSalesChance(rd, _seller, _buyer);
         if(chanceProc)
         {
             
