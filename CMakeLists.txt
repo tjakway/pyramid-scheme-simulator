@@ -8,9 +8,11 @@ cmake_minimum_required(VERSION 3.1)
 set(MAIN_LIB_TARGET "pyramid")
 set(MAIN_EXE_TARGET "pyramid-simulator")
 set(TEST_TARGET "test-pyramid-simulator")
+set(MAIN_LIB_GL_TARGET "pyramid-gl")
 
 option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
 option(BUILD_TESTS "whether to build unit tests" ON)
+option(BUILD_OPENGL_BACKEND "whether to build the OpenGL backend" ON)
 
 include("cmake/default_build_type.cmake"    OPTIONAL)
 include("cmake/build_spdlog_dep.cmake"      REQUIRED)

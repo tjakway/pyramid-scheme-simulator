@@ -1,0 +1,16 @@
+project(pyramid_lib_opengl LANGUAGES CXX)
+
+cmake_minimum_required(VERSION 3.1)
+
+FILE(GLOB MAIN_LIB_GL_SRC *.cpp *.c *.cxx)
+
+find_package(OpenGL REQUIRED)
+
+
+add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
+target_link_libraries(${MAIN_LIB_GL_TARGET} ${OPENGL_LIBRARIES})
+
+target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})
+
+target_require_cxx11(${MAIN_LIB_GL_TARGET})
+process_warnings(${MAIN_LIB_GL_TARGET})
