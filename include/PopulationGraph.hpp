@@ -136,11 +136,11 @@ public:
 
     PopulationGraph(Config&);
 
-    vertices_size_type numVertices();
-    edges_size_type numEdges();
+    vertices_size_type numVertices() const;
+    edges_size_type numEdges() const;
 
-    std::vector<Pop> vertices();
-    std::vector<std::pair<Pop, Pop>> edges();
+    std::vector<Pop> vertices() const;
+    std::vector<std::pair<Pop, Pop>> edges() const;
 
     CapitalHolder& findVertexByUnique(const Unique&);
 

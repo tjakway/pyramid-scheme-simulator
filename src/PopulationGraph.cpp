@@ -30,7 +30,7 @@
 
 namespace pyramid_scheme_simulator {
 
-std::string PopulationGraph::toString()
+std::string PopulationGraph::toString() const
 {
     std::ostringstream os;
 
@@ -272,18 +272,18 @@ PopulationGraph::BGLPopulationGraph PopulationGraph::graphFromTuples(
     return g;
 }
 
-PopulationGraph::vertices_size_type PopulationGraph::numVertices()
+PopulationGraph::vertices_size_type PopulationGraph::numVertices() const
 {
     return boost::num_vertices(graph);
 }
 
-PopulationGraph::edges_size_type PopulationGraph::numEdges()
+PopulationGraph::edges_size_type PopulationGraph::numEdges() const
 {
     return boost::num_edges(graph);
 }
 
 
-std::vector<PopulationGraph::Pop> PopulationGraph::vertices()
+std::vector<PopulationGraph::Pop> PopulationGraph::vertices() const
 {
     //copy all shared_ptr objects into a vector and return it
     std::vector<Pop> allPops;
@@ -301,7 +301,7 @@ std::vector<PopulationGraph::Pop> PopulationGraph::vertices()
 }
 
 std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
-    PopulationGraph::edges()
+    PopulationGraph::edges() const
 {
     std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
         allEdges;
