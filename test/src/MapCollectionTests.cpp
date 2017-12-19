@@ -56,9 +56,9 @@
     }
 
     template <typename Collection>
-    void insertRandomElement(Collection& col, int /*add*/)
+    void insertRandomElement(Collection& col, int add)
     {
-        col.insert(col.end(), randBounded());
+        col.insert(col.end(), genUniqueInt(col, add));
     }
 
     /**
@@ -101,10 +101,17 @@
         EXPECT_EQ(to.size(), generatedSize);
         EXPECT_EQ(from.size(), to.size());
 
-        typename FromCollection::iterator fIt = from.begin(),
-                 fEnd = from.end();
-        typename ToCollection::iterator tIt = to.begin(),
-                 tEnd = to.end();
+        //convert everything to ordered containers before comparing
+        std::vector<int> cmpTo(to.begin(), to.end()),
+            cmpFrom(from.begin(), from.end());
+
+        std::sort(cmpTo.begin(), cmpTo.end());
+        std::sort(cmpFrom.begin(), cmpFrom.end());
+
+        typename std::vector<int>::iterator fIt = cmpFrom.begin(),
+                 fEnd = cmpFrom.end();
+        typename std::vector<int>::iterator tIt = cmpTo.begin(),
+                 tEnd = cmpTo.end();
 
         while(fIt != fEnd)
         {
@@ -126,7 +133,8 @@ void testXToAll(int param = randBounded())
     testMapCollection<X, std::vector<int>>(param);
     testMapCollection<X, std::list<int>>(param);
     testMapCollection<X, std::deque<int>>(param);
-    testMapCollection<X, std::set<int>>();
+    //have to pass 0 for set because it will sort itself
+    testMapCollection<X, std::set<int>>(0);
 }
 
 //need to have different behavior for set and unordered_set,
@@ -257,7 +265,7 @@ TEST(MapCollectionTests, testOrdered)
     testXToAll<std::deque<int>>();
 
     //have to pass 0 for set because it will sort itself
-    testXToAll<std::set<int>>();
+    testXToAll<std::set<int>>(0);
 }
 
 
