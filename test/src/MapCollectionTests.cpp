@@ -65,7 +65,7 @@
      * sets delete nonunique values so we need to sample without replacement
      * from a random distribution to fill them properly
      */
-    void insertRandomElement(std::set<int> col, int add)
+    void insertRandomElement(std::set<int>& col, int add)
     {
         col.emplace(genUniqueInt(col, add));
     }
