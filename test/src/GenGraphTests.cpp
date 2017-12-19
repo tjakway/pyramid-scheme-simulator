@@ -30,6 +30,7 @@ TEST_F(GenGraphTests, TestLinkChance)
 
     MockPopulationGraph g(*configPtr);
 
+    g.auditGraph();
     auto graphPtr = g.getGraphPtr();
 
     PopulationGraph::BGLPopulationGraph::vertex_iterator vi, viEnd;
@@ -45,9 +46,11 @@ TEST_F(GenGraphTests, TestLinkChance)
     std::for_each(vi, viEnd, 
             [&numVertices, &sumDegrees, graphPtr]
             (PopulationGraph::BGLPopulationGraph::vertex_descriptor v) {
-                sumDegrees += boost::degree(v, *graphPtr);
+                auto degreeOfVertex = boost::degree(v, *graphPtr);
+                sumDegrees += degreeOfVertex;
                 numVertices++;
             });
+    g.auditGraph();
 
     ASSERT_GT(numVertices, 0);
     ASSERT_GT(sumDegrees, 0);
@@ -64,8 +67,8 @@ TEST_F(GenGraphTests, TestLinkChance)
     const double expectedAvgDegree = 
         (dNumVertices - 1) * configPtr->graphGenerationOptions->linkChance->getOption();
 
-    const double allowedMarginOfError = TestConfig::allowedMarginOfError / 2.0;
-    ASSERT_LE(TestConfig::allowedMarginOfError, 1.0);
+    const double allowedMarginOfError = TestConfig::MarginsOfError::testLinkChance / 2.0;
+    ASSERT_LE(TestConfig::MarginsOfError::testLinkChance, 1.0);
 
     const double maxAllowedAvgDegree = 
         expectedAvgDegree * (1.0 + allowedMarginOfError);
@@ -75,6 +78,8 @@ TEST_F(GenGraphTests, TestLinkChance)
 
     ASSERT_GE(avgDegree, minAllowedAvgDegree);
     ASSERT_LE(avgDegree, maxAllowedAvgDegree);
+
+    g.auditGraph();
 }
 
 }

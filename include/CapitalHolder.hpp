@@ -42,10 +42,10 @@ public:
     virtual std::shared_ptr<CapitalHolder> clone() const = 0;
 
     virtual ChanceContributor&
-        getSalesChanceContribution() = 0;
+        getSalesChanceContribution() const = 0;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() = 0;
+        getDistributorConversionChanceContribution() const = 0;
 
     virtual bool isDistributor() const { return false; }
 
@@ -86,21 +86,11 @@ public:
 
     virtual void deductMoney(Money);
 
-    /**
-     * this method is a little odd
-     * it takes a NewDistributorFunction so that a default one can be set
-     * without every Consumer having to know about it, but is also virtual
-     * so that it can be overridden by subclasses (who are free to ignore the
-     * passed function and return a different distributor type)
-     *
-     * This is to allow maximize customizability of consumers
-     */
     virtual std::shared_ptr<Distributor> 
         becomeDistributor(
-                NewDistributorFunction,
-                std::shared_ptr<Distributor> convertedBy);
+                std::shared_ptr<Distributor> convertedBy) = 0;
 
-    virtual bool canBecomeDistributor(Money buyIn);
+    virtual bool canBecomeDistributor(Money buyIn) const;
 };
 
 class Distributor : public Consumer
@@ -123,11 +113,17 @@ protected:
     Distributor(Consumer&, std::shared_ptr<Distributor>);
 
 public:
+    NEW_EXCEPTION_TYPE(AlreadyDistributorException);
+
     virtual ~Distributor() {}
 
     void addMoney(Money);
 
-    virtual bool canBecomeDistributor(Money /*buyIn*/) override { return false; }
+    virtual bool canBecomeDistributor(Money /*buyIn*/) const override { return false; }
+
+    virtual std::shared_ptr<Distributor> 
+        becomeDistributor(
+                std::shared_ptr<Distributor> convertedBy) override;
 
     virtual bool isDistributor() const override { return true; }
 
@@ -135,8 +131,8 @@ public:
 
     virtual bool hasInventory() const { return getInventory() > 0; }
 
-    virtual Inventory getRestockThreshold() = 0;
-    virtual bool needsRestock() { return getInventory() > getRestockThreshold(); }
+    virtual Inventory getRestockThreshold() const = 0;
+    virtual bool needsRestock() const { return getInventory() > getRestockThreshold(); }
 };
 
 

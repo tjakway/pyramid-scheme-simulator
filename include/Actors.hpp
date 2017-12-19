@@ -37,11 +37,16 @@ public:
 
     virtual std::shared_ptr<CapitalHolder> clone() const override;
 
-    virtual ChanceContributor&
-        getSalesChanceContribution() override;
+    virtual std::shared_ptr<Distributor> 
+        becomeDistributor(
+                std::shared_ptr<Distributor> convertedBy) override;
+
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() override;
+        getSalesChanceContribution() const override;
+
+    virtual ChanceContributor&
+        getDistributorConversionChanceContribution() const override;
 };
 
 class Company : public Distributor
@@ -59,20 +64,35 @@ public:
 
 class StaticDistributor : public Distributor
 {
+    //make StaticConsumer a friend so it can turn itself into a StaticDistributor
+    //using StaticDistributor(Consumer&, std::shared_ptr<Distributor>)
+    friend StaticConsumer;
+
     std::unique_ptr<ChanceContributor> salesChance;
+
 protected:
-    StaticDistributor(Unique, Money, Inventory);
+    const Inventory desiredRestockAmount;
+    const Inventory restockThreshold;
+
     StaticDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
-        : Distributor(self, convBy)
+        : Distributor(self, convBy), 
+          desiredRestockAmount(Config::Defaults::defaultDesiredRestockAmount),
+          restockThreshold(Config::Defaults::defaultRestockThreshold)
     {}
     //used by other constructors
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&&);
+    StaticDistributor(
+            Unique, 
+            Money, 
+            Inventory, 
+            Inventory,
+            Inventory,
+            std::unique_ptr<ChanceContributor>&&);
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:
-    StaticDistributor(Unique, Money, Inventory, const double salesChance);
-    StaticDistributor(Unique, Money, Inventory, ChanceContributor*);
-    StaticDistributor(Unique, Money, Inventory, std::unique_ptr<ChanceContributor>&);
+    StaticDistributor(Unique, Money, Inventory, Inventory, const double salesChance);
+    StaticDistributor(Unique, Money, Inventory, Inventory, ChanceContributor*);
+    StaticDistributor(Unique, Money, Inventory, Inventory, std::unique_ptr<ChanceContributor>&);
 
     //copy constructor
     StaticDistributor(const StaticDistributor&);
@@ -80,10 +100,15 @@ public:
     virtual ~StaticDistributor();
 
     virtual ChanceContributor&
-        getSalesChanceContribution() override;
+        getSalesChanceContribution() const override;
 
     virtual ChanceContributor&
-        getDistributorConversionChanceContribution() override;
+        getDistributorConversionChanceContribution() const override;
+
+    virtual Inventory getDesiredRestockAmount() const override;
+    virtual Inventory getRestockThreshold() const override;
+
+    virtual std::shared_ptr<CapitalHolder> clone() const override;
 };
 
 }

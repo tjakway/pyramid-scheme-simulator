@@ -96,7 +96,7 @@ PopulationGraph::BGLPopulationGraph
     //check if link chance procs
     auto testEdge = [&rd, &config]() -> bool { 
         return Util::sampleFrom(rd, 
-            config.graphGenerationOptions->linkChance->getOption()); };
+            config.graphGenerationOptions->linkChance->getOption() / 2.0); };
 
     const auto graphSize = config.graphGenerationOptions->graphSize.getOption();
 
@@ -382,6 +382,12 @@ PopulationGraph::vertices_size_type
     return PopulationGraph::mutateVerticesOfGraph(mutate, graph);
 }
 
+PopulationGraph::edges_size_type 
+    PopulationGraph::mutateEdges(MutateEdgeFunction mutate)
+{
+    return PopulationGraph::mutateEdgesOfGraph(mutate, graph);
+}
+
 PopulationGraph::vertices_size_type
     PopulationGraph::mutateVerticesWithPredicate(
         MutateVertexFunction mutate,
@@ -409,8 +415,8 @@ PopulationGraph::vertices_size_type
                 BGLPopulationGraph& g,
                 VertexPredicate _pred
                 )
-            : pred(_pred), 
-             graphPtr(&g)
+            : graphPtr(&g),
+            pred(_pred)
         {}
 
         /**
@@ -454,6 +460,226 @@ PopulationGraph::vertices_size_type
     return numMutated;
 }
 
+PopulationGraph::edges_size_type
+    PopulationGraph::mutateEdgesOfGraph(MutateEdgeFunction mutate, 
+        BGLPopulationGraph& g)
+{
+    edges_size_type numMutated = 0;
+
+    BGLPopulationGraph::edge_iterator ei, eiEnd;
+
+    std::tie(ei, eiEnd) = boost::edges(g);
+
+    for(; ei != eiEnd; ++ei)
+    {
+        BGLPopulationGraph::edge_descriptor ed = *ei;
+        
+        Pop s, t;
+        std::tie(s, t) = mutate(getVerticesForEdge(ed, g));
+
+        //get the vertex descriptors so we can mutate the vertices in the edge we're
+        //currently modifying
+        BGLPopulationGraph::vertex_descriptor vdS = boost::source(ed, g);
+        BGLPopulationGraph::vertex_descriptor vdT = boost::target(ed, g);
+        
+        g[vdS] = s;
+        g[vdT] = t;
+        numMutated++;
+    }
+
+    return numMutated;
+}
+
+std::pair<PopulationGraph::Pop, PopulationGraph::Pop> 
+    PopulationGraph::getVerticesForEdge(
+        PopulationGraph::BGLPopulationGraph::edge_descriptor ed,
+        BGLPopulationGraph& g)
+{
+    Pop source = g[boost::source(ed, g)];
+    Pop target = g[boost::target(ed, g)];
+    return std::make_pair(source, target);
+}
+
+
+
+PopulationGraph::edges_size_type
+    PopulationGraph::mutateEdgesWithPredicate(
+        MutateEdgeFunction mutate,
+        EdgePredicate predicate)
+{
+    class EdgePredicateObject
+    {
+        BGLPopulationGraph* graphPtr;
+
+        EdgePredicate pred;
+
+    public:
+        //boost filtered_graph docs say the predicate has to have a default constructor
+        EdgePredicateObject() = default;
+
+        EdgePredicateObject(
+                BGLPopulationGraph* _graphPtr,
+                EdgePredicate _pred
+                )
+            : graphPtr(_graphPtr),
+              pred(_pred)
+        {}
+
+        bool operator()(const BGLPopulationGraph::edge_descriptor& ed) const {
+
+            Pop s, t;
+            std::tie(s, t) = PopulationGraph::getVerticesForEdge(ed, *graphPtr);
+
+            //sanity check
+            ASSERT_WITH_MESSAGE(s.get() != nullptr && t.get() != nullptr,
+                    "The edges shouldn't have null pointers");
+
+            //dereference the pointer and run the actual predicate
+            return pred(*s, *t);
+        }
+    } predicateObject(&graph, predicate);
+
+    //filter the graph using our predicate
+    using FGraph = boost::filtered_graph<BGLPopulationGraph, EdgePredicateObject>;
+    FGraph fgraph(graph, predicateObject);
+
+    edges_size_type numMutated = 0;
+
+    FGraph::edge_iterator ei, eiEnd;
+
+    std::tie(ei, eiEnd) = boost::edges(fgraph);
+
+    for(; ei != eiEnd; ++ei)
+    {
+        FGraph::edge_descriptor ed = *ei;
+        
+        Pop s, t;
+        std::tie(s, t) = mutate(getVerticesForEdge(ed, graph));
+
+        //get the vertex descriptors so we can mutate the vertices in the edge we're
+        //currently modifying
+        FGraph::vertex_descriptor vdS = boost::source(ed, graph);
+        FGraph::vertex_descriptor vdT = boost::target(ed, graph);
+        
+        fgraph[vdS] = s;
+        fgraph[vdT] = t;
+        numMutated++;
+    }
+
+    return numMutated;
+}
+
+
+void PopulationGraph::auditGraph()
+{
+    NEW_EXCEPTION_TYPE(AuditGraphException);
+
+    //audit iteration functions
+    {
+        //setup expected values and checks
+        const auto expectedNumVertices = boost::num_vertices(graph);
+        const auto expectedNumEdges = boost::num_edges(graph);
+
+        BGLPopulationGraph::vertices_size_type numVertices = 0;
+        BGLPopulationGraph::edges_size_type    numEdges = 0;
+
+
+        /***vertex iteration checks***/
+        const auto checkNumVertices = 
+            [&numVertices, expectedNumVertices](std::string fName) {
+                if(numVertices != expectedNumVertices)
+                {
+                    throw AuditGraphException(STRCAT(
+                                "Graph failed audit because expected != actual in ", 
+                                fName, " expected = ", expectedNumVertices, 
+                                "actual = ", numVertices));
+                }
+        };
+
+        const std::function<Pop(Pop)> incNumVertices = [&numVertices](Pop x)
+            { numVertices++; return x; };
+
+        //run vertex iteration functions and assert against the results
+        forEachVertex(incNumVertices);
+        checkNumVertices("forEachVertex");
+        numVertices = 0;
+
+        mutateVertices(incNumVertices);
+        checkNumVertices("mutateVertices");
+        numVertices = 0;
+
+        mutateVerticesWithPredicate(incNumVertices, 
+                //trivial predicate
+                [](const CapitalHolder&) { return true; });
+        checkNumVertices("mutateVerticesWithPredicate");
+        numVertices=0;
+        /*****************************/
+
+
+        /***edge iteration checks*****/
+        const auto checkNumEdges =
+            [&numEdges, expectedNumEdges](std::string fName) {
+                if(numEdges != expectedNumEdges) 
+                {
+                    throw AuditGraphException(STRCAT(
+                                "Graph failed audit because expected != actual in ", 
+                                fName, " expected = ", expectedNumEdges, 
+                                "actual = ", numEdges));
+                }
+            };
+
+        const std::function<std::pair<Pop, Pop>(std::pair<Pop, Pop>)> incNumEdges = 
+            [&numEdges](std::pair<Pop, Pop> p)
+            { numEdges++; return p; };
+
+        //run edge iteration functions and assert against the results
+        forEachEdge<std::pair<Pop, Pop>>(incNumEdges);
+        checkNumEdges("forEachEdge");
+        numEdges = 0;
+
+        mutateEdges(incNumEdges);
+        checkNumEdges("mutateEdges");
+        numEdges = 0;
+
+        mutateEdgesWithPredicate(incNumEdges, 
+                //trivial predicate
+                [](const CapitalHolder&, const CapitalHolder&) { return true; });
+        checkNumEdges("mutateEdgesWithPredicate");
+        numEdges=0;
+
+        /*****************************/
+    }
+}
+
+/***************************************/
+/********iterator functions*************/
+/***************************************/
+
+PopulationGraph::VertexIt PopulationGraph::vBegin()
+{
+    return mkTransformationIterator(boost::vertices(graph).first,
+            transformVertexIt);
+}
+PopulationGraph::VertexIt PopulationGraph::vEnd()
+{
+    return mkTransformationIterator(boost::vertices(graph).second,
+            transformVertexIt);
+}
+PopulationGraph::EdgeIt PopulationGraph::eBegin()
+{
+    return mkTransformationIterator(boost::edges(graph).first,
+            transformEdgeIt);
+}
+PopulationGraph::EdgeIt PopulationGraph::eEnd()
+{
+    return mkTransformationIterator(boost::edges(graph).second,
+            transformEdgeIt);
+}
+
+
+/***************************************/
+/***************************************/
+/***************************************/
 
 
 std::unique_ptr<PopulationGraph> 

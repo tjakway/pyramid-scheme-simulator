@@ -153,7 +153,6 @@ TEST_F(BasicGraphTests, BecomeDistributorTest)
 
     PopulationGraph::Pop newDistributor = 
         std::dynamic_pointer_cast<Consumer>(consumer1)->becomeDistributor(
-                newDistributorFunction,
                 convertedBy);
 
     tinyGraph->mutateVerticesWithPredicate(

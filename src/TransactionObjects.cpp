@@ -35,16 +35,74 @@ const std::function<ConversionHandler::RecordType(
         ConversionHandler::RecordType&&)> 
     ConversionHandler::reduce =
 [](ConversionHandler::RecordType&& lhs, ConversionHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<ConversionHandler::ElemType>(
+    return mergeListTransactionRecords<ConversionHandler::ElementType>(
             std::move(lhs), std::move(rhs), ConversionHandler::comparator);
 };
 
+
+bool ConversionHandler::testConversion(rd_ptr rd,
+        const Consumer& consumer,
+        const Distributor& distributor,
+        const Money buyIn)
+{
+    return consumer.canBecomeDistributor(buyIn) && 
+        (consumer.getDistributorConversionChanceContribution() +
+         distributor.getDistributorConversionChanceContribution())->sampleFrom(rd);
+}
+
+bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
+{
+    const Consumer*    consumer = nullptr;
+    const Distributor* distributor = nullptr;
+
+    const auto tryCastConsumer = [&consumer](const CapitalHolder* which)
+    {
+        //skip if we're already found the consumer
+        if(consumer == nullptr)
+        {
+            const Consumer* castConsumer = dynamic_cast<const Consumer*>(which);
+            if(castConsumer != nullptr 
+                    //a distributor can also be a consumer
+                    && !castConsumer->isDistributor()) {
+                consumer = castConsumer;
+            }
+        }
+    };
+
+    //unfortunately no template lambdas yet
+    const auto tryCastDistributor = [&distributor](const CapitalHolder* which)
+    {
+        if(distributor == nullptr)
+        {
+            const Distributor* castDistributor = dynamic_cast<const Distributor*>(which);
+            if(castDistributor != nullptr) {
+                distributor = castDistributor;
+            }
+        }
+    };
+
+    //try all combinations of consumers and distributors
+    tryCastConsumer(&lhs);
+    tryCastConsumer(&rhs);
+    tryCastDistributor(&lhs);
+    tryCastDistributor(&rhs);
+
+
+    if(consumer == nullptr || distributor == nullptr)
+    {
+        return false;
+    }
+    else
+    {
+        return testConversion(rd, *consumer, *distributor, buyIn);
+    }
+}
 
 const std::function<SaleHandler::RecordType(
         SaleHandler::RecordType&&, 
         SaleHandler::RecordType&&)> SaleHandler::reduce =
 [](SaleHandler::RecordType&& lhs, SaleHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<SaleHandler::ElemType>(
+    return mergeListTransactionRecords<SaleHandler::ElementType>(
             std::move(lhs), std::move(rhs), SaleHandler::comparator);
 };
 
@@ -52,7 +110,7 @@ const std::function<RestockHandler::RecordType(
         RestockHandler::RecordType&&, 
         RestockHandler::RecordType&&)> RestockHandler::reduce =
 [](RestockHandler::RecordType&& lhs, RestockHandler::RecordType&& rhs){ 
-    return mergeListTransactionRecords<RestockHandler::ElemType>(
+    return mergeListTransactionRecords<RestockHandler::ElementType>(
             std::move(lhs), std::move(rhs), RestockHandler::listComparator);
 };
 
@@ -61,10 +119,10 @@ const RestockHandler::ListComparatorType RestockHandler::listComparator =
     cmpUniquePtrsToUnique;
 
 
-const std::set<RestockHandler::ElemType> 
+const std::set<RestockHandler::ElementType> 
     RestockHandler::toSet(RestockHandler::RecordType&& rec)
 {
-    std::set<RestockHandler::ElemType> uniques;
+    std::set<RestockHandler::ElementType> uniques;
 
     for(std::unique_ptr<Unique>& x : rec.records)
     {
@@ -76,6 +134,6 @@ const std::set<RestockHandler::ElemType>
 }
 
 const SaleHandler::ComparatorType SaleHandler::comparator =
-    Util::deepCompareUniquePtrs<SaleHandler::ElemType>;
+    Util::deepCompareUniquePtrs<SaleHandler::ElementType>;
 
 }

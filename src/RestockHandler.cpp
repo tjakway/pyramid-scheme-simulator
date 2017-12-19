@@ -3,13 +3,13 @@
 namespace pyramid_scheme_simulator {
 
 RestockHandler::RecordType RestockHandler::operator()(
-    SimulationTick when,
-    Money price, 
-    CapitalHolder& who)
+    const SimulationTick when,
+    const Money price, 
+    const CapitalHolder& who)
 {
-    Distributor* dist = dynamic_cast<Distributor*>(&who);
+    const Distributor* dist = dynamic_cast<const Distributor*>(&who);
 
-    auto empty = emptyListTransactionRecord<RestockHandler::ElemType>();
+    auto empty = emptyListTransactionRecord<RestockHandler::ElementType>();
     if(dist == nullptr)
     {
         return empty;
@@ -18,7 +18,7 @@ RestockHandler::RecordType RestockHandler::operator()(
     {
         //copy the unique
         return singleElementListTransactionRecord<
-            RestockHandler::ElemType>(make_unique<Unique>(dist->id));
+            RestockHandler::ElementType>(make_unique<Unique>(dist->id));
     }
     else
     {

@@ -83,18 +83,10 @@ void Consumer::deductMoney(Money howMuch)
     }
 }
 
-bool Consumer::canBecomeDistributor(Money buyIn)
+bool Consumer::canBecomeDistributor(Money buyIn) const
 {
     return buyIn < getMoney();
 }
-
-std::shared_ptr<Distributor> Consumer::becomeDistributor(
-            NewDistributorFunction newDistributorFunction,
-            std::shared_ptr<Distributor> convertedBy)
-{
-    return newDistributorFunction(*this, convertedBy);
-}
-
 
 Distributor::Distributor(Unique id, Money m, std::shared_ptr<Distributor> _recruitedBy)
     : Consumer(id, m),
@@ -115,6 +107,13 @@ Distributor::Distributor(Consumer& from, std::shared_ptr<Distributor> convertedB
             std::shared_ptr<Distributor>(convertedBy))
 {
     setInventory(from.getInventory());
+}
+
+
+std::shared_ptr<Distributor> Distributor::becomeDistributor(std::shared_ptr<Distributor>)
+{
+    throw AlreadyDistributorException(
+            STRCAT("CapitalHolder with id ", id, " is already a distributor"));
 }
 
 bool Distributor::canPurchase(Money cost, const CapitalHolder& from)

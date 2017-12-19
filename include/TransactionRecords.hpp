@@ -14,11 +14,11 @@
 namespace pyramid_scheme_simulator {
 
 
-template <typename U>
+template <typename X>
 class ListTransactionRecord 
 {
 public:
-    using ElementType = std::unique_ptr<U>;
+    using ElementType = std::unique_ptr<X>;
     using ContainerType = std::list<ElementType>;
     ContainerType records;
 
@@ -26,8 +26,41 @@ public:
         : records(std::move(l))
     { }
 
-};
+    ListTransactionRecord(ListTransactionRecord<X>&& other)
+        : records(std::move(other.records))
+    {}
 
+
+private:
+    //these functions exist so ListTransactionRecord can be the Container in leftFold
+    bool empty() const { return records.empty(); }
+    X front() { return records.front; }
+    void pop_front() { records.pop_front(); }
+
+    template <typename Container, typename Reducer>
+    ListTransactionRecord<X> leftFoldHelper(Container&& toMerge, Reducer reducer, 
+            ListTransactionRecord<X>&& acc)
+    {
+        if(toMerge.empty())
+        {
+            return std::move(acc);
+        }
+        else
+        {
+            toMerge.pop_front();
+            return leftFoldHelper(std::move(toMerge), reducer, 
+                        reducer(std::move(acc), std::move(toMerge.front())));
+        }
+    }
+
+public:
+    //calls leftFoldHelper with this as the starting accumulator
+    template <typename Container, typename Reducer>
+    ListTransactionRecord<X> leftFold(Container&& toMerge, Reducer reducer)
+    {
+        return leftFoldHelper<Container, Reducer>(std::move(toMerge), reducer, std::move(*this));
+    }
+};
 
 template <typename X>
 ListTransactionRecord<X> emptyListTransactionRecord() 

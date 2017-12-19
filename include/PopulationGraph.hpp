@@ -14,6 +14,7 @@
 #include "Config.hpp"
 #include "CapitalHolder.hpp"
 #include "Util/NewExceptionType.hpp"
+#include "Util/TransformationIterator.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -98,38 +99,46 @@ protected:
     static BGLPopulationGraph graphFromTuples(
             std::vector<std::pair<Pop, Pop>>);
 
+    static std::pair<Pop, Pop> getVerticesForEdge(BGLPopulationGraph::edge_descriptor, 
+            BGLPopulationGraph&);
+
 public:
     template <typename T>
-    std::vector<T> forEachEdge(std::function<T(Pop, Pop)> f)
+    std::vector<T> forEachEdge(std::function<T(std::pair<Pop, Pop>)> f)
     {
         //see http://www.boost.org/doc/libs/1_65_1/libs/graph/doc/quick_tour.html
         boost::graph_traits<BGLPopulationGraph>::edge_iterator ei, ei_end;
 
         std::tie(ei, ei_end) = boost::edges(graph);
-        //see https://stackoverflow.com/questions/7895879/using-member-variable-in-lambda-capture-list-inside-a-member-function
         auto& g = graph;
 
-        return Util::accumulateWithVector(ei, ei_end, 
-                [&f, &g](BGLPopulationGraph::edge_iterator e) -> T {
-                    auto arg1 = source(*e, g);
-                    auto arg2 = target(*e, g);
+        return Util::accumulateWithVector<std::function<T(BGLPopulationGraph::edge_descriptor)>,
+               T,
+               BGLPopulationGraph::edge_iterator
+               >
+            (ei, ei_end, 
+                [&f, &g](BGLPopulationGraph::edge_descriptor e) -> T {
 
-                    return f(arg1, arg2);
+                    return f(getVerticesForEdge(e, g));
                 });
     }
 
     
     template <typename T> 
-    std::vector<T> forEachVertex(std::function<T(Pop, Pop)> f)
+    std::vector<T> forEachVertex(std::function<T(Pop)> f)
     {
         boost::graph_traits<BGLPopulationGraph>::vertex_iterator vi, vi_end;
 
         std::tie(vi, vi_end) = boost::vertices(graph);
         auto& g = graph;
 
-        return Util::accumulateWithVector(vi, vi_end, 
-                [&f, &g](BGLPopulationGraph::vertex_iterator v){
-                    return f(g[*v]);
+        return Util::accumulateWithVector<
+            std::function<T(BGLPopulationGraph::vertex_descriptor)>, 
+               T, 
+               BGLPopulationGraph::vertex_iterator>
+            (vi, vi_end, 
+                [&f, &g](BGLPopulationGraph::vertex_descriptor v){
+                    return f(g[v]);
                 });
     }
     
@@ -144,17 +153,22 @@ public:
 
     CapitalHolder& findVertexByUnique(const Unique&);
 
+    /** TODO: use templates to reduce duplication between edge and vertex functions */
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;
     using MutateVertexFunction = 
         std::function<const std::shared_ptr<CapitalHolder>(std::shared_ptr<CapitalHolder>)>;
 
+    using EdgePredicate = std::function<bool(
+            const CapitalHolder&, const CapitalHolder&)>;
+    using MutateEdgeFunction = 
+        std::function<const std::pair<const Pop, const Pop>(std::pair<Pop, Pop>)>;
 protected:
+
     /**
      * returns the number of vertices mutated
      */
     static vertices_size_type mutateVerticesOfGraph(MutateVertexFunction, 
             BGLPopulationGraph&);
-
 
     std::unique_ptr<PopulationGraph> cloneWithCopyVertexFunction(
             std::function<const Pop(const Pop)>);
@@ -163,6 +177,11 @@ protected:
 public:
     std::unique_ptr<PopulationGraph> clone();
     
+    static edges_size_type mutateEdgesOfGraph(MutateEdgeFunction,
+            BGLPopulationGraph&);
+
+public:
+    void auditGraph();
 
     /**
      * returns the number of vertices mutated
@@ -175,12 +194,62 @@ public:
      */
     vertices_size_type mutateVertices(MutateVertexFunction);
 
+
+    /**
+     * returns the number of edges mutated
+     * ***see above***
+     */
+    edges_size_type mutateEdges(MutateEdgeFunction);
+
     /**
      * filters the graph then mutates it
      * more efficiently than trying to filter in the function passed to mutateVertices
      * returns the number of vertices mutated
      */
     vertices_size_type mutateVerticesWithPredicate(MutateVertexFunction, VertexPredicate);
+
+    edges_size_type mutateEdgesWithPredicate(MutateEdgeFunction, EdgePredicate);
+
+
+    /***************************************/
+    /********iterator functions*************/
+    /***************************************/
+protected:
+    //iterator transformation functions
+    const std::function<const CapitalHolder&(BGLPopulationGraph::vertex_descriptor)> 
+        transformVertexIt = [this](BGLPopulationGraph::vertex_descriptor vd) 
+        -> const CapitalHolder& {
+            return *(this->graph[vd]);
+        };
+    const std::function<std::pair<const CapitalHolder&, const CapitalHolder&>(
+            BGLPopulationGraph::edge_descriptor)> transformEdgeIt = 
+        [this](BGLPopulationGraph::edge_descriptor ed)
+        -> std::pair<const CapitalHolder&, const CapitalHolder&> {
+            std::pair<Pop, Pop> edge = this->getVerticesForEdge(ed, this->graph);
+            return std::pair<const CapitalHolder&, const CapitalHolder&>(
+                    *edge.first, *edge.second);
+        };
+
+public:
+    using VertexIt = 
+        TransformationIterator<BGLPopulationGraph::vertex_iterator,
+                               BGLPopulationGraph::vertex_descriptor,
+                               const CapitalHolder&>;
+
+    using EdgeIt = 
+        TransformationIterator<BGLPopulationGraph::edge_iterator,
+                               BGLPopulationGraph::edge_descriptor,
+                               std::pair<const CapitalHolder&, const CapitalHolder&>>;
+
+
+    VertexIt vBegin();
+    VertexIt vEnd();
+    EdgeIt eBegin();
+    EdgeIt eEnd();
+
+    /***************************************/
+    /***************************************/
+    /***************************************/
 
 protected:
     struct UndirectedEdge
