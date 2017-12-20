@@ -40,8 +40,8 @@ void Simulation::interrupt() const noexcept
 
 void Simulation::tick()
 {
-    const PopulationGraph::vertices_size_type numConversions = applyConversions();
-
+    const ConversionHandler::RecordType conversionRecords = applyConversions();
+    const SaleHandler::RecordType saleRecords = applySales();
 
 
 
