@@ -1,7 +1,10 @@
 #include "SalesSideEffects.hpp"
 
 #include <unordered_map>
+#include <algorithm>
 
+#include "Util/Util.hpp"
+#include "Util/AssertWithMessage.hpp"
 #include "Util/Strcat.hpp"
 #include "CapitalHolder.hpp"
 
@@ -72,7 +75,14 @@ protected:
         const Money wholesalePrice, 
         const BeneficiaryChain chain)
     {
+        ASSERT_WITH_MESSAGE(soldFor > wholesalePrice, 
+                "Distributors must sell the product for more than its wholesale price.");
+        SalesSideEffects::auditBeneficiaryChain(chain, );
 
+        //the seller has to make at least enough to cover the cost of buying the product
+        const Money guaranteedToSeller = min(1.0, soldFor - wholesalePrice);
+
+        const Money remainder = min(0.0, soldFor - wholesalePrice);
     }
 
 public:
@@ -132,6 +142,9 @@ void SalesSideEffects::auditBeneficiaryChain(
         nextIt = chain.begin(),
         endIt = chain.end();
 
+    ASSERT_WITH_MESSAGE(chain.size() >= 2, 
+            "The beneficiary chain has to at least contain the seller and the company");
+
     while(currIt != endIt)
     {
         //if there's no next then the current distributor shouldn't have a recruitedBy
@@ -148,6 +161,17 @@ void SalesSideEffects::auditBeneficiaryChain(
             assert(wasRecruitedBy(*currIt, *nextIt));
         }
     }
+}
+
+
+//try and find the company automatically
+void SalesSideEffects::auditBeneficiaryChain(BeneficiaryChain chain)
+{
+    const auto company = std::dynamic_pointer_cast<Company>(chain.back());
+    ASSERT_WITH_MESSAGE(company.get() != nullptr, 
+            "Could not find the company automatically in auditBeneficiaryChain");
+
+    auditBeneficiaryChain(chain, company);
 }
 
 }
