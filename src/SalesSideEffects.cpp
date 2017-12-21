@@ -77,12 +77,14 @@ protected:
     {
         ASSERT_WITH_MESSAGE(soldFor > wholesalePrice, 
                 "Distributors must sell the product for more than its wholesale price.");
-        SalesSideEffects::auditBeneficiaryChain(chain, );
+        SalesSideEffects::auditBeneficiaryChain(chain);
 
         //the seller has to make at least enough to cover the cost of buying the product
         const Money guaranteedToSeller = min(1.0, soldFor - wholesalePrice);
 
         const Money remainder = min(0.0, soldFor - wholesalePrice);
+
+         
     }
 
 public:
