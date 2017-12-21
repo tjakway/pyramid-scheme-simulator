@@ -15,7 +15,7 @@ protected:
     using BeneficiaryChain = std::vector<std::shared_ptr<Distributor>>;
      
     BeneficiaryChain getBeneficiaryChain(const std::shared_ptr<Distributor>);
-    void auditBeneficiaryChain(BeneficiaryChain);
+    void auditBeneficiaryChain(BeneficiaryChain, std::shared_ptr<Distributor> company);
 
     //maps a distributor to how much they get paid
     class BenefitFormula

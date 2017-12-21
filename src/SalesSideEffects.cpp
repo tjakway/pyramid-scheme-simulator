@@ -81,7 +81,8 @@ SalesSideEffects::BeneficiaryChain SalesSideEffects::getBeneficiaryChain(
 }
 
 void SalesSideEffects::auditBeneficiaryChain(
-        SalesSideEffects::BeneficiaryChain chain)
+        SalesSideEffects::BeneficiaryChain chain, 
+        std::shared_ptr<Distributor> company)
 {
     auto currIt = chain.begin(),
         nextIt = chain.begin(),
@@ -94,6 +95,8 @@ void SalesSideEffects::auditBeneficiaryChain(
         {
             std::shared_ptr<Distributor> seller = *currIt;
             assert(seller->getRecruitedBy().get() == nullptr);
+            //the last beneficiary should always be the company
+            assert((*seller) == (*company));
         }
         //otherwise, check they match up
         else
