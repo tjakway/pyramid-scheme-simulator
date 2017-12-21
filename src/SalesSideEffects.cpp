@@ -1,5 +1,8 @@
 #include "SalesSideEffects.hpp"
 
+#include <unordered_map>
+
+#include "Util/Strcat.hpp"
 #include "CapitalHolder.hpp"
 
 namespace {
@@ -27,6 +30,14 @@ SalesSideEffects::BenefitFormula::BenefitFormula(const Money _soldFor,
 { }
 
 
+void SalesSideEffects::BenefitFormula::unknownBeneficiaryError(
+        std::shared_ptr<Distributor> who) const
+{
+    throw UnknownBeneficiaryException(STRCAT("Could not find ",
+                "a payout amount for Distributor with ID ",
+                who->id));
+}
+
 Money SalesSideEffects::BenefitFormula::getSoldForPrice() const
 {
     return soldFor;
@@ -50,7 +61,40 @@ Money SalesSideEffects::BenefitFormula::getBenefit(
 class SalesSideEffects::ChainedPercentWithGuarantee
     : public BenefitFormula
 {
+protected:
+    const std::unordered_map<Unique, Money> paymentMapping;
 
+    /**
+     * this function does the actual work
+     */
+    static std::unordered_map<Unique, Money> calculatePaymentMapping(
+        const Money soldFor,
+        const Money wholesalePrice, 
+        const BeneficiaryChain chain)
+    {
+
+    }
+
+public:
+    ChainedPercentWithGuarantee(
+            const Money soldFor,
+            const Money wholesalePrice, 
+            const BeneficiaryChain chain)
+        : BenefitFormula(soldFor, wholesalePrice, chain)
+    {}
+
+    virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
+    {
+        auto res = paymentMapping.find(who->id);
+        if(res == paymentMapping.end())
+        {
+            unknownBeneficiaryError(who);
+        }
+        else
+        {
+            return (*res).second;
+        }
+    }
 };
 
 /***************************/

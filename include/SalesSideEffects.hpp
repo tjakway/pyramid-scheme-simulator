@@ -24,6 +24,9 @@ protected:
         Money getSoldForPrice() const;
         Money getWholesalePrice() const;
         BeneficiaryChain getBeneficiaryChain() const;
+
+        NEW_EXCEPTION_TYPE(UnknownBeneficiaryException);
+        [[noreturn]] void unknownBeneficiaryError(std::shared_ptr<Distributor>) const;
     public:
         BenefitFormula(const Money,
                 const Money, 
