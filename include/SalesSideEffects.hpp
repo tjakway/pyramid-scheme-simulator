@@ -1,7 +1,8 @@
 #pragma once
 
-#include <functional>
+#include <vector>
 
+#include "Types.hpp"
 #include "PopulationGraph.hpp"
 #include "TransactionObjects.hpp"
 
@@ -19,14 +20,25 @@ protected:
     //maps a distributor to how much they get paid
     class BenefitFormula
     {
+    protected:
+        Money getSoldForPrice() const;
+        Money getWholesalePrice() const;
+        BeneficiaryChain getBeneficiaryChain() const;
     public:
-        BenefitFormula(const Money soldFor,
-                const Money wholesalePrice, 
+        BenefitFormula(const Money,
+                const Money, 
                 const BeneficiaryChain);
 
-        virtual Money getBenefit(std::shared_ptr<Distributor> who) const = 0;
-        virtual Money getBenefit(const Distributor& who) const;
+        virtual Money getBenefit(std::shared_ptr<Distributor> who) const;
+        virtual Money getBenefit(const Distributor& who) const = 0;
+
+    private:
+        const Money soldFor;
+        const Money wholesalePrice;
+        const BeneficiaryChain beneficiaryChain;
     };
+
+    class ChainedPercentWithGuarantee;
 
 public:
     static void apply(PopulationGraph&,

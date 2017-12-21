@@ -15,6 +15,48 @@ namespace {
 namespace pyramid_scheme_simulator {
 
 
+/***************************/
+/***** Benefit Formula *****/
+/***************************/
+SalesSideEffects::BenefitFormula::BenefitFormula(const Money _soldFor,
+    const Money _wholesalePrice, 
+    const BeneficiaryChain _beneficiaryChain)
+    : soldFor(_soldFor),
+    wholesalePrice(_wholesalePrice),
+    beneficiaryChain(_beneficiaryChain)
+{ }
+
+
+Money SalesSideEffects::BenefitFormula::getSoldForPrice() const
+{
+    return soldFor;
+}
+Money SalesSideEffects::BenefitFormula::getWholesalePrice() const
+{
+    return wholesalePrice;
+}
+SalesSideEffects::BeneficiaryChain 
+    SalesSideEffects::BenefitFormula::getBeneficiaryChain() const
+{
+    return beneficiaryChain;
+}
+
+Money SalesSideEffects::BenefitFormula::getBenefit(
+        std::shared_ptr<Distributor> who) const
+{
+    return getBenefit(*who);
+}
+
+class SalesSideEffects::ChainedPercentWithGuarantee
+    : public BenefitFormula
+{
+
+};
+
+/***************************/
+/***************************/
+/***************************/
+
 /**
  * the seller is the bottom of the chain
  * first (index 0) was recruited by the second (index 1) who was recruited by 
