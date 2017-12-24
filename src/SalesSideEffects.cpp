@@ -50,7 +50,7 @@ Money SalesSideEffects::BenefitFormula::getWholesalePrice() const
 {
     return wholesalePrice;
 }
-SalesSideEffects::BeneficiaryChain 
+const SalesSideEffects::BeneficiaryChain& 
     SalesSideEffects::BenefitFormula::getBeneficiaryChain() const
 {
     return beneficiaryChain;
@@ -61,6 +61,7 @@ Money SalesSideEffects::BenefitFormula::getBenefit(
 {
     return getBenefit(*who);
 }
+
 
 class SalesSideEffects::ChainedPercentWithGuarantee
     : public BenefitFormula
@@ -172,6 +173,8 @@ public:
 /***************************/
 /***************************/
 /***************************/
+
+
 
 /**
  * the seller is the bottom of the chain
