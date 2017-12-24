@@ -62,9 +62,10 @@ Money SalesSideEffects::BenefitFormula::getBenefit(
     return getBenefit(*who);
 }
 
-//BenefitFormula plus company and buyer fields
+//BenefitFormula plus company, buyer, and downstream percent (% commission) fields
 class SalesSideEffects::EffectTransferable : public BenefitFormula
 {
+protected:
     const double downstreamPercent;
     std::shared_ptr<Distributor> company;
     std::shared_ptr<Consumer> buyer;
@@ -88,11 +89,10 @@ public:
 };
 
 class SalesSideEffects::ChainedPercentWithGuarantee
-    : public BenefitFormula
+    : public EffectTransferable 
 {
 protected:
     const std::unordered_map<Unique, Money> paymentMapping;
-    const double downstreamPercent;
 
     /**
      * this function does the actual work
@@ -173,11 +173,23 @@ protected:
 public:
     ChainedPercentWithGuarantee(
             const double _downstreamPercent,
-            const Money soldFor,
-            const Money wholesalePrice, 
-            const BeneficiaryChain chain)
-        : BenefitFormula(soldFor, wholesalePrice, chain),
-        downstreamPercent(_downstreamPercent)
+            std::shared_ptr<Distributor> _company,
+            std::shared_ptr<Consumer> _buyer,
+            const Money _soldFor,
+            const Money _wholesalePrice, 
+            const BeneficiaryChain _chain)
+        : EffectTransferable(
+                _downstreamPercent,
+                _company,
+                _buyer, 
+                _soldFor,
+                _wholesalePrice,
+                _chain),
+        paymentMapping(calculatePaymentMapping(
+                    _downstreamPercent,
+                    _soldFor,
+                    _wholesalePrice,
+                    _chain))
     {}
 
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
