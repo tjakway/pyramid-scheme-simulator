@@ -170,6 +170,51 @@ public:
     }
 };
 
+
+class SalesSideEffects::CompanyCommission
+    : public BenefitFormula
+{
+    const double downstreamPercent;
+
+public:
+    CompanyCommission(
+            const double _downstreamPercent,
+            const Money soldFor,
+            const Money wholesalePrice, 
+            const BeneficiaryChain chain)
+        : BenefitFormula(soldFor, wholesalePrice, chain),
+        downstreamPercent(_downstreamPercent)
+    {}
+
+    virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
+    {
+        auto findRes = std::find_if(getBeneficiaryChain().cbegin(), getBeneficiaryChain().cend(),
+                [who](std::shared_ptr<Distributor> x){
+                    return who->id == x->id;
+                });
+        if(findRes == getBeneficiaryChain().cend())
+        {
+            unknownBeneficiaryError(who);
+        }
+        else
+        {
+            std::shared_ptr<Distributor> foundDistributor = *findRes,
+                originalSeller = getBeneficiaryChain().front();
+            if(foundDistributor->id == originalSeller->id)
+            {
+                //original seller gets paid the value of the sale
+                return getSoldForPrice();
+            }
+            else
+            {
+                //everyone else gets commission (paid by the company)
+                return downstreamPercent * getSoldForPrice();
+            }
+        }
+    }
+};
+
+
 /***************************/
 /***************************/
 /***************************/
