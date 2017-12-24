@@ -42,6 +42,8 @@ protected:
         const BeneficiaryChain beneficiaryChain;
     };
 
+    class EffectTransferable;
+
     //for when the company does *not* pay commission
     class ChainedPercentWithGuarantee;
     //for when it does

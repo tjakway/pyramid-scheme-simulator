@@ -62,6 +62,30 @@ Money SalesSideEffects::BenefitFormula::getBenefit(
     return getBenefit(*who);
 }
 
+//BenefitFormula plus company and buyer fields
+class SalesSideEffects::EffectTransferable : public BenefitFormula
+{
+    const double downstreamPercent;
+    std::shared_ptr<Distributor> company;
+    std::shared_ptr<Consumer> buyer;
+
+public:
+    EffectTransferable(
+            const double _downstreamPercent,
+            std::shared_ptr<Distributor> _company,
+            std::shared_ptr<Consumer> _buyer,
+            const Money soldFor,
+            const Money wholesalePrice, 
+            const BeneficiaryChain chain)
+        : BenefitFormula(soldFor, wholesalePrice, chain),
+        downstreamPercent(_downstreamPercent),
+        company(_company),
+        buyer(_buyer)
+    {}
+
+    virtual void  effectTransfer(std::shared_ptr<Distributor> to,
+            const Money) const = 0;
+};
 
 class SalesSideEffects::ChainedPercentWithGuarantee
     : public BenefitFormula
@@ -179,6 +203,8 @@ class SalesSideEffects::CompanyCommission
 public:
     CompanyCommission(
             const double _downstreamPercent,
+            std::shared_ptr<Distributor> company,
+            std::shared_ptr<Consumer> buyer,
             const Money soldFor,
             const Money wholesalePrice, 
             const BeneficiaryChain chain)
