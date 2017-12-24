@@ -130,13 +130,11 @@ protected:
                 //give the last guy anything left
                 if(toDivide > 0 && (lastPaid.get() != nullptr))
                 {
-                    Unique payee;
-                    Money amt;
-
                     const auto lastPayment = payments.find(*lastPaid);
                     if(lastPayment != payments.end())
                     {
-                        std::tie(payee, amt) = *lastPayment;
+                        const Unique payee((*lastPayment).first);
+                        const Money amt = (*lastPayment).second;
                         payments.erase(payee);
                         payments.emplace(std::make_pair(payee, amt + toDivide));
                     }
