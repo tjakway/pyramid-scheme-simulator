@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <algorithm>
+#include <iterator>
 
 #include "Util/Util.hpp"
 #include "Util/AssertWithMessage.hpp"
@@ -66,11 +67,13 @@ class SalesSideEffects::ChainedPercentWithGuarantee
 {
 protected:
     const std::unordered_map<Unique, Money> paymentMapping;
+    const double downstreamPercent;
 
     /**
      * this function does the actual work
      */
     static std::unordered_map<Unique, Money> calculatePaymentMapping(
+        const double downstreamPercent,
         const Money soldFor,
         const Money wholesalePrice, 
         const BeneficiaryChain chain)
@@ -81,18 +84,77 @@ protected:
 
         //the seller has to make at least enough to cover the cost of buying the product
         const Money guaranteedToSeller = min(1.0, soldFor - wholesalePrice);
-
         const Money remainder = min(0.0, soldFor - wholesalePrice);
 
-         
+        Money sellerPayment = guaranteedToSeller + ((1 - downstreamPercent) * remainder);
+
+        std::unordered_map<Unique, Money> payments;
+        const Unique sellerId = chain.front()->id;
+
+        BeneficiaryChain remainingDistributors;
+
+        auto it = chain.rbegin();
+        while((*it)->id != sellerId)
+        {
+            remainingDistributors.emplace_back(*it);
+
+            it++;
+            assert(it != chain.rend());
+        }
+
+        Money toDivide = downstreamPercent * remainder;
+
+        //if there's no upstream distributors, award everything to the seller
+        if(remainingDistributors.size() <= 0)
+        {
+            payments.emplace(std::make_pair(sellerId, sellerPayment + toDivide));
+        }
+        else 
+        {
+            if(toDivide > 0)
+            {
+                std::unique_ptr<Unique> lastPaid;
+                for(auto reIt = remainingDistributors.begin();
+                        reIt != remainingDistributors.end();
+                        ++reIt)
+                {
+                    const Money thisPayment = downstreamPercent * toDivide;
+                    toDivide = toDivide - thisPayment;
+
+                    const Unique payee = (*reIt)->id;
+                    payments.emplace(payee, thisPayment);
+
+                    lastPaid = make_unique<Unique>(payee);
+                }
+
+                //give the last guy anything left
+                if(toDivide > 0 && (lastPaid.get() != nullptr))
+                {
+                    Unique payee;
+                    Money amt;
+
+                    const auto lastPayment = payments.find(*lastPaid);
+                    if(lastPayment != payments.end())
+                    {
+                        std::tie(payee, amt) = *lastPayment;
+                        payments.erase(payee);
+                        payments.emplace(std::make_pair(payee, amt + toDivide));
+                    }
+                }
+            }
+        }
+
+        return payments;
     }
 
 public:
     ChainedPercentWithGuarantee(
+            const double _downstreamPercent,
             const Money soldFor,
             const Money wholesalePrice, 
             const BeneficiaryChain chain)
-        : BenefitFormula(soldFor, wholesalePrice, chain)
+        : BenefitFormula(soldFor, wholesalePrice, chain),
+        downstreamPercent(_downstreamPercent)
     {}
 
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override

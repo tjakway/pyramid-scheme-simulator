@@ -42,10 +42,14 @@ protected:
         const BeneficiaryChain beneficiaryChain;
     };
 
+    //for when the company does *not* pay commission
     class ChainedPercentWithGuarantee;
+    //for when it does
+    class CompanyCommission;
 
 public:
-    static void apply(PopulationGraph&,
+    static void apply(const bool,
+        PopulationGraph&,
         SaleHandler::RecordType);
 };
 
