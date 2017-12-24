@@ -208,20 +208,23 @@ public:
 
 
 class SalesSideEffects::CompanyCommission
-    : public BenefitFormula
+    : public EffectTransferable
 {
-    const double downstreamPercent;
-
 public:
     CompanyCommission(
             const double _downstreamPercent,
-            std::shared_ptr<Distributor> company,
-            std::shared_ptr<Consumer> buyer,
-            const Money soldFor,
-            const Money wholesalePrice, 
-            const BeneficiaryChain chain)
-        : BenefitFormula(soldFor, wholesalePrice, chain),
-        downstreamPercent(_downstreamPercent)
+            std::shared_ptr<Distributor> _company,
+            std::shared_ptr<Consumer> _buyer,
+            const Money _soldFor,
+            const Money _wholesalePrice, 
+            const BeneficiaryChain _chain)
+        : EffectTransferable(
+                _downstreamPercent,
+                _company,
+                _buyer, 
+                _soldFor,
+                _wholesalePrice,
+                _chain)
     {}
 
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
