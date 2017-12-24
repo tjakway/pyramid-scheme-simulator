@@ -11,7 +11,7 @@ namespace pyramid_scheme_simulator {
 Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backends) 
     : config(std::shared_ptr<Config>(c)),
     conversionHandler(config->randomGen,
-            config->simulationOptions->distributionOptions->buyIn),
+            config->simulationOptions->distributionOptions->buyIn.getOption()),
     backends(std::move(_backends))
 {
     populationGraph = buildGraph(config);
@@ -127,7 +127,7 @@ ConversionHandler::RecordType Simulation::applyConversions()
                 conversionHandler.reduce);
 
     const auto numConversions = processConversions(conversionRecs);
-    assert(numConversions == conversionRecs.size());
+    assert(numConversions == conversionRecs.records.size());
     return conversionRecs;
 }
 
