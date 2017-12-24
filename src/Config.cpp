@@ -33,10 +33,13 @@ Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
 
 Config::SimulationOptions::DistributorOptions::DistributorOptions(
         double pct, const unsigned int _buyIn, 
-        NewDistributorFunction f)
-    : buyIn(_buyIn), newDistributorFunction(f)
+        NewDistributorFunction f,
+        bool _companyPaysCommission)
+    : companyPaysCommission(_companyPaysCommission),
+    newDistributorFunction(f)
 {
     downstreamPercent.setOption(pct);
+    buyIn.setOption(_buyIn);
 }
 
 

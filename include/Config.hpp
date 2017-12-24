@@ -73,6 +73,13 @@ public:
             BoundedOption<double> downstreamPercent = 
                 BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
 
+            /**
+             * whether or not the downstream percent is paid by the company
+             * or if it's taken out of the sale price
+             */
+            const bool companyPaysCommission = true;
+
+
             //how much inventory do you need to buy from the company to become
             //a distributor?
             BoundedOption<unsigned int> buyIn =
@@ -84,7 +91,7 @@ public:
             //used by Consumer::becomeDistributor
             const NewDistributorFunction newDistributorFunction;
 
-            DistributorOptions(double, const unsigned int, NewDistributorFunction);
+            DistributorOptions(double, const unsigned int, NewDistributorFunction, bool);
         };
         std::unique_ptr<DistributorOptions> distributionOptions;
 
