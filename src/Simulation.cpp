@@ -5,6 +5,7 @@
 #include "Config.hpp"
 #include "PopulationGraph.hpp"
 #include "Simulation.hpp"
+#include "SalesSideEffects.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -44,6 +45,12 @@ void Simulation::tick()
     const SaleHandler::RecordType saleRecords = applySales();
 
 
+    SalesSideEffects::apply(
+            config->simulationOptions->distributionOptions->companyPaysCommission,
+            config->simulationOptions->distributionOptions->downstreamPercent.getOption(),
+            config->simulationOptions->wholesaleProductCost,
+            company,
+            saleRecords);
 
 }
 
