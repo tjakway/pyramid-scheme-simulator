@@ -53,9 +53,8 @@ public:
         const bool,
         const double,
         const Money,
-        PopulationGraph&,
         std::shared_ptr<Distributor>,
-        SaleHandler::RecordType);
+        const SaleHandler::RecordType&);
 };
 
 }
