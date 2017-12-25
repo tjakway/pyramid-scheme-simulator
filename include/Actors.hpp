@@ -52,6 +52,7 @@ public:
 class Company : public Distributor
 {
 protected:
+    std::vector<Money> disbursements;
     virtual bool canPurchase(Money, const CapitalHolder&) override;
 
     static const Inventory inventory;
