@@ -58,8 +58,9 @@ void Simulation::interrupt() const noexcept
 Simulation::Backend::Data Simulation::cycle()
 {
     const ConversionHandler::RecordType conversionRecords = applyConversions();
-    const std::pair<SaleHandler::RecordType,
-          const RestockHandler::RestockSet> salesRes = applySales();
+
+    std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>> salesRes = applySales();
 
 
     SalesSideEffects::apply(
@@ -67,12 +68,13 @@ Simulation::Backend::Data Simulation::cycle()
             config->simulationOptions->distributionOptions->downstreamPercent.getOption(),
             config->simulationOptions->wholesaleProductCost,
             company,
-            saleRecords);
+            *salesRes.first);
+
 
 }
 
-std::pair<SaleHandler::RecordType,
-            const RestockHandler::RestockSet>&&
+std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>>
     Simulation::applySales()
 {
     std::vector<RestockHandler::RecordType> restockRecords = 
@@ -123,8 +125,8 @@ std::pair<SaleHandler::RecordType,
 
 
     return std::make_pair(
-            SaleHandler::RecordType(std::move(allSalesRecords)), 
-            restockSet);
+            std::make_shared<SaleHandler::RecordType>(std::move(allSalesRecords)), 
+            std::make_shared<RestockHandler::RestockSet>(restockSet));
 }
 
 ConversionHandler::RecordType Simulation::applyConversions()
