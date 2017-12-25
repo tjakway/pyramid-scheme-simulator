@@ -14,8 +14,8 @@ Simulation::Backend::Data::Data(
     const std::shared_ptr<PopulationGraph> _graph,
     const SimulationTick _when,
     const std::shared_ptr<ConversionHandler::RecordType> _conversionRecords,
-    const std::shared_ptr<RestockHandler::RestockSet> _restockSet,
-    const std::shared_ptr<SaleHandler::RecordType> _saleRecords)
+    const std::shared_ptr<const RestockHandler::RestockSet> _restockSet,
+    const std::shared_ptr<const SaleHandler::RecordType> _saleRecords)
     : graph(_graph),
     when(_when),
     conversionRecords(_conversionRecords),
@@ -55,11 +55,15 @@ void Simulation::interrupt() const noexcept
 
 Simulation::Backend::Data Simulation::cycle()
 {
-    const ConversionHandler::RecordType conversionRecords = applyConversions();
+    ConversionHandler::RecordType conversionRecords = applyConversions();
 
     std::pair<std::shared_ptr<const SaleHandler::RecordType>,
             std::shared_ptr<const RestockHandler::RestockSet>> salesRes = applySales();
 
+    const auto salesRecords = salesRes.first;
+    const auto restockSet = salesRes.second;
+    const std::shared_ptr<ConversionHandler::RecordType> conversionRecs = 
+        std::make_shared<ConversionHandler::RecordType>(std::move(conversionRecords));
 
     SalesSideEffects::apply(
             config->simulationOptions->distributionOptions->companyPaysCommission,
@@ -68,7 +72,14 @@ Simulation::Backend::Data Simulation::cycle()
             company,
             *salesRes.first);
 
+    const std::shared_ptr<PopulationGraph> graphPtr = 
+        std::shared_ptr<PopulationGraph>(populationGraph->clone());
 
+    return Backend::Data(graphPtr,
+            when(),
+            conversionRecs,
+            restockSet,
+            salesRecords);
 }
 
 std::pair<std::shared_ptr<const SaleHandler::RecordType>,

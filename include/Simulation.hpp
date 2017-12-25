@@ -55,15 +55,17 @@ public:
             const SimulationTick when;
 
             const std::shared_ptr<ConversionHandler::RecordType> conversionRecords;
-            const std::shared_ptr<RestockHandler::RestockSet> restockSet;
-            const std::shared_ptr<SaleHandler::RecordType> saleRecords;
+            const std::shared_ptr<const RestockHandler::RestockSet> restockSet;
+            const std::shared_ptr<const SaleHandler::RecordType> saleRecords;
 
             Data(
                 const std::shared_ptr<PopulationGraph>,
                 const SimulationTick,
                 const std::shared_ptr<ConversionHandler::RecordType>,
-                const std::shared_ptr<RestockHandler::RestockSet>,
-                const std::shared_ptr<SaleHandler::RecordType>);
+                const std::shared_ptr<const RestockHandler::RestockSet>,
+                const std::shared_ptr<const SaleHandler::RecordType>);
+
+            Data(const Data&);
         };
 
         virtual void interrupt() noexcept = 0;
