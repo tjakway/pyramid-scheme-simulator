@@ -15,14 +15,12 @@ Simulation::Backend::Data::Data(
     const SimulationTick _when,
     const std::shared_ptr<ConversionHandler::RecordType> _conversionRecords,
     const std::shared_ptr<RestockHandler::RestockSet> _restockSet,
-    const std::shared_ptr<SaleHandler::RecordType> _saleRecords,
-    const PopulationGraph::vertices_size_type _numConversions)
+    const std::shared_ptr<SaleHandler::RecordType> _saleRecords)
     : graph(_graph),
     when(_when),
     conversionRecords(_conversionRecords),
     restockSet(_restockSet),
-    saleRecords(_saleRecords),
-    numConversions(_numConversions)
+    saleRecords(_saleRecords)
 { }
 
 Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backends) 
