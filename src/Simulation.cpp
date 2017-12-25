@@ -53,7 +53,7 @@ void Simulation::interrupt() const noexcept
     }
 }
 
-Simulation::Backend::Data Simulation::cycle()
+std::shared_ptr<Simulation::Backend::Data> Simulation::cycle()
 {
     ConversionHandler::RecordType conversionRecords = applyConversions();
 
@@ -75,12 +75,23 @@ Simulation::Backend::Data Simulation::cycle()
     const std::shared_ptr<PopulationGraph> graphPtr = 
         std::shared_ptr<PopulationGraph>(populationGraph->clone());
 
-    return Backend::Data(graphPtr,
+    return std::make_shared<Backend::Data>(graphPtr,
             when(),
             conversionRecs,
             restockSet,
             salesRecords);
 }
+
+
+void Simulation::cycleCallBackends()
+{
+    const std::shared_ptr<Backend::Data> data = cycle();
+    for(const auto& thisBackend : backends)
+    {
+        thisBackend->exportData(data);
+    }
+}
+
 
 std::pair<std::shared_ptr<const SaleHandler::RecordType>,
             std::shared_ptr<const RestockHandler::RestockSet>>

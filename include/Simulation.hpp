@@ -9,6 +9,7 @@
 #include "TransactionObjects.hpp"
 #include "TransactionRecords.hpp"
 #include "Util/NewExceptionType.hpp"
+#include "Util/AtomicDeque.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -78,9 +79,11 @@ public:
         virtual ~Backend() {}
     };
 
-private:
+protected:
     std::vector<std::unique_ptr<Backend>> backends;
-    Backend::Data cycle();
+
+    std::shared_ptr<Backend::Data> cycle();
+    void cycleCallBackends();
 
 public:
     Simulation(Config*, std::vector<std::unique_ptr<Backend>>&&);
