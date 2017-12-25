@@ -365,9 +365,8 @@ void SalesSideEffects::apply(
     const bool companyPaysCommission,
     const double downstreamPercent,
     const Money wholesalePrice,
-    PopulationGraph& graph,
     std::shared_ptr<Distributor> company,
-    SaleHandler::RecordType salesRecords)
+    const SaleHandler::RecordType& salesRecords)
 {
     for(const auto& thisRecord : salesRecords.records)
     {
