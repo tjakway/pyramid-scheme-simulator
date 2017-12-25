@@ -66,6 +66,8 @@ public:
         virtual void join() noexcept {}
 
         virtual void exportData(const std::shared_ptr<Data>) = 0;
+
+        virtual ~Backend() {}
     };
 
 private:
