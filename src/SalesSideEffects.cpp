@@ -286,15 +286,14 @@ SalesSideEffects::BeneficiaryChain SalesSideEffects::getBeneficiaryChain(
 }
 
 void SalesSideEffects::auditBeneficiaryChain(
-        SalesSideEffects::BeneficiaryChain chain, 
-        std::shared_ptr<Distributor> company)
+        SalesSideEffects::BeneficiaryChain chain)
 {
     auto currIt = chain.begin(),
         nextIt = chain.begin(),
         endIt = chain.end();
 
-    ASSERT_WITH_MESSAGE(chain.size() >= 2, 
-            "The beneficiary chain has to at least contain the seller and the company");
+    ASSERT_WITH_MESSAGE(chain.size() >= 1, 
+            "The beneficiary chain has to at least contain the seller");
 
     while(currIt != endIt)
     {
@@ -302,9 +301,9 @@ void SalesSideEffects::auditBeneficiaryChain(
         if(nextIt == endIt)
         {
             std::shared_ptr<Distributor> seller = *currIt;
+            //the last beneficiary should always have been recruited by the company
+            //(meaning the recruitedBy field is null)
             assert(seller->getRecruitedBy().get() == nullptr);
-            //the last beneficiary should always be the company
-            assert((*seller) == (*company));
         }
         //otherwise, check they match up
         else
@@ -312,17 +311,6 @@ void SalesSideEffects::auditBeneficiaryChain(
             assert(wasRecruitedBy(*currIt, *nextIt));
         }
     }
-}
-
-
-//try and find the company automatically
-void SalesSideEffects::auditBeneficiaryChain(BeneficiaryChain chain)
-{
-    const auto company = std::dynamic_pointer_cast<Company>(chain.back());
-    ASSERT_WITH_MESSAGE(company.get() != nullptr, 
-            "Could not find the company automatically in auditBeneficiaryChain");
-
-    auditBeneficiaryChain(chain, company);
 }
 
 }
