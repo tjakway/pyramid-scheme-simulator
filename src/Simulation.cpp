@@ -9,6 +9,22 @@
 
 namespace pyramid_scheme_simulator {
 
+
+Simulation::Backend::Data::Data(
+    const std::shared_ptr<PopulationGraph> _graph,
+    const SimulationTick _when,
+    const std::shared_ptr<ConversionHandler::RecordType> _conversionRecords,
+    const std::shared_ptr<RestockHandler::RecordType> _restockRecords,
+    const std::shared_ptr<SaleHandler::RecordType> _saleRecords,
+    const PopulationGraph::vertices_size_type _numConversions)
+    : graph(_graph),
+    when(_when),
+    conversionRecords(_conversionRecords),
+    restockRecords(_restockRecords),
+    saleRecords(_saleRecords),
+    numConversions(_numConversions)
+{ }
+
 Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backends) 
     : config(std::shared_ptr<Config>(c)),
     conversionHandler(config->randomGen,

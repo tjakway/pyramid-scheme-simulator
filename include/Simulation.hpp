@@ -58,6 +58,14 @@ public:
             const std::shared_ptr<SaleHandler::RecordType> saleRecords;
 
             const PopulationGraph::vertices_size_type numConversions;
+
+            Data(
+                const std::shared_ptr<PopulationGraph>,
+                const SimulationTick,
+                const std::shared_ptr<ConversionHandler::RecordType>,
+                const std::shared_ptr<RestockHandler::RecordType>,
+                const std::shared_ptr<SaleHandler::RecordType>,
+                const PopulationGraph::vertices_size_type);
         };
 
         virtual void interrupt() noexcept = 0;
