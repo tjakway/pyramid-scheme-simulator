@@ -74,6 +74,7 @@ class SalesSideEffects::EffectTransferable : public BenefitFormula
 protected:
     const double downstreamPercent;
     std::shared_ptr<Distributor> company;
+    std::shared_ptr<Distributor> seller;
     std::shared_ptr<Consumer> buyer;
 
 public:
@@ -87,12 +88,15 @@ public:
         : BenefitFormula(soldFor, wholesalePrice, chain),
         downstreamPercent(_downstreamPercent),
         company(_company),
+        seller(SalesSideEffects::getSeller(getBeneficiaryChain())),
         buyer(_buyer)
     {}
 
 public:
     virtual void effectTransfers()
     {
+        buyer->deductMoney(getSoldForPrice());
+
         std::for_each(getBeneficiaryChain().begin(), getBeneficiaryChain().end(),
                 [this](std::shared_ptr<Distributor> x){
                     this->effectTransfer(x);
@@ -207,6 +211,7 @@ public:
                     _chain))
     {}
 
+protected:
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
     {
         auto res = paymentMapping.find(who->id);
@@ -218,6 +223,15 @@ public:
         {
             return (*res).second;
         }
+    }
+
+    //trivial implementation, just look up the amount of money and pay
+    //the distributor
+    virtual void effectTransfer(
+            std::shared_ptr<Distributor> to) override
+    {
+        const Money benefit = getBenefit(to);
+        to->addMoney(benefit);
     }
 };
 
@@ -270,19 +284,18 @@ protected:
         }
     }
 
-    virtual void effectTransfers() override
-    {
-        buyer->deductMoney(getSoldForPrice());
-
-
-    }
-
     virtual void effectTransfer(
             std::shared_ptr<Distributor> to) override
     {
-        const Money toTransfer = getBenefit(to);
-        buyer->deductMoney(toTransfer);
-        to->addMoney(toTransfer);
+        const Money benefit = getBenefit(to);
+        to->addMoney(benefit);
+
+        //if this isn't the seller then the company is paying commission
+        //(otherwise the consumer paid them)
+        if((*to) != (*seller))
+        {
+            company->deductMoney(benefit);
+        }
     }
 };
 
