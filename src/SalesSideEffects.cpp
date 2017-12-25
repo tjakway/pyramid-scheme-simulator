@@ -62,6 +62,12 @@ Money SalesSideEffects::BenefitFormula::getBenefit(
     return getBenefit(*who);
 }
 
+std::shared_ptr<Distributor> SalesSideEffects::getSeller(
+        const BeneficiaryChain& chain)
+{
+    return chain.front();
+}
+
 //BenefitFormula plus company, buyer, and downstream percent (% commission) fields
 class SalesSideEffects::EffectTransferable : public BenefitFormula
 {
@@ -84,8 +90,17 @@ public:
         buyer(_buyer)
     {}
 
-    virtual void  effectTransfer(std::shared_ptr<Distributor> to,
-            const Money) const = 0;
+public:
+    virtual void effectTransfers()
+    {
+        std::for_each(getBeneficiaryChain().begin(), getBeneficiaryChain().end(),
+                [this](std::shared_ptr<Distributor> x){
+                    this->effectTransfer(x);
+                });
+    }
+
+protected:
+    virtual void  effectTransfer(std::shared_ptr<Distributor> to) = 0;
 };
 
 class SalesSideEffects::ChainedPercentWithGuarantee
@@ -227,6 +242,7 @@ public:
                 _chain)
     {}
 
+protected:
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
     {
         auto findRes = std::find_if(getBeneficiaryChain().cbegin(), getBeneficiaryChain().cend(),
@@ -252,6 +268,21 @@ public:
                 return downstreamPercent * getSoldForPrice();
             }
         }
+    }
+
+    virtual void effectTransfers() override
+    {
+        buyer->deductMoney(getSoldForPrice());
+
+
+    }
+
+    virtual void effectTransfer(
+            std::shared_ptr<Distributor> to) override
+    {
+        const Money toTransfer = getBenefit(to);
+        buyer->deductMoney(toTransfer);
+        to->addMoney(toTransfer);
     }
 };
 

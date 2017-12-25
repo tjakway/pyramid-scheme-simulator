@@ -16,6 +16,7 @@ protected:
      
     BeneficiaryChain getBeneficiaryChain(const std::shared_ptr<Distributor>);
     static void auditBeneficiaryChain(BeneficiaryChain);
+    static std::shared_ptr<Distributor> getSeller(const BeneficiaryChain&);
 
     //maps a distributor to how much they get paid
     class BenefitFormula
