@@ -14,7 +14,7 @@ class SalesSideEffects
 protected:
     using BeneficiaryChain = std::vector<std::shared_ptr<Distributor>>;
      
-    BeneficiaryChain getBeneficiaryChain(const std::shared_ptr<Distributor>);
+    static BeneficiaryChain getBeneficiaryChain(const std::shared_ptr<Distributor>);
     static void auditBeneficiaryChain(BeneficiaryChain);
     static std::shared_ptr<Distributor> getSeller(const BeneficiaryChain&);
 
@@ -33,8 +33,7 @@ protected:
                 const Money, 
                 const BeneficiaryChain);
 
-        virtual Money getBenefit(std::shared_ptr<Distributor> who) const;
-        virtual Money getBenefit(const Distributor& who) const = 0;
+        virtual Money getBenefit(std::shared_ptr<Distributor> who) const = 0;
 
     private:
         const Money soldFor;
@@ -50,8 +49,12 @@ protected:
     class CompanyCommission;
 
 public:
-    static void apply(const bool,
+    static void apply(
+        const bool,
+        const double,
+        const Money,
         PopulationGraph&,
+        std::shared_ptr<Distributor>,
         SaleHandler::RecordType);
 };
 

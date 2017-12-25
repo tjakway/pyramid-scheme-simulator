@@ -56,12 +56,6 @@ const SalesSideEffects::BeneficiaryChain&
     return beneficiaryChain;
 }
 
-Money SalesSideEffects::BenefitFormula::getBenefit(
-        std::shared_ptr<Distributor> who) const
-{
-    return getBenefit(*who);
-}
-
 std::shared_ptr<Distributor> SalesSideEffects::getSeller(
         const BeneficiaryChain& chain)
 {
@@ -359,6 +353,58 @@ void SalesSideEffects::auditBeneficiaryChain(
 
         currIt++;
         nextIt++;
+    }
+}
+
+
+/*******************************/
+/********ENTRY POINT************/
+/*******************************/
+
+void SalesSideEffects::apply(
+    const bool companyPaysCommission,
+    const double downstreamPercent,
+    const Money wholesalePrice,
+    PopulationGraph& graph,
+    std::shared_ptr<Distributor> company,
+    SaleHandler::RecordType salesRecords)
+{
+    for(const auto& thisRecord : salesRecords.records)
+    {
+        SaleHandler::Sale* recPtr = thisRecord->getRightPtr();
+        
+        //ignore non-sales records
+        if(recPtr != nullptr)
+        {
+            const Money soldFor = recPtr->price;
+            const BeneficiaryChain chain = SalesSideEffects::getBeneficiaryChain(recPtr->seller);
+            std::unique_ptr<EffectTransferable> formula;
+
+            SalesSideEffects::auditBeneficiaryChain(chain);
+            
+            if(companyPaysCommission)
+            {
+                formula = make_unique<CompanyCommission>(
+                        downstreamPercent,
+                        company,
+                        recPtr->buyer,
+                        soldFor,
+                        wholesalePrice,
+                        chain);
+            }
+            else
+            {
+                formula = make_unique<ChainedPercentWithGuarantee>(
+                        downstreamPercent,
+                        company,
+                        recPtr->buyer,
+                        soldFor,
+                        wholesalePrice,
+                        chain);
+            }
+
+            formula->effectTransfers();
+        }
     }
 }
 
