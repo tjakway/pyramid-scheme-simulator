@@ -30,7 +30,9 @@ private:
     
 protected:
     ConversionHandler::RecordType applyConversions();
-    SaleHandler::RecordType applySales();
+
+    std::pair<SaleHandler::RecordType,
+            const RestockHandler::RestockSet>&& applySales();
 
     static ConversionHandler::Conversion* lookupConversionRecord(
             ConversionHandler::RecordType&,
@@ -53,7 +55,7 @@ public:
             const SimulationTick when;
 
             const std::shared_ptr<ConversionHandler::RecordType> conversionRecords;
-            const std::shared_ptr<RestockHandler::RecordType> restockRecords;
+            const std::shared_ptr<RestockHandler::RestockSet> restockSet;
             const std::shared_ptr<SaleHandler::RecordType> saleRecords;
 
             const PopulationGraph::vertices_size_type numConversions;
@@ -62,7 +64,7 @@ public:
                 const std::shared_ptr<PopulationGraph>,
                 const SimulationTick,
                 const std::shared_ptr<ConversionHandler::RecordType>,
-                const std::shared_ptr<RestockHandler::RecordType>,
+                const std::shared_ptr<RestockHandler::RestockSet>,
                 const std::shared_ptr<SaleHandler::RecordType>,
                 const PopulationGraph::vertices_size_type);
         };

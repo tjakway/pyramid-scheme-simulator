@@ -14,13 +14,13 @@ Simulation::Backend::Data::Data(
     const std::shared_ptr<PopulationGraph> _graph,
     const SimulationTick _when,
     const std::shared_ptr<ConversionHandler::RecordType> _conversionRecords,
-    const std::shared_ptr<RestockHandler::RecordType> _restockRecords,
+    const std::shared_ptr<RestockHandler::RestockSet> _restockSet,
     const std::shared_ptr<SaleHandler::RecordType> _saleRecords,
     const PopulationGraph::vertices_size_type _numConversions)
     : graph(_graph),
     when(_when),
     conversionRecords(_conversionRecords),
-    restockRecords(_restockRecords),
+    restockSet(_restockSet),
     saleRecords(_saleRecords),
     numConversions(_numConversions)
 { }
@@ -58,7 +58,8 @@ void Simulation::interrupt() const noexcept
 Simulation::Backend::Data Simulation::cycle()
 {
     const ConversionHandler::RecordType conversionRecords = applyConversions();
-    const SaleHandler::RecordType saleRecords = applySales();
+    const std::pair<SaleHandler::RecordType,
+          const RestockHandler::RestockSet> salesRes = applySales();
 
 
     SalesSideEffects::apply(
@@ -70,7 +71,9 @@ Simulation::Backend::Data Simulation::cycle()
 
 }
 
-SaleHandler::RecordType Simulation::applySales()
+std::pair<SaleHandler::RecordType,
+            const RestockHandler::RestockSet>&&
+    Simulation::applySales()
 {
     std::vector<RestockHandler::RecordType> restockRecords = 
         populationGraph->forEachVertex<RestockHandler::RecordType>
@@ -119,8 +122,9 @@ SaleHandler::RecordType Simulation::applySales()
             .leftFold(std::move(saleRecords), SaleHandler::reduce);
 
 
-    //TODO: apply sales side effects
-    return allSalesRecords;
+    return std::make_pair(
+            SaleHandler::RecordType(std::move(allSalesRecords)), 
+            restockSet);
 }
 
 ConversionHandler::RecordType Simulation::applyConversions()
