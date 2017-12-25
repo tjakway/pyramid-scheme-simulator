@@ -339,6 +339,8 @@ void SalesSideEffects::auditBeneficiaryChain(
     ASSERT_WITH_MESSAGE(chain.size() >= 1, 
             "The beneficiary chain has to at least contain the seller");
 
+    nextIt++;
+
     while(currIt != endIt)
     {
         //if there's no next then the current distributor shouldn't have a recruitedBy
@@ -354,6 +356,9 @@ void SalesSideEffects::auditBeneficiaryChain(
         {
             assert(wasRecruitedBy(*currIt, *nextIt));
         }
+
+        currIt++;
+        nextIt++;
     }
 }
 
