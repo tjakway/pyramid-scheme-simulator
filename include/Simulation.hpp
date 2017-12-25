@@ -31,8 +31,8 @@ private:
 protected:
     ConversionHandler::RecordType applyConversions();
 
-    std::pair<SaleHandler::RecordType,
-            const RestockHandler::RestockSet>&& applySales();
+    std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>> applySales();
 
     static ConversionHandler::Conversion* lookupConversionRecord(
             ConversionHandler::RecordType&,
