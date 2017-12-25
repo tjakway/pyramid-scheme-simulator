@@ -55,7 +55,7 @@ void Simulation::interrupt() const noexcept
     }
 }
 
-void Simulation::tick()
+Simulation::Backend::Data Simulation::cycle()
 {
     const ConversionHandler::RecordType conversionRecords = applyConversions();
     const SaleHandler::RecordType saleRecords = applySales();

@@ -26,7 +26,6 @@ private:
     SimulationTick when() const { return now; }
 
     std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config>);
-    void tick();
 
     
 protected:
@@ -80,10 +79,12 @@ public:
 
 private:
     std::vector<std::unique_ptr<Backend>> backends;
+    Backend::Data cycle();
 
 public:
     Simulation(Config*, std::vector<std::unique_ptr<Backend>>&&);
 
+    void runCycle();
     void interrupt() const noexcept;
 };
 
