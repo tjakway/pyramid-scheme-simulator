@@ -9,6 +9,7 @@
 #include "TransactionObjects.hpp"
 #include "TransactionRecords.hpp"
 #include "Util/NewExceptionType.hpp"
+#include "Util/AtomicDeque.hpp"
 
 namespace pyramid_scheme_simulator {
 
@@ -26,12 +27,13 @@ private:
     SimulationTick when() const { return now; }
 
     std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config>);
-    void tick();
 
     
 protected:
     ConversionHandler::RecordType applyConversions();
-    SaleHandler::RecordType applySales();
+
+    std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>> applySales();
 
     static ConversionHandler::Conversion* lookupConversionRecord(
             ConversionHandler::RecordType&,
@@ -54,10 +56,17 @@ public:
             const SimulationTick when;
 
             const std::shared_ptr<ConversionHandler::RecordType> conversionRecords;
-            const std::shared_ptr<RestockHandler::RecordType> restockRecords;
-            const std::shared_ptr<SaleHandler::RecordType> saleRecords;
+            const std::shared_ptr<const RestockHandler::RestockSet> restockSet;
+            const std::shared_ptr<const SaleHandler::RecordType> saleRecords;
 
-            const PopulationGraph::vertices_size_type numConversions;
+            Data(
+                const std::shared_ptr<PopulationGraph>,
+                const SimulationTick,
+                const std::shared_ptr<ConversionHandler::RecordType>,
+                const std::shared_ptr<const RestockHandler::RestockSet>,
+                const std::shared_ptr<const SaleHandler::RecordType>);
+
+            Data(const Data&);
         };
 
         virtual void interrupt() noexcept = 0;
@@ -66,14 +75,20 @@ public:
         virtual void join() noexcept {}
 
         virtual void exportData(const std::shared_ptr<Data>) = 0;
+
+        virtual ~Backend() {}
     };
 
-private:
+protected:
     std::vector<std::unique_ptr<Backend>> backends;
+
+    std::shared_ptr<Backend::Data> cycle();
+    void cycleCallBackends();
 
 public:
     Simulation(Config*, std::vector<std::unique_ptr<Backend>>&&);
 
+    void runCycle();
     void interrupt() const noexcept;
 };
 

@@ -5,6 +5,7 @@
 #include <functional>
 #include <utility>
 #include <limits>
+#include <string>
 
 #include <spdlog/spdlog.h>
 
@@ -55,8 +56,8 @@ public:
          * have Transactions dynamically calculate product costs
          * based on competition (i.e. from the number of edges)
          */
-        const unsigned int standardProductCost;
-        const unsigned int wholesaleProductCost;
+        const Money standardProductCost;
+        const Money wholesaleProductCost;
 
 
         const std::function<Money()> startingFunds;
@@ -72,14 +73,25 @@ public:
             BoundedOption<double> downstreamPercent = 
                 BoundedOption<double>(std::pair<double, double>(0.0, 0.99));
 
+            /**
+             * whether or not the downstream percent is paid by the company
+             * or if it's taken out of the sale price
+             */
+            const bool companyPaysCommission = true;
+
+
             //how much inventory do you need to buy from the company to become
             //a distributor?
-            const unsigned int buyIn;
+            BoundedOption<unsigned int> buyIn =
+                BoundedOption<unsigned int>(
+                    std::pair<unsigned int, unsigned int>(1, 
+                        std::numeric_limits<unsigned int>::max()),
+                        "The minimum buy in must be at least 1");
 
             //used by Consumer::becomeDistributor
             const NewDistributorFunction newDistributorFunction;
 
-            DistributorOptions(double, const unsigned int, NewDistributorFunction);
+            DistributorOptions(double, const unsigned int, NewDistributorFunction, bool);
         };
         std::unique_ptr<DistributorOptions> distributionOptions;
 
@@ -88,6 +100,7 @@ public:
                 const unsigned int, const unsigned int,
                 const std::function<Money()>);
 
+        static std::string audit(const SimulationOptions&, bool*);
     };
     std::unique_ptr<SimulationOptions> simulationOptions;
     
@@ -196,6 +209,10 @@ public:
 
     static const std::shared_ptr<spdlog::logger> logger;
 
+    /**
+     * the passed bool will be set to true if an error occurred
+     */
+    static std::string audit(const Config&, bool*);
     /********************/
 };
 

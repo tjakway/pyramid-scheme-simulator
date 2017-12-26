@@ -231,7 +231,7 @@ public:
 
     //get*Ptr() methods return nullptr
     //on incorrect type
-    std::unique_ptr<L> getLeftPtr() const
+    L* getLeftPtr() const
     {
         if(type == RIGHT)
         {
@@ -239,11 +239,11 @@ public:
         }
         else
         {
-            return lPtr;
+            return lPtr.get();
         }
     }
 
-    std::unique_ptr<R> getRightPtr() const
+    R* getRightPtr() const
     {
         if(type == LEFT)
         {
@@ -251,7 +251,7 @@ public:
         }
         else
         {
-            return rPtr;
+            return rPtr.get();
         }
     }
 

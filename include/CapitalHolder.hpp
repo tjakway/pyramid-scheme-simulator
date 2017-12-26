@@ -116,6 +116,7 @@ public:
     NEW_EXCEPTION_TYPE(AlreadyDistributorException);
 
     virtual ~Distributor() {}
+    std::shared_ptr<Distributor> getRecruitedBy() const { return recruitedBy; }
 
     void addMoney(Money);
 

@@ -98,16 +98,19 @@ Unique SaleHandler::Sale::getUnique(SimulationTick when,
 }
 
 SaleHandler::Sale::Sale(SimulationTick when, Money price, 
-        const std::shared_ptr<Distributor> seller, 
-        const std::shared_ptr<Consumer> buyer) 
+        const std::shared_ptr<Distributor> _seller, 
+        const std::shared_ptr<Consumer> _buyer) 
 
     : UniqueRecord(when, 
             Sale::getUnique(when, price, 
-                seller.get(), buyer.get())),
+                _seller.get(), _buyer.get())),
 
       price(price), 
-      sellerRecord(checkSellerRecord(when, price, seller.get(), buyer.get())),
-      buyerRecord(checkBuyerRecord(when, price, buyer.get()))
+      sellerRecord(checkSellerRecord(when, price, _seller.get(), _buyer.get())),
+      buyerRecord(checkBuyerRecord(when, price, _buyer.get())),
+      seller(_seller),
+      buyer(_buyer)
+
 { }
 
 
