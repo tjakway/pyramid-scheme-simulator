@@ -135,7 +135,8 @@ public:
         const Money price;
         const MoneyChangeRecord sellerRecord;
         const MoneyChangeRecord buyerRecord;
-
+        const std::shared_ptr<Distributor> seller;
+        const std::shared_ptr<Consumer> buyer;
 
         Sale(SimulationTick, 
                 Money price, 

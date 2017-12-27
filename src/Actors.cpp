@@ -90,11 +90,11 @@ unsigned int Company::getInventory() const
     return std::numeric_limits<unsigned int>::max();
 }
 
-/**
- * no-op because the company never buys anything
- */
-void Company::deductMoney(Money)
-{ return; }
+void Company::deductMoney(Money amt)
+{ 
+    //record the payment but don't change the balance
+    disbursements.emplace_back(amt);
+}
 
 
 

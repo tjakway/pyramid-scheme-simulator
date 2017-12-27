@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 
+#include "Util/Strcat.hpp"
 #include "Util/Util.hpp"
 #include "Types.hpp"
 #include "CapitalHolderClassDecls.hpp"
@@ -32,10 +33,13 @@ Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
 
 Config::SimulationOptions::DistributorOptions::DistributorOptions(
         double pct, const unsigned int _buyIn, 
-        NewDistributorFunction f)
-    : buyIn(_buyIn), newDistributorFunction(f)
+        NewDistributorFunction f,
+        bool _companyPaysCommission)
+    : companyPaysCommission(_companyPaysCommission),
+    newDistributorFunction(f)
 {
     downstreamPercent.setOption(pct);
+    buyIn.setOption(_buyIn);
 }
 
 
@@ -86,6 +90,39 @@ const std::shared_ptr<spdlog::logger> Config::logger = [](){
 const Inventory Config::Defaults::defaultDesiredRestockAmount = 10;
 const Inventory Config::Defaults::defaultRestockThreshold = 1;
 
+
+#define CHECK_ERROR_OCCURRED_NOT_NULL if(errorOccurred == nullptr) \
+{ throw STRCAT("Internal error: ", __func__, " called with null bool*"); }
+
+std::string Config::SimulationOptions::audit(
+        const SimulationOptions& options, 
+        bool* errorOccurred)
+{
+    CHECK_ERROR_OCCURRED_NOT_NULL;
+    if((options.standardProductCost + 1) <= options.wholesaleProductCost)
+    {
+        *errorOccurred = true;
+        return "standard product cost must be at least the wholesale product cost + 1";
+    }
+    else
+    {
+        *errorOccurred = false;
+        return "";
+    }
+}
+
+std::string Config::audit(const Config& config, bool* errorOccurred)
+{
+    CHECK_ERROR_OCCURRED_NOT_NULL;
+
+    std::ostringstream os;
+    bool subError = false;
+
+    os << Config::SimulationOptions::audit(*config.simulationOptions, &subError);
+    if(subError) { *errorOccurred = true; }
+
+    return os.str();
+}
 
 
 }

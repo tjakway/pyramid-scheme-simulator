@@ -37,7 +37,9 @@ std::unique_ptr<Config> TestConfig::getBuildGraphConfig(rd_ptr rd)
                 //sample starting funds from a random distribution
                 [rd]() { 
                     return Util::sampleRdInRange(rd, 
-                        std::make_pair(minStartingFunds, maxStartingFunds));
+                        std::make_pair<unsigned int>(
+                            static_cast<unsigned int>(minStartingFunds), 
+                            static_cast<unsigned int>(maxStartingFunds)));
                     }
                 ),
             make_unique<Config::GraphGenerationOptions>(

@@ -5,13 +5,28 @@
 #include "Config.hpp"
 #include "PopulationGraph.hpp"
 #include "Simulation.hpp"
+#include "SalesSideEffects.hpp"
 
 namespace pyramid_scheme_simulator {
+
+
+Simulation::Backend::Data::Data(
+    const std::shared_ptr<PopulationGraph> _graph,
+    const SimulationTick _when,
+    const std::shared_ptr<ConversionHandler::RecordType> _conversionRecords,
+    const std::shared_ptr<const RestockHandler::RestockSet> _restockSet,
+    const std::shared_ptr<const SaleHandler::RecordType> _saleRecords)
+    : graph(_graph),
+    when(_when),
+    conversionRecords(_conversionRecords),
+    restockSet(_restockSet),
+    saleRecords(_saleRecords)
+{ }
 
 Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backends) 
     : config(std::shared_ptr<Config>(c)),
     conversionHandler(config->randomGen,
-            config->simulationOptions->distributionOptions->buyIn),
+            config->simulationOptions->distributionOptions->buyIn.getOption()),
     backends(std::move(_backends))
 {
     populationGraph = buildGraph(config);
@@ -38,16 +53,49 @@ void Simulation::interrupt() const noexcept
     }
 }
 
-void Simulation::tick()
+std::shared_ptr<Simulation::Backend::Data> Simulation::cycle()
 {
-    const PopulationGraph::vertices_size_type numConversions = applyConversions();
+    ConversionHandler::RecordType conversionRecords = applyConversions();
 
+    std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>> salesRes = applySales();
 
+    const auto salesRecords = salesRes.first;
+    const auto restockSet = salesRes.second;
+    const std::shared_ptr<ConversionHandler::RecordType> conversionRecs = 
+        std::make_shared<ConversionHandler::RecordType>(std::move(conversionRecords));
 
+    SalesSideEffects::apply(
+            config->simulationOptions->distributionOptions->companyPaysCommission,
+            config->simulationOptions->distributionOptions->downstreamPercent.getOption(),
+            config->simulationOptions->wholesaleProductCost,
+            company,
+            *salesRes.first);
 
+    const std::shared_ptr<PopulationGraph> graphPtr = 
+        std::shared_ptr<PopulationGraph>(populationGraph->clone());
+
+    return std::make_shared<Backend::Data>(graphPtr,
+            when(),
+            conversionRecs,
+            restockSet,
+            salesRecords);
 }
 
-SaleHandler::RecordType Simulation::applySales()
+
+void Simulation::cycleCallBackends()
+{
+    const std::shared_ptr<Backend::Data> data = cycle();
+    for(const auto& thisBackend : backends)
+    {
+        thisBackend->exportData(data);
+    }
+}
+
+
+std::pair<std::shared_ptr<const SaleHandler::RecordType>,
+            std::shared_ptr<const RestockHandler::RestockSet>>
+    Simulation::applySales()
 {
     std::vector<RestockHandler::RecordType> restockRecords = 
         populationGraph->forEachVertex<RestockHandler::RecordType>
@@ -96,8 +144,9 @@ SaleHandler::RecordType Simulation::applySales()
             .leftFold(std::move(saleRecords), SaleHandler::reduce);
 
 
-    //TODO: apply sales side effects
-    return allSalesRecords;
+    return std::make_pair(
+            std::make_shared<SaleHandler::RecordType>(std::move(allSalesRecords)), 
+            std::make_shared<RestockHandler::RestockSet>(restockSet));
 }
 
 ConversionHandler::RecordType Simulation::applyConversions()
@@ -127,7 +176,7 @@ ConversionHandler::RecordType Simulation::applyConversions()
                 conversionHandler.reduce);
 
     const auto numConversions = processConversions(conversionRecs);
-    assert(numConversions == conversionRecs.size());
+    assert(numConversions == conversionRecs.records.size());
     return conversionRecs;
 }
 
