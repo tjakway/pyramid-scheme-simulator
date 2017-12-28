@@ -91,13 +91,19 @@ public:
 
     class Spring
     {
+        std::unique_ptr<Point> aPtr, bPtr;
     public:
-        const Point pointA, pointB;
         const double length, springConstant;
 
         Spring(const Point&, const Point&, double, double);
         Spring(const Spring&);
         Spring(const Node&, const Node&);
+
+        Point getPointA() const { return *aPtr; }
+        Point getPointB() const { return *bPtr; }
+
+        void setPointA(const Point&);
+        void setPointB(const Point&);
     };
 
     class Node

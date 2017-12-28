@@ -115,6 +115,18 @@ GraphLayout::Point GraphLayout::Point::applyForce(
             velocity, newAcceleration);
 }
 
+
+void GraphLayout::Spring::setPointA(const Point& to)
+{
+    aPtr = make_unique<Point>(to);
+}
+
+void GraphLayout::Spring::setPointB(const Point& to)
+{
+    bPtr = make_unique<Point>(to);
+}
+
+
 //trivial comparison operator implementations
 bool GraphLayout::Point::operator==(const Point& other) const
 {
@@ -134,15 +146,15 @@ GraphLayout::Spring::Spring(
         const Point& b, 
         double l, 
         double k)
-    : pointA(a),
-    pointB(b),
+    : aPtr(make_unique<Point>(a)),
+    bPtr(make_unique<Point>(b)),
     length(l),
     springConstant(k)
 {}
 
 GraphLayout::Spring::Spring(const Spring& other)
-    : pointA(other.pointA),
-    pointB(other.pointB),
+    : aPtr(make_unique<Point>(other.getPointA())),
+    bPtr(make_unique<Point>(other.getPointB())),
     length(other.length),
     springConstant(other.springConstant)
 {}
@@ -150,8 +162,8 @@ GraphLayout::Spring::Spring(const Spring& other)
 GraphLayout::Spring::Spring(
         const Node& left, 
         const Node& right)
-    : pointA(left.getPoint()),
-    pointB(right.getPoint()),
+    : aPtr(make_unique<Point>(left.getPoint())),
+    bPtr(make_unique<Point>(right.getPoint())),
     length(0.0),
     springConstant(0.0)
 {}
