@@ -38,6 +38,7 @@ namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
+public:
     class Vector
     {
     public:
@@ -49,13 +50,13 @@ class GraphLayout
 
 
         //scalar functions
-        Vector add(double)      const;
-        Vector subtract(double) const;
+        Vector add(const Vector&) const;
+        Vector subtract(const Vector&) const;
         Vector multiply(double) const;
-        Vector divide(double)   const;
+        Vector divide(double) const;
 
         double magnitude() const;
-        Vector normal()    const;
+        Vector normal() const;
         Vector normalise() const;
 
         static Vector random();
@@ -67,7 +68,10 @@ class GraphLayout
         const double position, mass;
         const Vector velocity, acceleration;
 
-        Point applyForce(const Vector& force);
+        Point(double, double, Vector, Vector);
+        Point(const Point&);
+
+        Point applyForce(const Vector& force) const;
     };
 
     class Spring
