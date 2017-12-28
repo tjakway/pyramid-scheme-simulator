@@ -97,11 +97,22 @@ public:
         double length, springConstant;
     };
 
+    using Graph = boost::adjacency_list<
+            boost::vecS,
+            boost::vecS, 
+            boost::undirectedS,
+            Node,
+            SpringProperties>;
+
     class Node
     {
         std::unique_ptr<Point> pointPtr;
+        std::unique_ptr<Unique> id;
+
+        void setUnique(const Unique&);
+        class NodeCopier;
+
     public:
-        const Unique id;
 
         Node();
         Node(const Unique&, const Point&);
@@ -109,14 +120,11 @@ public:
 
         void  setPoint(const Point&);
         Point getPoint() const;
-    };
 
-    using Graph = boost::adjacency_list<
-            boost::vecS,
-            boost::vecS, 
-            boost::undirectedS,
-            Node,
-            SpringProperties>;
+        Unique getUnique() const { return *id; }
+
+        static NodeCopier getNodeCopier(Graph&, Graph&);
+    };
 
 
     class Layout
@@ -143,6 +151,19 @@ public:
 
         void forEachPoint(std::function<void(const Point&)>) const;
 
+        double totalEnergy() const;
+
+        void applyCoulombsLaw();
+        void applyHookesLaw();
+        void attractToCenter();
+        void updateVelocity(GraphLayoutTick);
+        void updatePosition(GraphLayoutTick);
+
+        void tick(GraphLayoutTick);
+
+        std::unique_ptr<Graph> copyGraph();
+        std::unique_ptr<Graph> runSimulation(GraphLayoutTick*);
+
     public:
         Layout(const double, 
                 const double,
@@ -151,17 +172,10 @@ public:
                 const double);
         Layout(const Layout&);
 
-        void applyCoulombsLaw();
-        void applyHookesLaw();
-        void attractToCenter();
-        void updateVelocity(GraphLayoutTick);
-        void updatePosition(GraphLayoutTick);
-
         std::pair<Position, Position> getBoundingBox();
 
-        void tick(GraphLayoutTick*);
-
-        double totalEnergy() const;
+        std::unique_ptr<Graph> runSimulation();
+        std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
     };
 
 };
