@@ -1,5 +1,7 @@
 #include "GraphLayout.hpp"
 
+#include "Util/Util.hpp"
+
 #include <cmath>
 
 namespace pyramid_scheme_simulator {
@@ -148,8 +150,8 @@ GraphLayout::Spring::Spring(const Spring& other)
 GraphLayout::Spring::Spring(
         const Node& left, 
         const Node& right)
-    : pointA(left.point),
-    pointB(right.point),
+    : pointA(left.getPoint()),
+    pointB(right.getPoint()),
     length(0.0),
     springConstant(0.0)
 {}
@@ -166,12 +168,23 @@ GraphLayout::Node::Node()
 GraphLayout::Node::Node(
         const Unique& u,
         const Point& p)
-    : id(u), point(p)
+    : pointPtr(make_unique<Point>(p)),
+    id(u)
 {}
 
 GraphLayout::Node::Node(const Node& other)
-    : id(other.id),
-    point(other.point)
+    : pointPtr(make_unique<Point>(other.getPoint())),
+    id(other.id)
 {}
+
+void GraphLayout::Node::setPoint(const Point& x)
+{
+    pointPtr = make_unique<Point>(x);
+}
+
+GraphLayout::Point GraphLayout::Node::getPoint() const
+{
+    return *pointPtr;
+}
 
 }

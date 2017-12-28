@@ -101,13 +101,16 @@ public:
 
     class Node
     {
+        std::unique_ptr<Point> pointPtr;
     public:
         const Unique id;
-        const Point point;
 
         Node();
         Node(const Unique&, const Point&);
         Node(const Node&);
+
+        void  setPoint(const Point&);
+        Point getPoint() const;
     };
 
     using Graph = boost::adjacency_list<
