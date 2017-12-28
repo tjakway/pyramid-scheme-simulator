@@ -1,7 +1,9 @@
 #include "GraphLayout.hpp"
 
 #include "Util/Util.hpp"
+#include "Util/Strcat.hpp"
 
+#include <stdexcept>
 #include <cmath>
 
 namespace pyramid_scheme_simulator {
@@ -230,16 +232,23 @@ GraphLayout::GraphLayout(
 std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox> 
     GraphLayout::calculateLayout()
 {
-    if(maxTicksPtr)
-    {
-        layout.runSimulation(*maxTicksPtr);
-    }
-    else
-    {
-        layout.runSimulation();
-    }
+    try {
+        if(maxTicksPtr)
+        {
+            layout.runSimulation(*maxTicksPtr);
+        }
+        else
+        {
+            layout.runSimulation();
+        }
 
-    return std::make_pair(layout.copyGraph(), layout.getBoundingBox());
+        return std::make_pair(layout.copyGraph(), layout.getBoundingBox());
+
+    } catch(const std::logic_error& e) {
+        //wrap & rethrow exceptions
+        throw GraphLayoutException(STRCAT("Error in ", __func__,
+                    " cause by ", e.what()));
+    }
 }
 
 std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox> 
