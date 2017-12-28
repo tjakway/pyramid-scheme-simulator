@@ -81,12 +81,18 @@ std::string demangle(const char* mangledName)
 #else
 //demangling is a no-op
 //don't warn about emitting an unused function
+#ifdef __clang__
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunneeded-internal-declaration"
+#pragma GCC diagnostic ignored "-Wunneeded-internal-declaration" //this is a clang-specific warning
+#endif //__clang__
+
 std::string demangle(const char* mangledName) {
     return std::string(mangledName);
 }
+#ifdef __clang__
 #pragma GCC diagnostic pop
+#endif //__clang__
+
 #endif
 }
 
