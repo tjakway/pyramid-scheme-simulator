@@ -298,7 +298,7 @@ void GraphLayout::Layout::makeGraph(Graph& to, const PopulationGraph& population
 }
 
 
-std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph()
+std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph() const
 {
     std::unique_ptr<Graph> newGraph = make_unique<Graph>();
 
