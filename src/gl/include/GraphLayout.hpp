@@ -89,21 +89,9 @@ public:
 
     class Node;
 
-    class Spring
+    struct SpringProperties
     {
-        std::unique_ptr<Point> aPtr, bPtr;
-    public:
-        const double length, springConstant;
-
-        Spring(const Point&, const Point&, double, double);
-        Spring(const Spring&);
-        Spring(const Node&, const Node&);
-
-        Point getPointA() const { return *aPtr; }
-        Point getPointB() const { return *bPtr; }
-
-        void setPointA(const Point&);
-        void setPointB(const Point&);
+        double length, springConstant;
     };
 
     class Node
@@ -125,7 +113,7 @@ public:
             boost::vecS, 
             boost::undirectedS,
             Node,
-            Spring>;
+            SpringProperties>;
 
 
     class Layout
@@ -144,6 +132,10 @@ public:
         void mutatePoints(std::function<Point(Point)>);
         void mutatePointPairs(std::function<
                 std::pair<Point, Point>(Point, Point)>);
+
+        void forEachSpring(
+                std::function<void(Node&, Node&, 
+                    double, double)>);
 
     public:
         Layout(const double, 
