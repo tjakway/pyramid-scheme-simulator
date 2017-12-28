@@ -145,6 +145,8 @@ public:
 
                 const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
 
+                GraphLayoutOptions(const GraphLayoutOptions&);
+
                 GraphLayoutOptions(
                         const double,
                         const double,
