@@ -43,7 +43,8 @@ namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
-    unsigned long layoutTick = 0;
+    using GraphLayoutTick = unsigned long;
+    GraphLayoutTick layoutTick = 0;
 
 public:
     class Vector
@@ -153,8 +154,10 @@ public:
         void applyCoulombsLaw();
         void applyHookesLaw();
         void attractToCenter();
-        void updateVelocity(unsigned long);
-        void updatePosition(unsigned long);
+        void updateVelocity(GraphLayoutTick);
+        void updatePosition(GraphLayoutTick);
+
+        std::pair<Position, Position> getBoundingBox();
 
         double totalEnergy() const;
     };

@@ -192,6 +192,37 @@ void GraphLayout::Layout::updatePosition(GraphLayoutTick tick)
     });
 }
 
+std::pair<GraphLayout::Position, GraphLayout::Position> 
+    GraphLayout::Layout::getBoundingBox()
+{
+    double bottomLeftX = -2, bottomLeftY = -2,
+           topRightX = 2, topRightY = 2;
+
+    forEachPoint(
+    [&](const Point& point)
+    {
+        if(point.position.x < bottomLeftX)
+        {
+            bottomLeftX = point.position.x;
+        }
+        if(point.position.y < bottomLeftY)
+        {
+            bottomLeftY = point.position.y;
+        }
+        if(point.position.x > topRightX)
+        {
+            topRightX = point.position.x;
+        }
+        if(point.position.y > topRightY)
+        {
+            topRightY = point.position.y;
+        }
+    });
+
+    return std::make_pair(Vector(bottomLeftX, bottomLeftY),
+            Vector(topRightX, topRightY));
+}
+
 void GraphLayout::Layout::attractToCenter()
 {
     const double _repulsion = repulsion;
