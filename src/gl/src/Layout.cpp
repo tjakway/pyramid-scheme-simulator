@@ -160,7 +160,16 @@ void GraphLayout::Layout::attractToCenter()
 
 double GraphLayout::Layout::totalEnergy() const
 {
+    double energy = 0.0;
 
+    forEachPoint(
+    [&energy](const Point& point)
+    {
+        const double speed = point.velocity.magnitude();
+        energy += 0.5 * point.mass * speed * speed;
+    });
+
+    return energy;
 }
 
 }
