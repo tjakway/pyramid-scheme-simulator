@@ -7,4 +7,7 @@ namespace pyramid_scheme_simulator {
     */
 using SimulationTick = unsigned int;
 
+using GraphLayoutTick = unsigned long;
+
+
 }

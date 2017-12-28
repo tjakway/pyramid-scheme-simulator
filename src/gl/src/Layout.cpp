@@ -2,6 +2,7 @@
 
 #include "Util/Util.hpp"
 
+#include <unordered_map>
 #include <utility>
 
 #include <boost/graph/copy.hpp>
@@ -12,13 +13,13 @@ void GraphLayout::Layout::mutatePoints(
         std::function<Point(const Point&)> f)
 {
     Graph::vertex_iterator i, iEnd;
-    std::tie(i, iEnd) = boost::vertices(graph);
+    std::tie(i, iEnd) = boost::vertices(*graph);
 
     for(; i != iEnd; ++i)
     {
         //replace each point with the result of calling 
         //the function
-        graph[*i].setPoint(f(graph[*i].getPoint()));
+        (*graph)[*i].setPoint(f((*graph)[*i].getPoint()));
     }
 }
 
@@ -28,11 +29,11 @@ void GraphLayout::Layout::forEachPoint(
         std::function<void(const Point&)> f) const
 {
     Graph::vertex_iterator i, iEnd;
-    std::tie(i, iEnd) = boost::vertices(graph);
+    std::tie(i, iEnd) = boost::vertices(*graph);
 
     for(; i != iEnd; ++i)
     {
-        f(graph[*i].getPoint());
+        f((*graph)[*i].getPoint());
     }
 }
 
@@ -40,20 +41,20 @@ void GraphLayout::Layout::mutatePointPairs(std::function<
         std::pair<Point, Point>(const Point&, const Point&)> f)
 {
     Graph::vertex_iterator i, iEnd;
-    std::tie(i, iEnd) = boost::vertices(graph);
+    std::tie(i, iEnd) = boost::vertices(*graph);
 
     for(; i != iEnd; ++i)
     {
         Graph::vertex_iterator j, jEnd;
-        std::tie(j, jEnd) = boost::vertices(graph);
+        std::tie(j, jEnd) = boost::vertices(*graph);
 
         for(; j != jEnd; ++j)
         {
             std::pair<Point, Point> res = 
-                f(graph[*i].getPoint(), graph[*j].getPoint());
+                f((*graph)[*i].getPoint(), (*graph)[*j].getPoint());
 
-            graph[*i].setPoint(res.first);
-            graph[*j].setPoint(res.second);
+            (*graph)[*i].setPoint(res.first);
+            (*graph)[*j].setPoint(res.second);
         }
     }
 }
@@ -63,16 +64,16 @@ void GraphLayout::Layout::forEachSpring(
                     double, double)> f)
 {
     Graph::edge_iterator ei, eiEnd;
-    std::tie(ei, eiEnd) = boost::edges(graph);
+    std::tie(ei, eiEnd) = boost::edges(*graph);
 
     for(; ei != eiEnd; ++ei)
     {
         Graph::edge_descriptor ed = *ei;
 
-        f(graph[boost::source(ed, graph)],
-          graph[boost::target(ed, graph)],
-          graph[ed].length,
-          graph[ed].springConstant);
+        f((*graph)[boost::source(ed, *graph)],
+          (*graph)[boost::target(ed, *graph)],
+          (*graph)[ed].length,
+          (*graph)[ed].springConstant);
     }
 }
 
@@ -261,11 +262,48 @@ double GraphLayout::Layout::totalEnergy() const
     return energy;
 }
 
+GraphLayout::SpringProperties GraphLayout::Layout::newSpring() const
+{
+    SpringProperties p;
+    p.length = 1.0;
+    p.springConstant = stiffness;
+
+    return p;
+}
+
+void GraphLayout::Layout::makeGraph(Graph& to, const PopulationGraph& populationGraph)
+{
+    std::unordered_map<Unique, Graph::vertex_descriptor> vdMap;
+
+    //add the vertices from the population graph,
+    //creating new points for each unique
+    for(const auto& p : populationGraph.vertices())
+    {
+        const Node newNode = Node(p->id);
+        const Graph::vertex_descriptor newVd = boost::add_vertex(newNode, to);
+
+        vdMap.emplace(std::make_pair(newNode.getUnique(), newVd));
+    }
+
+    PopulationGraph::Pop left, right;
+    for(const auto e : populationGraph.edges())
+    {
+        std::tie(left, right) = e;
+
+        const Graph::vertex_descriptor leftVd = vdMap.at(left->id),
+              rightVd = vdMap.at(right->id);
+
+        boost::add_edge(leftVd, rightVd, newSpring(), to);
+    }
+}
+
+
 std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph()
 {
     std::unique_ptr<Graph> newGraph = make_unique<Graph>();
 
-    boost::copy_graph(graph, *newGraph, boost::vertex_copy(Node::getNodeCopier(graph, *newGraph)));
+    boost::copy_graph(*graph, *newGraph, 
+            boost::vertex_copy(Node::getNodeCopier(*graph, *newGraph)));
 
     //this is probably unnecessary since the internal unique_ptr<Point> in Node
     //should only be changed by setting it to a new Point (i.e. not modifying the data
