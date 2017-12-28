@@ -43,6 +43,8 @@ namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
+    unsigned long layoutTick = 0;
+
 public:
     class Vector
     {
@@ -129,13 +131,16 @@ public:
 
         //call the function with every point or pair of points 
         //on the graph and replace them with the return value
-        void mutatePoints(std::function<Point(Point)>);
+        void mutatePoints(std::function<Point(const Point&)>);
         void mutatePointPairs(std::function<
-                std::pair<Point, Point>(Point, Point)>);
+                std::pair<Point, Point>(
+                    const Point&, const Point&)>);
 
         void forEachSpring(
                 std::function<void(Node&, Node&, 
                     double, double)>);
+
+        void forEachPoint(std::function<void(const Point&)>);
 
     public:
         Layout(const double, 
@@ -147,6 +152,11 @@ public:
 
         void applyCoulombsLaw();
         void applyHookesLaw();
+        void attractToCenter();
+        void updateVelocity(unsigned long);
+        void updatePosition(unsigned long);
+
+        double totalEnergy() const;
     };
 
 };

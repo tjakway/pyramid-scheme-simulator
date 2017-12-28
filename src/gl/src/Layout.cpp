@@ -5,7 +5,7 @@
 namespace pyramid_scheme_simulator {
 
 void GraphLayout::Layout::mutatePoints(
-        std::function<Point(Point)> f)
+        std::function<Point(const Point&)> f)
 {
     Graph::vertex_iterator i, iEnd;
     std::tie(i, iEnd) = boost::vertices(graph);
@@ -18,8 +18,22 @@ void GraphLayout::Layout::mutatePoints(
     }
 }
 
+
+//like the above but without the ability to change the graph
+void GraphLayout::Layout::forEachPoint(
+        std::function<void(const Point&)> f)
+{
+    Graph::vertex_iterator i, iEnd;
+    std::tie(i, iEnd) = boost::vertices(graph);
+
+    for(; i != iEnd; ++i)
+    {
+        f(graph[*i].getPoint());
+    }
+}
+
 void GraphLayout::Layout::mutatePointPairs(std::function<
-        std::pair<Point, Point>(Point, Point)> f)
+        std::pair<Point, Point>(const Point&, const Point&)> f)
 {
     Graph::vertex_iterator i, iEnd;
     std::tie(i, iEnd) = boost::vertices(graph);
@@ -63,7 +77,8 @@ void GraphLayout::Layout::applyCoulombsLaw()
 {
     const double _repulsion = repulsion;
     mutatePointPairs(
-    [_repulsion](Point firstPoint, Point secondPoint)
+    [_repulsion](const Point& firstPoint, 
+        const Point& secondPoint)
     {
         if(firstPoint != secondPoint)
         {
@@ -134,7 +149,7 @@ void GraphLayout::Layout::attractToCenter()
 {
     const double _repulsion = repulsion;
     mutatePoints(
-    [_repulsion](Point point)
+    [_repulsion](const Point& point)
     {
         const auto direction = point.position.multiply(-1.0);
         return 
