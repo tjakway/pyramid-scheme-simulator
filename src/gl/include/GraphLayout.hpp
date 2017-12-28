@@ -159,6 +159,8 @@ public:
 
         std::pair<Position, Position> getBoundingBox();
 
+        void tick(GraphLayoutTick*);
+
         double totalEnergy() const;
     };
 
