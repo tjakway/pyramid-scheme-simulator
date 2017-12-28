@@ -31,6 +31,37 @@ Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
 { }
 
 
+
+Config::BackendOptions::GLBackendOptions::GraphLayoutOptions::GraphLayoutOptions(
+        const double _stiffness,
+        const double _repulsion,
+        const double _damping,
+        const double _minEnergyThreshold,
+        const double _maxSpeed,
+        const GraphLayoutTick maxTicks)
+    : stiffness(_stiffness),
+    repulsion(_repulsion),
+    damping(_damping),
+    minEnergyThreshold(_minEnergyThreshold),
+    maxSpeed(_maxSpeed),
+    maxTicksPtr(make_unique<GraphLayoutTick>(maxTicks))
+{ }
+
+Config::BackendOptions::GLBackendOptions::GraphLayoutOptions::GraphLayoutOptions(
+        const double _stiffness,
+        const double _repulsion,
+        const double _damping,
+        const double _minEnergyThreshold,
+        const double _maxSpeed)
+    : stiffness(_stiffness),
+    repulsion(_repulsion),
+    damping(_damping),
+    minEnergyThreshold(_minEnergyThreshold),
+    maxSpeed(_maxSpeed),
+    maxTicksPtr()
+{ }
+
+
 Config::SimulationOptions::DistributorOptions::DistributorOptions(
         double pct, const unsigned int _buyIn, 
         NewDistributorFunction f,

@@ -127,6 +127,46 @@ public:
     //capitalization change per tick
     //const ??? capitalizationChange;
 
+    class BackendOptions
+    {
+    public:
+        class GLBackendOptions
+        {
+        public:
+            class GraphLayoutOptions
+            {
+            public:
+                const double stiffness, 
+                    repulsion, 
+                    damping;
+
+                const double minEnergyThreshold;
+                const double maxSpeed;
+
+                const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
+
+                GraphLayoutOptions(
+                        const double,
+                        const double,
+                        const double,
+                        const double,
+                        const double,
+                        const GraphLayoutTick);
+
+                //no max ticks
+                GraphLayoutOptions(
+                        const double,
+                        const double,
+                        const double,
+                        const double,
+                        const double);
+            };
+
+            GLBackendOptions(GraphLayoutOptions);
+        };
+
+        std::unique_ptr<GLBackendOptions> glBackendOptions;
+    } backendOptions;
 
     class GraphGenerationOptions
     {
@@ -190,6 +230,9 @@ public:
 
         static const Inventory defaultDesiredRestockAmount;
         static const Inventory defaultRestockThreshold;
+
+        static const BackendOptions::GLBackendOptions::GraphLayoutOptions 
+            defaultGraphLayoutOptions;
     };
     Defaults defaults;
 

@@ -3,6 +3,7 @@
 #include "Types.hpp"
 #include "Actors.hpp"
 
+#include <limits>
 #include <memory>
 
 namespace pyramid_scheme_simulator {
@@ -24,4 +25,14 @@ std::shared_ptr<Consumer> Config::Defaults::mkConsumer(Config& conf, rd_ptr rd, 
             salesChance, conversionChance);
 }
 
+
+const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions 
+    Config::Defaults::defaultGraphLayoutOptions = 
+        Config::BackendOptions::GLBackendOptions::GraphLayoutOptions(
+                400.0, //default stiffness
+                400.0, //default repulsion
+                0.5,   //default damping
+                0.00001, //default minEnergyThreshold
+                std::numeric_limits<double>::max() //default max speed
+                );
 }

@@ -37,16 +37,13 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
+#include "PopulationGraph.hpp"
 #include "Util/Unique.hpp"
 
 namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
-    using GraphLayoutTick = unsigned long;
-    GraphLayoutTick layoutTick = 0;
-
-public:
     class Vector
     {
     public:
@@ -88,6 +85,8 @@ public:
 
         bool operator==(const Point&) const;
         bool operator!=(const Point&) const;
+
+        static Point random();
     };
 
     class Node;
@@ -115,6 +114,7 @@ public:
     public:
 
         Node();
+        Node(const Unique&);
         Node(const Unique&, const Point&);
         Node(const Node&);
 
@@ -136,7 +136,7 @@ public:
         const double minEnergyThreshold;
         const double maxSpeed;
 
-        Graph graph;
+        std::unique_ptr<Graph> graph;
 
         //call the function with every point or pair of points 
         //on the graph and replace them with the return value
@@ -164,12 +164,20 @@ public:
         std::unique_ptr<Graph> copyGraph();
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick*);
 
+        /**
+         * return a spring with default values
+         */
+        SpringProperties newSpring() const;
+
+        void makeGraph(Graph&, const PopulationGraph&);
+
     public:
         Layout(const double, 
                 const double,
                 const double,
                 const double,
-                const double);
+                const double,
+                const PopulationGraph&);
         Layout(const Layout&);
 
         std::pair<Position, Position> getBoundingBox();
@@ -178,6 +186,8 @@ public:
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
     };
 
+public:
+    GraphLayout(const Config&, const PopulationGraph&);
 };
 
 class GraphLayout::Node::NodeCopier

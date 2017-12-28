@@ -130,12 +130,21 @@ bool GraphLayout::Point::operator!=(const Point& other) const
     return !this->operator==(other);
 }
 
-GraphLayout::Node::Node()
-    : Node(Unique(),
-    Point(Position::random(), 
+GraphLayout::Point GraphLayout::Point::random()
+{
+    return Point(Position::random(), 
         1.0, //mass
         Vector(0.0, 0.0), 
-        Vector(0.0, 0.0)))
+        Vector(0.0, 0.0));
+}
+
+GraphLayout::Node::Node()
+    : Node(Unique(),
+    Point(Point::random()))
+{}
+
+GraphLayout::Node::Node(const Unique& u)
+    : Node(u, Point::random())
 {}
 
 GraphLayout::Node::Node(
