@@ -160,4 +160,31 @@ GraphLayout::Point GraphLayout::Node::getPoint() const
     return *pointPtr;
 }
 
+void GraphLayout::Node::setUnique(const Unique& newId)
+{
+    id = make_unique<Unique>(newId);
+}
+
+class GraphLayout::Node::NodeCopier
+{
+    Graph& from;
+    Graph& to;
+
+public:
+    NodeCopier(Graph& _from, Graph& _to)
+        : from(_from), to(_to)
+    {}
+
+    void operator()(Graph::vertex_descriptor fromVd, Graph::vertex_descriptor toVd)
+    {
+        to[toVd].setUnique(from[fromVd].getUnique());
+        to[toVd].setPoint(from[fromVd].getPoint());
+    }
+};
+
+GraphLayout::Node::NodeCopier GraphLayout::Node::getNodeCopier(Graph& from, Graph& to)
+{
+    return NodeCopier(from, to);
+}
+
 }
