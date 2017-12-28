@@ -214,7 +214,8 @@ GraphLayout::Layout::Layout(const Layout& other)
 GraphLayout::GraphLayout(
     const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& options, 
     const PopulationGraph& populationGraph)
-    : layout(
+    : maxTicksPtr(Util::copyUniquePtrIfNotNull(options.maxTicksPtr)),
+        layout(
             options.stiffness,
             options.repulsion,
             options.damping,
@@ -222,5 +223,30 @@ GraphLayout::GraphLayout(
             options.maxSpeed,
             populationGraph)
 {}
+
+
+//calling this multiple times *should* only run the simulation once
+//TODO: verify this
+std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox> 
+    GraphLayout::calculateLayout()
+{
+    if(maxTicksPtr)
+    {
+        layout.runSimulation(*maxTicksPtr);
+    }
+    else
+    {
+        layout.runSimulation();
+    }
+
+    return std::make_pair(layout.copyGraph(), layout.getBoundingBox());
+}
+
+std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox> 
+    GraphLayout::operator()()
+{
+    return calculateLayout();
+}
+
 
 }

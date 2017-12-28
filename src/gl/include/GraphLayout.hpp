@@ -44,6 +44,7 @@ namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
+public:
     class Vector
     {
     public:
@@ -127,6 +128,9 @@ class GraphLayout
     };
 
 
+    //bottom left and top right
+    using BoundingBox = std::pair<Position, Position>;
+private:
     class Layout
     {
         const double stiffness, 
@@ -161,7 +165,6 @@ class GraphLayout
 
         void tick(GraphLayoutTick);
 
-        std::unique_ptr<Graph> copyGraph() const;
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick*);
 
         /**
@@ -180,18 +183,25 @@ class GraphLayout
                 const PopulationGraph&);
         Layout(const Layout&);
 
-        std::pair<Position, Position> getBoundingBox();
+        BoundingBox getBoundingBox();
+        std::unique_ptr<Graph> copyGraph() const;
 
         std::unique_ptr<Graph> runSimulation();
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
     };
 
+private:
+    const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
     Layout layout;
 
 public:
     GraphLayout(
         const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions&, 
         const PopulationGraph&);
+
+    std::pair<std::unique_ptr<Graph>, BoundingBox> calculateLayout();
+    //synonym for calculateLayout
+    std::pair<std::unique_ptr<Graph>, BoundingBox> operator()();
 };
 
 class GraphLayout::Node::NodeCopier
