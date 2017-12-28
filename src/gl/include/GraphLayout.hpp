@@ -39,12 +39,15 @@
 
 #include "PopulationGraph.hpp"
 #include "Util/Unique.hpp"
+#include "Util/NewExceptionType.hpp"
 
 namespace pyramid_scheme_simulator {
 
 class GraphLayout 
 {
 public:
+    NEW_EXCEPTION_TYPE(GraphLayoutException);
+
     class Vector
     {
     public:
