@@ -34,6 +34,10 @@
 
 #include <utility>
 
+#include <boost/graph/adjacency_list.hpp>
+
+#include "Util/Unique.hpp"
+
 namespace pyramid_scheme_simulator {
 
 class GraphLayout 
@@ -83,6 +87,14 @@ public:
         Spring(const Point&, const Point&, double, double);
         Spring(const Spring&);
     };
+
+
+    using Graph = boost::adjacency_list<
+            boost::vecS,
+            boost::vecS, 
+            boost::undirectedS,
+            Unique>;
+
 };
 
 }

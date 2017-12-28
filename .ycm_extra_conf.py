@@ -25,6 +25,7 @@ flags = [
 'c++',
 '-std=c++11',
 '-I', 'include/',
+'-I', 'src/gl/include',
 '-I', 'lib/crossguid', #stop warning about Uniques
 '-I', 'lib/googletest/googletest/include',
 '-I', 'lib/spdlog/include',
