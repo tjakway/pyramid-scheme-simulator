@@ -236,6 +236,16 @@ void GraphLayout::Layout::attractToCenter()
     });
 }
 
+void GraphLayout::Layout::tick(GraphLayoutTick* tick)
+{
+    applyCoulombsLaw();
+    applyHookesLaw();
+    attractToCenter();
+    updateVelocity(*tick);
+    updatePosition(*tick);
+    (*tick) += 1;
+}
+
 double GraphLayout::Layout::totalEnergy() const
 {
     double energy = 0.0;
