@@ -33,6 +33,7 @@
  */
 
 #include <utility>
+#include <functional>
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -132,7 +133,11 @@ public:
 
         Graph graph;
 
-
+        //call the function with every point or pair of points 
+        //on the graph and replace them with the return value
+        void mutatePoints(std::function<Point(Point)>);
+        void mutatePointPairs(std::function<
+                std::pair<Point, Point>(Point, Point)>);
 
     public:
         Layout(const double, 
@@ -143,6 +148,7 @@ public:
         Layout(const Layout&);
 
         void applyCoulombsLaw();
+        void applyHookesLaw();
     };
 
 };
