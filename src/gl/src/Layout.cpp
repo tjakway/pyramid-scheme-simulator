@@ -21,7 +21,7 @@ void GraphLayout::Layout::mutatePoints(
 
 //like the above but without the ability to change the graph
 void GraphLayout::Layout::forEachPoint(
-        std::function<void(const Point&)> f)
+        std::function<void(const Point&)> f) const
 {
     Graph::vertex_iterator i, iEnd;
     std::tie(i, iEnd) = boost::vertices(graph);
@@ -56,7 +56,7 @@ void GraphLayout::Layout::mutatePointPairs(std::function<
 
 void GraphLayout::Layout::forEachSpring(
         std::function<void(Node&, Node&, 
-                    double, double)> f) const
+                    double, double)> f)
 {
     Graph::edge_iterator ei, eiEnd;
     std::tie(ei, eiEnd) = boost::edges(graph);
