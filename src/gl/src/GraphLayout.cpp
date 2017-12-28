@@ -17,18 +17,20 @@ GraphLayout::Vector::Vector(std::pair<double, double>& p)
 {}
 
 
-GraphLayout::Vector GraphLayout::Vector::add(double c) const
+GraphLayout::Vector GraphLayout::Vector::add(const Vector& v)
+    const
 {
     return Vector(
-            x + c,
-            y + c);
+            x + v.x,
+            y + v.y);
 }
 
-GraphLayout::Vector GraphLayout::Vector::subtract(double c) const
+GraphLayout::Vector GraphLayout::Vector::subtract(
+        const Vector& v) const
 {
     return Vector(
-            x - c,
-            y - c);
+            x - v.x,
+            y - v.y);
 }
 
 GraphLayout::Vector GraphLayout::Vector::multiply(double c) const
@@ -68,6 +70,35 @@ GraphLayout::Vector GraphLayout::Vector::normal() const
 GraphLayout::Vector GraphLayout::Vector::normalise() const
 {
     return divide(magnitude());
+}
+
+GraphLayout::Point::Point(
+        double p,
+        double m,
+        Vector v, 
+        Vector a)
+    : position(p),
+    mass(m),
+    velocity(v),
+    acceleration(a)
+{}
+
+GraphLayout::Point::Point(const Point& p)
+    : position(p.position),
+    mass(p.mass),
+    velocity(p.velocity),
+    acceleration(p.acceleration)
+{}
+
+
+GraphLayout::Point GraphLayout::Point::applyForce(
+        const Vector& force) const
+{
+    const Vector newAcceleration = 
+        acceleration.add(force.divide(mass));
+
+    return Point(position, mass,
+            velocity, newAcceleration);
 }
 
 }
