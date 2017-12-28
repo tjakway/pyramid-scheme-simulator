@@ -63,19 +63,27 @@ public:
         Vector normal() const;
         Vector normalise() const;
 
+        bool operator==(const Vector&) const;
+        bool operator!=(const Vector&) const;
+
         static Vector random();
     };
 
+    using Position = Vector;
     class Point
     {
     public:
-        const double position, mass;
+        const Position position;
+        const double mass;
         const Vector velocity, acceleration;
 
-        Point(double, double, Vector, Vector);
+        Point(Position, double, Vector, Vector);
         Point(const Point&);
 
         Point applyForce(const Vector& force) const;
+
+        bool operator==(const Point&) const;
+        bool operator!=(const Point&) const;
     };
 
     class Node;
@@ -93,10 +101,10 @@ public:
 
     class Node
     {
+    public:
         const Unique id;
         const Point point;
 
-    public:
         Node();
         Node(const Unique&, const Point&);
         Node(const Node&);
