@@ -56,7 +56,7 @@ void GraphLayout::Layout::mutatePointPairs(std::function<
 
 void GraphLayout::Layout::forEachSpring(
         std::function<void(Node&, Node&, 
-                    double, double)> f)
+                    double, double)> f) const
 {
     Graph::edge_iterator ei, eiEnd;
     std::tie(ei, eiEnd) = boost::edges(graph);
@@ -156,6 +156,11 @@ void GraphLayout::Layout::attractToCenter()
             point.applyForce(direction.multiply(
                         _repulsion / 50.0));
     });
+}
+
+double GraphLayout::Layout::totalEnergy() const
+{
+
 }
 
 }

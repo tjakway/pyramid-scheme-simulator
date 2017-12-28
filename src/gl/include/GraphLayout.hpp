@@ -140,7 +140,7 @@ public:
                 std::function<void(Node&, Node&, 
                     double, double)>);
 
-        void forEachPoint(std::function<void(const Point&)>);
+        void forEachPoint(std::function<void(const Point&)>) const;
 
     public:
         Layout(const double, 
