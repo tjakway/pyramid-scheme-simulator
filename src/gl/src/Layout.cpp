@@ -105,10 +105,28 @@ void GraphLayout::Layout::applyCoulombsLaw()
 void GraphLayout::Layout::applyHookesLaw()
 {
     forEachSpring(
-    [](Node& firstPoint, Node& secondPoint, 
-        double length, double springConstant)
+    [](Node& firstNode, Node& secondNode, 
+        double length, double springConstant) -> void
     {
-        
+        const Position d = 
+            secondNode.getPoint().position.subtract(
+                    firstNode.getPoint().position);
+
+        const double displacement = length - d.magnitude();
+        const Vector direction = d.normalise();
+
+        const auto newFirstPoint = 
+            firstNode.getPoint().applyForce(
+                    direction.multiply(
+                        springConstant * displacement * -0.5));
+
+        const auto newSecondPoint =
+            secondNode.getPoint().applyForce(
+                    direction.multiply(
+                        springConstant * displacement * 0.5));
+
+        firstNode.setPoint(newFirstPoint);
+        secondNode.setPoint(newSecondPoint);
     });
 }
 
