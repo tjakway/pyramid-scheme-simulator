@@ -176,6 +176,22 @@ void GraphLayout::Layout::updateVelocity(GraphLayoutTick tick)
     });
 }
 
+void GraphLayout::Layout::updatePosition(GraphLayoutTick tick)
+{
+    mutatePoints(
+    [tick](const Point& point)
+    {
+        const Position newPosition = 
+            point.position.add(point.velocity.multiply(tick));
+
+        return Point(
+                newPosition,
+                point.mass,
+                point.velocity,
+                point.acceleration);
+    });
+}
+
 void GraphLayout::Layout::attractToCenter()
 {
     const double _repulsion = repulsion;
