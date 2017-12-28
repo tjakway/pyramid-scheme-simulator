@@ -180,4 +180,47 @@ GraphLayout::Node::NodeCopier GraphLayout::Node::getNodeCopier(Graph& from, Grap
     return NodeCopier(from, to);
 }
 
+//Layout CTORs
+GraphLayout::Layout::Layout(
+        const double _stiffness,
+        const double _repulsion,
+        const double _damping,
+        const double _minEnergyThreshold,
+        const double _maxSpeed,
+        const PopulationGraph& populationGraph)
+    : stiffness(_stiffness),
+    repulsion(_repulsion),
+    damping(_damping),
+    minEnergyThreshold(_minEnergyThreshold),
+    maxSpeed(_maxSpeed),
+    //default-construct the graph
+    graph(make_unique<Graph>())
+{
+    //then populate it
+    makeGraph(*graph, populationGraph);
+}
+
+GraphLayout::Layout::Layout(const Layout& other)
+    : stiffness(other.stiffness),
+    repulsion(other.repulsion),
+    damping(other.damping),
+    minEnergyThreshold(other.minEnergyThreshold),
+    maxSpeed(other.maxSpeed),
+    graph(other.copyGraph())
+{}
+
+
+//GraphLayout CTOR
+GraphLayout::GraphLayout(
+    const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& options, 
+    const PopulationGraph& populationGraph)
+    : layout(
+            options.stiffness,
+            options.repulsion,
+            options.damping,
+            options.minEnergyThreshold,
+            options.maxSpeed,
+            populationGraph)
+{}
+
 }
