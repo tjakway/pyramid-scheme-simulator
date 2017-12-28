@@ -1,5 +1,7 @@
 #include "GraphLayout.hpp"
 
+#include "Util/Util.hpp"
+
 #include <utility>
 
 namespace pyramid_scheme_simulator {
@@ -142,6 +144,35 @@ void GraphLayout::Layout::applyHookesLaw()
 
         firstNode.setPoint(newFirstPoint);
         secondNode.setPoint(newSecondPoint);
+    });
+}
+
+void GraphLayout::Layout::updateVelocity(GraphLayoutTick tick)
+{
+    const double _maxSpeed = maxSpeed,
+          _damping = damping;
+
+    mutatePoints(
+    [tick, _damping, _maxSpeed](const Point& point)
+    {
+        std::unique_ptr<Vector> newVelocity = 
+            make_unique<Vector>(point.velocity.add(
+                point.acceleration.multiply(tick))
+            .multiply(_damping));
+
+        if(newVelocity->magnitude() > _maxSpeed)
+        {
+            newVelocity = make_unique<Vector>(
+                    newVelocity->normalise().multiply(_maxSpeed));
+        }
+
+        const Vector newAcceleration = Vector(0, 0);
+
+        return Point(
+                point.position,
+                point.mass,
+                *newVelocity,
+                newAcceleration);
     });
 }
 
