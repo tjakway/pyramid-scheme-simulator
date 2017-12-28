@@ -78,6 +78,8 @@ public:
         Point applyForce(const Vector& force) const;
     };
 
+    class Node;
+
     class Spring
     {
     public:
@@ -86,14 +88,51 @@ public:
 
         Spring(const Point&, const Point&, double, double);
         Spring(const Spring&);
+        Spring(const Node&, const Node&);
     };
 
+    class Node
+    {
+        const Unique id;
+        const Point point;
+
+    public:
+        Node();
+        Node(const Unique&, const Point&);
+        Node(const Node&);
+    };
 
     using Graph = boost::adjacency_list<
             boost::vecS,
             boost::vecS, 
             boost::undirectedS,
-            Unique>;
+            Node,
+            Spring>;
+
+
+    class Layout
+    {
+        const double stiffness, 
+              repulsion, 
+              damping;
+
+        const double minEnergyThreshold;
+        const double maxSpeed;
+
+        Graph graph;
+
+
+
+    public:
+        Layout(const double, 
+                const double,
+                const double,
+                const double,
+                const double);
+        Layout(const Layout&);
+
+        void applyCoulombsLaw();
+    };
 
 };
 
