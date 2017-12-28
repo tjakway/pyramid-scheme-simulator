@@ -161,7 +161,7 @@ class GraphLayout
 
         void tick(GraphLayoutTick);
 
-        std::unique_ptr<Graph> copyGraph();
+        std::unique_ptr<Graph> copyGraph() const;
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick*);
 
         /**
@@ -186,8 +186,12 @@ class GraphLayout
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
     };
 
+    Layout layout;
+
 public:
-    GraphLayout(const Config&, const PopulationGraph&);
+    GraphLayout(
+        const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions&, 
+        const PopulationGraph&);
 };
 
 class GraphLayout::Node::NodeCopier
