@@ -31,6 +31,15 @@ Config::Config(std::unique_ptr<SimulationOptions>&& simOptions,
 { }
 
 
+Config::BackendOptions::GLBackendOptions::GraphLayoutOptions::GraphLayoutOptions(
+        const GraphLayoutOptions& other)
+    : stiffness(other.stiffness),
+    repulsion(other.repulsion),
+    damping(other.damping),
+    minEnergyThreshold(other.minEnergyThreshold),
+    maxSpeed(other.maxSpeed),
+    maxTicksPtr(Util::copyUniquePtrIfNotNull(other.maxTicksPtr))
+{ }
 
 Config::BackendOptions::GLBackendOptions::GraphLayoutOptions::GraphLayoutOptions(
         const double _stiffness,
