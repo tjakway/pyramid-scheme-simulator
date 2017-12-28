@@ -73,7 +73,7 @@ GraphLayout::Vector GraphLayout::Vector::normalise() const
 }
 
 GraphLayout::Point::Point(
-        double p,
+        Position p,
         double m,
         Vector v, 
         Vector a)
@@ -100,5 +100,53 @@ GraphLayout::Point GraphLayout::Point::applyForce(
     return Point(position, mass,
             velocity, newAcceleration);
 }
+
+
+GraphLayout::Spring::Spring(
+        const Point& a, 
+        const Point& b, 
+        double l, 
+        double k)
+    : pointA(a),
+    pointB(b),
+    length(l),
+    springConstant(k)
+{}
+
+GraphLayout::Spring::Spring(const Spring& other)
+    : pointA(other.pointA),
+    pointB(other.pointB),
+    length(other.length),
+    springConstant(other.springConstant)
+{}
+
+GraphLayout::Spring::Spring(
+        const Node& left, 
+        const Node& right)
+    : pointA(left.point),
+    pointB(right.point),
+    length(0.0),
+    springConstant(0.0)
+{}
+
+
+GraphLayout::Node::Node()
+    : Node(Unique(),
+    Point(Position::random(), 
+        1.0, //mass
+        Vector(0.0, 0.0), 
+        Vector(0.0, 0.0)))
+{}
+
+GraphLayout::Node::Node(
+        const Unique& u,
+        const Point& p)
+    : id(u), point(p)
+{}
+
+GraphLayout::Node::Node(const Node& other)
+    : id(other.id),
+    point(other.point)
+{}
 
 }
