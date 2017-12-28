@@ -4,6 +4,8 @@
 
 #include <utility>
 
+#include <boost/graph/copy.hpp>
+
 namespace pyramid_scheme_simulator {
 
 void GraphLayout::Layout::mutatePoints(
@@ -236,14 +238,13 @@ void GraphLayout::Layout::attractToCenter()
     });
 }
 
-void GraphLayout::Layout::tick(GraphLayoutTick* tick)
+void GraphLayout::Layout::tick(GraphLayoutTick tick)
 {
     applyCoulombsLaw();
     applyHookesLaw();
     attractToCenter();
-    updateVelocity(*tick);
-    updatePosition(*tick);
-    (*tick) += 1;
+    updateVelocity(tick);
+    updatePosition(tick);
 }
 
 double GraphLayout::Layout::totalEnergy() const
@@ -258,6 +259,68 @@ double GraphLayout::Layout::totalEnergy() const
     });
 
     return energy;
+}
+
+std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph()
+{
+    std::unique_ptr<Graph> newGraph = make_unique<Graph>();
+
+    boost::copy_graph(graph, *newGraph, boost::vertex_copy(Node::getNodeCopier(graph, *newGraph)));
+
+    //this is probably unnecessary since the internal unique_ptr<Point> in Node
+    //should only be changed by setting it to a new Point (i.e. not modifying the data
+    //its pointing to), but just to be really sure...
+    Graph::vertex_iterator vi, viEnd;
+    std::tie(vi, viEnd) = boost::vertices(*newGraph);
+    for(; vi != viEnd; ++vi)
+    {
+        (*newGraph)[*vi].setPoint((*newGraph)[*vi].getPoint());
+    }
+
+    return newGraph;
+}
+
+std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::runSimulation(
+        GraphLayoutTick* maxTicksPtr)
+{
+    std::function<bool()> condition;
+    GraphLayoutTick currentTick = 0;
+
+    const std::function<bool()> energyThresholdCondition = 
+        [this]() { return this->totalEnergy() < this->minEnergyThreshold; };
+
+    //no maximum if the passed pointer is null
+    if(maxTicksPtr == nullptr)
+    {
+        condition = energyThresholdCondition;
+    }
+    else
+    {
+        //otherwise make sure we haven't exceeded the max number of ticks
+        const GraphLayoutTick maxTicks = *maxTicksPtr;
+        condition = [energyThresholdCondition, maxTicks, &currentTick]()
+        {
+            return energyThresholdCondition() && currentTick < maxTicks;
+        };
+    }
+
+    while(condition())
+    {
+        tick(currentTick);
+        currentTick++;
+    }
+
+    return copyGraph();
+}
+
+std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::runSimulation()
+{
+    return runSimulation(nullptr);
+}
+
+std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::runSimulation(GraphLayoutTick maxTicks)
+{
+    return runSimulation(&maxTicks);
 }
 
 }
