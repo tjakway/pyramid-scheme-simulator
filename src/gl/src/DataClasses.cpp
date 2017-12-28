@@ -72,6 +72,18 @@ GraphLayout::Vector GraphLayout::Vector::normalise() const
     return divide(magnitude());
 }
 
+
+//trivial comparison operator implementations
+bool GraphLayout::Vector::operator==(const Vector& other) const
+{
+    return x == other.x && y == other.y;
+}
+
+bool GraphLayout::Vector::operator!=(const Vector& other) const
+{
+    return !this->operator==(other);
+}
+
 GraphLayout::Point::Point(
         Position p,
         double m,
@@ -101,6 +113,19 @@ GraphLayout::Point GraphLayout::Point::applyForce(
             velocity, newAcceleration);
 }
 
+//trivial comparison operator implementations
+bool GraphLayout::Point::operator==(const Point& other) const
+{
+    return position == other.position 
+        && mass == other.mass
+        && velocity == other.velocity
+        && acceleration == other.acceleration;
+}
+
+bool GraphLayout::Point::operator!=(const Point& other) const
+{
+    return !this->operator==(other);
+}
 
 GraphLayout::Spring::Spring(
         const Point& a, 
