@@ -130,4 +130,17 @@ void GraphLayout::Layout::applyHookesLaw()
     });
 }
 
+void GraphLayout::Layout::attractToCenter()
+{
+    const double _repulsion = repulsion;
+    mutatePoints(
+    [_repulsion](Point point)
+    {
+        const auto direction = point.position.multiply(-1.0);
+        return 
+            point.applyForce(direction.multiply(
+                        _repulsion / 50.0));
+    });
+}
+
 }
