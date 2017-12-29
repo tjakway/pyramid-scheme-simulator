@@ -4,10 +4,31 @@
 
 #include <functional>
 #include <memory>
+#include <sstream>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+
+void GLUtil::throwIfError()
+{
+    bool errorFound = false;
+    std::ostringstream errStream;
+
+    GLenum errorFlag = glGetError();
+    while(errorFlag != GL_NO_ERROR)
+    {
+        errStream << "OpenGL error found: " << '\t' << 
+            gluErrorString(errorFlag) << std::endl;
+        errorFound = true;
+    }
+
+    if(errorFound)
+    {
+        throw OpenGLException(errStream.str());
+    }
+
+}
 
 std::string GLUtil::getShaderInfoLog(GLuint shader)
 {

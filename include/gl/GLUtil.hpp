@@ -24,7 +24,10 @@ class GLUtil
     static std::string getShaderSource(GLuint);
 
 public:
-    NEW_EXCEPTION_TYPE(GLUtilException);
+    NEW_EXCEPTION_TYPE(OpenGLException);
+    NEW_EXCEPTION_TYPE_WITH_BASE(GLUtilException, OpenGLException);
+
+    static void throwIfError();
 
     static GLuint compileShaderProgram(std::string vertexShader, 
             std::string fragmentShader);
