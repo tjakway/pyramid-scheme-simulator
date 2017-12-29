@@ -12,6 +12,7 @@
 
 void GLUtil::throwIfError()
 {
+#ifndef GLUTIL_SKIP_THOROUGH_ERROR_CHECKS
     bool errorFound = false;
     std::ostringstream errStream;
 
@@ -27,6 +28,7 @@ void GLUtil::throwIfError()
     {
         throw OpenGLException(errStream.str());
     }
+#endif
 
 }
 
