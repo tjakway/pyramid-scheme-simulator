@@ -127,6 +127,9 @@ public:
         return id.str();
     }
 
+    //a somewhat shorter but still identifying string
+    std::string print() const;
+
     bool operator<(const Unique&) const;
 };
 
