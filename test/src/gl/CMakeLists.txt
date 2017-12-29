@@ -15,6 +15,12 @@ target_link_libraries(${TEST_GL_TARGET} Boost::graph)
 target_link_libraries(${TEST_GL_TARGET} ${CROSSGUID_TARGET_NAME})
 target_link_libraries(${TEST_GL_TARGET} ${SPDLOG_TARGET_NAME})
 
+target_link_libraries(${TEST_GL_TARGET} ${MAIN_LIB_TARGET})
+target_link_libraries(${TEST_GL_TARGET} gtest gtest_main)
+
+target_include_directories(${TEST_TARGET} PUBLIC include/)
+target_include_directories(${TEST_GL_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+target_include_directories(${TEST_GL_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
 
 target_include_directories(${TEST_GL_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_DIRECTORIES})
 target_include_directories(${TEST_GL_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})

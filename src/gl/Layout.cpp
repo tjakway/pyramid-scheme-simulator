@@ -1,4 +1,4 @@
-#include "GraphLayout.hpp"
+#include "gl/GraphLayout.hpp"
 
 #include "Util/Util.hpp"
 
