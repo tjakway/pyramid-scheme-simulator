@@ -34,6 +34,7 @@
 
 #include <utility>
 #include <functional>
+#include <ostream>
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -207,6 +208,8 @@ public:
     std::pair<std::unique_ptr<Graph>, BoundingBox> calculateLayout();
     //synonym for calculateLayout
     std::pair<std::unique_ptr<Graph>, BoundingBox> operator()();
+
+    static void printGraphLayout(std::ostream&, Graph&);
 };
 
 class GraphLayout::Node::NodeCopier

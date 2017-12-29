@@ -395,4 +395,35 @@ std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::runSimulation(GraphLayo
     return runSimulation(&maxTicks);
 }
 
+
+void GraphLayout::printGraphLayout(std::ostream& os, Graph& g)
+{
+    Graph::edge_iterator ei, eiEnd;
+    std::tie(ei, eiEnd) = boost::edges(g);
+
+    for(; ei != eiEnd; ++ei)
+    {
+        const Unique lhs = g[boost::source(*ei, g)].getUnique(),
+              rhs = g[boost::target(*ei, g)].getUnique();
+        //TODO: should we use Unique::print?
+        //it might be confusing...
+        os << lhs.print() << " ---> " << rhs.print() << std::endl;
+    }
+
+    //print vertices that don't have any edges
+    Graph::vertex_iterator vi, viEnd;
+    std::tie(vi, viEnd) = boost::vertices(g);
+    for(; vi != viEnd; ++vi)
+    {
+        std::tie(ei, eiEnd) = boost::out_edges(*vi, g);
+
+        if(ei == eiEnd)
+        {
+            const Unique u = g[*vi].getUnique();
+            //this one has no edges (out and in edges are the same on an undirected graph)
+            os << u.print() << std::endl;
+        }
+    }
+}
+
 }
