@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <cmath>
+#include <cstdlib>
 
 
 /**
@@ -54,6 +55,10 @@ GraphLayout::Vector::Vector(std::pair<double, double>& p)
     : x(p.first), y(p.second)
 {}
 
+GraphLayout::Vector GraphLayout::Vector::random()
+{
+    return Vector(rand(), rand());
+}
 
 GraphLayout::Vector GraphLayout::Vector::add(const Vector& v)
     const
