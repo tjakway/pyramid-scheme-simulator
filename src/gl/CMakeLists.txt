@@ -2,7 +2,7 @@ project(pyramid_lib_opengl LANGUAGES CXX)
 
 cmake_minimum_required(VERSION 3.1)
 
-FILE(GLOB MAIN_LIB_GL_SRC src/*.cpp src/*.c src/*.cxx)
+FILE(GLOB MAIN_LIB_GL_SRC *.cpp *.c *.cxx)
 
 find_package(Boost COMPONENTS graph REQUIRED)
 find_package(OpenGL REQUIRED)
