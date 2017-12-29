@@ -133,7 +133,7 @@ public:
 
     //bottom left and top right
     using BoundingBox = std::pair<Position, Position>;
-private:
+protected:
     class Layout
     {
         const double stiffness, 
@@ -193,7 +193,7 @@ private:
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
     };
 
-private:
+protected:
     const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
     Layout layout;
 
@@ -201,6 +201,8 @@ public:
     GraphLayout(
         const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions&, 
         const PopulationGraph&);
+
+    virtual ~GraphLayout() {}
 
     std::pair<std::unique_ptr<Graph>, BoundingBox> calculateLayout();
     //synonym for calculateLayout
