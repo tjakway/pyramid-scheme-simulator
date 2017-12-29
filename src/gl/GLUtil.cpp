@@ -28,7 +28,10 @@ void GLUtil::throwIfError()
     {
         throw OpenGLException(errStream.str());
     }
+#elif defined(GLUTIL_SKIP_THOROUGH_ERROR_CHECKS) && defined(DEBUG)
+#warning "Skipping thorough warning checks in GLUtil::throwIfError in a debug build" 
 #endif
+
 
 }
 
