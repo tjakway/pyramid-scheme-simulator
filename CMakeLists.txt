@@ -9,7 +9,6 @@ set(MAIN_LIB_TARGET "pyramid")
 set(MAIN_EXE_TARGET "pyramid-simulator")
 set(TEST_TARGET "test-pyramid-simulator")
 set(MAIN_LIB_GL_TARGET "pyramid-gl")
-set(TEST_GL_TARGET "test-pyramid-gl")
 
 option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
 option(BUILD_TESTS "whether to build unit tests" ON)
