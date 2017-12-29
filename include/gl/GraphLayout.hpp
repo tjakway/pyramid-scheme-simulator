@@ -129,6 +129,8 @@ public:
         Unique getUnique() const { return *id; }
 
         static NodeCopier getNodeCopier(Graph&, Graph&);
+
+        std::string print() const;
     };
 
 

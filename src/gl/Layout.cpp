@@ -403,8 +403,8 @@ void GraphLayout::printGraphLayout(std::ostream& os, Graph& g)
 
     for(; ei != eiEnd; ++ei)
     {
-        const Unique lhs = g[boost::source(*ei, g)].getUnique(),
-              rhs = g[boost::target(*ei, g)].getUnique();
+        const Node &lhs = g[boost::source(*ei, g)].getUnique(),
+              &rhs = g[boost::target(*ei, g)].getUnique();
         //TODO: should we use Unique::print?
         //it might be confusing...
         os << lhs.print() << " ---> " << rhs.print() << std::endl;
@@ -415,13 +415,14 @@ void GraphLayout::printGraphLayout(std::ostream& os, Graph& g)
     std::tie(vi, viEnd) = boost::vertices(g);
     for(; vi != viEnd; ++vi)
     {
-        std::tie(ei, eiEnd) = boost::out_edges(*vi, g);
+        Graph::out_edge_iterator oei, oeiEnd;
+        std::tie(oei, oeiEnd) = boost::out_edges(*vi, g);
 
-        if(ei == eiEnd)
+        if(oei == oeiEnd)
         {
-            const Unique u = g[*vi].getUnique();
+            const Node& n = g[*vi];
             //this one has no edges (out and in edges are the same on an undirected graph)
-            os << u.print() << std::endl;
+            os << n.print() << std::endl;
         }
     }
 }

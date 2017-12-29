@@ -221,6 +221,14 @@ GraphLayout::Node::NodeCopier GraphLayout::Node::getNodeCopier(Graph& from, Grap
     return NodeCopier(from, to);
 }
 
+
+//for now, just print the position
+std::string GraphLayout::Node::print() const
+{
+    return STRCAT(getUnique().print(), "@", "(",
+            getPoint().position.x, ",", getPoint().position.y);
+}
+
 //Layout CTORs
 GraphLayout::Layout::Layout(
         const double _stiffness,
