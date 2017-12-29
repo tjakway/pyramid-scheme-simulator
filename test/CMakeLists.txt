@@ -7,6 +7,8 @@ include(${CMAKE_SOURCE_DIR}/cmake/build_gtest.cmake)
 
 enable_testing()
 
+set(PYRAMID_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_executable(${TEST_TARGET} ${TEST_SRC})
 
 target_include_directories(${TEST_TARGET} PUBLIC include/)
@@ -18,8 +20,12 @@ target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
 
-target_require_cxx11(${TEST_TARGET})
+if(BUILD_OPENGL_BACKEND)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/gl)
+    target_link_libraries(${TEST_TARGET} ${TEST_GL_TARGET})
+endif(BUILD_OPENGL_BACKEND)
 
+target_require_cxx11(${TEST_TARGET})
 process_warnings(${TEST_TARGET})
 
 
