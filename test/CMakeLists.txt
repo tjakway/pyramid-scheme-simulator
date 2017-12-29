@@ -7,7 +7,13 @@ include(${CMAKE_SOURCE_DIR}/cmake/build_gtest.cmake)
 
 enable_testing()
 
-set(PYRAMID_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+if(BUILD_OPENGL_BACKEND)
+    FILE(GLOB TEST_GL_SRC src/gl/*.cpp src/gl/*.c src/gl/*.cxx)
+    set(TEST_SRC ${TEST_SRC} ${TEST_GL_SRC})
+
+    find_package(OpenGL REQUIRED)
+endif(BUILD_OPENGL_BACKEND)
 
 add_executable(${TEST_TARGET} ${TEST_SRC})
 
@@ -16,13 +22,12 @@ target_include_directories(${TEST_TARGET} PUBLIC include/)
 #add google test to the include path for the test target
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
-
 target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
 
 if(BUILD_OPENGL_BACKEND)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/gl)
-    target_link_libraries(${TEST_TARGET} ${TEST_GL_TARGET})
+    target_link_libraries(${TEST_TARGET} ${OPENGL_LIBRARIES} ${MAIN_LIB_GL_TARGET})
+    target_include_directories(${TEST_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})
 endif(BUILD_OPENGL_BACKEND)
 
 target_require_cxx11(${TEST_TARGET})
