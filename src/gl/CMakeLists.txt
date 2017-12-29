@@ -8,14 +8,25 @@ find_package(Boost COMPONENTS graph REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
+#see https://github.com/shlomif/gtk3-cmake-examples/blob/master/CMakeLists.txt
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK REQUIRED gtk+-3.0)
+
+link_directories(${GTK3_LIBRARY_DIRS})
+
 
 add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
+
+target_compile_definitions(${MAIN_LIB_GL_TARGET} INTERFACE ${GTK3_CFLAGS_OTHER})
+
 target_link_libraries(${MAIN_LIB_GL_TARGET} ${OPENGL_LIBRARIES})
 target_link_libraries(${MAIN_LIB_GL_TARGET} Boost::graph)
 target_link_libraries(${MAIN_LIB_GL_TARGET} ${CROSSGUID_TARGET_NAME})
 target_link_libraries(${MAIN_LIB_GL_TARGET} ${SPDLOG_TARGET_NAME})
 target_link_libraries(${MAIN_LIB_GL_TARGET} ${GLEW_LIBRARIES})
+target_link_libraries(${MAIN_LIB_GL_TARGET} ${GTK3_LIBRARIES})
 
+target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${GTK3_INCLUDE_DIRS})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_DIRECTORIES})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${CROSSGUID_INCLUDE_DIR})
