@@ -30,12 +30,12 @@ public:
         friend ImageLoader;
 
     public:
-        const unsigned int width, height;
+        const unsigned width, height;
         const std::vector<unsigned char> pixels;
 
     protected:
-        Image(const unsigned int _width, 
-                const unsigned int _height, 
+        Image(const unsigned _width, 
+                const unsigned _height, 
                 const std::vector<unsigned char> _pixels)
             : width(_width), height(_height), pixels(_pixels)
         {}
