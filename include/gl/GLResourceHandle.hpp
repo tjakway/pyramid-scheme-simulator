@@ -23,8 +23,8 @@ public:
     {}
 
     virtual ~GLResourceHandle() {}
-    virtual GLuint get() const = 0;
+    virtual T get() const = 0;
 };
 
 
-BEGIN_PYRAMID_GL_NAMESPACE
+END_PYRAMID_GL_NAMESPACE
