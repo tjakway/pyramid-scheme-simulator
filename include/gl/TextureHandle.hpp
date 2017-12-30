@@ -3,7 +3,7 @@
 #include "NamespaceDefines.hpp"
 
 #include <string>
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
