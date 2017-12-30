@@ -1,16 +1,16 @@
 #pragma once
 
 #include "NamespaceDefines.hpp"
+#include "gl/GLResourceHandle.hpp"
 
 #include <string>
 #include <GL/glew.h>
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-class TextureHandle
+class TextureHandle : public GLResourceHandle<GLuint>
 {
 protected:
-    const GLuint handle;
     TextureHandle(GLuint);
 
 public:
@@ -18,7 +18,7 @@ public:
     virtual ~TextureHandle();
 
     //TODO: if debug, check texture handle
-    GLuint get() const;
+    virtual GLuint get() const override;
 
     static TextureHandle loadTextureFromPNG(std::string);
 };
