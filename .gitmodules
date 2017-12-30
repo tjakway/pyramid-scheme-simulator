@@ -7,3 +7,6 @@
 [submodule "lib/spdlog"]
 	path = lib/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "lib/lodepng"]
+	path = lib/lodepng
+	url = git@github.com:tjakway/lodepng.git
