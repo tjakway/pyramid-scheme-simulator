@@ -29,6 +29,8 @@ public:
 
     static void throwIfError();
 
+    static void assertIsTexture(GLuint);
+
     static GLuint compileShaderProgram(std::string vertexShader, 
             std::string fragmentShader);
 };

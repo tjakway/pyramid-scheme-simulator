@@ -103,6 +103,17 @@ std::string GLUtil::getShaderStringValue(
     }
 }
 
+void GLUtil::assertIsTexture(GLuint handle)
+{
+#ifdef DEBUG
+    if(glIsTexture(handle) != GL_TRUE)
+    {
+        throw OpenGLException(STRCAT("Handle ", handle,
+                    " does not refer to a texture."));
+    }
+#endif
+}
+
 GLuint GLUtil::compileShaderProgram(
         std::string vertexShaderSrc, 
         std::string fragmentShaderSrc)
