@@ -3,15 +3,17 @@
 #include "gl/ImageLoader.hpp"
 #include "NamespaceDefines.hpp"
 
+#include <utility>
+
 BEGIN_PYRAMID_GL_NAMESPACE
 
 
 TextureHandle::TextureHandle(GLuint _handle)
-    : handle(_handle)
+    : GLResourceHandle(_handle)
 {}
 
 TextureHandle::TextureHandle(TextureHandle&& other)
-    : handle(other.handle)
+    : GLResourceHandle(std::move(other))
 {}
 
 TextureHandle::~TextureHandle()
