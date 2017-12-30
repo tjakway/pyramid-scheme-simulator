@@ -17,7 +17,6 @@ public:
     TextureHandle(TextureHandle&&);
     virtual ~TextureHandle();
 
-    //TODO: if debug, check texture handle
     virtual GLuint get() const override;
 
     static TextureHandle loadTextureFromPNG(std::string);
