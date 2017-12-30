@@ -20,7 +20,7 @@ public:
     //TODO: if debug, check texture handle
     GLuint get() const;
 
-    static TextureHandle loadTextureFromFile(std::string);
+    static TextureHandle loadTextureFromPNG(std::string);
 };
 
 END_PYRAMID_GL_NAMESPACE
