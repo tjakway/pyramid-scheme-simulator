@@ -14,7 +14,8 @@ pkg_check_modules(GTKMM REQUIRED gtk+-3.0)
 
 link_directories(${GTKMM_LIBRARY_DIRS})
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/glm)
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/glm ${CMAKE_BINARY_DIR}/glm)
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/lodepng ${CMAKE_BINARY_DIR}/lodepng)
 
 add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 
