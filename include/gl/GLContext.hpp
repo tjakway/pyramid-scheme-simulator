@@ -2,6 +2,7 @@
 
 
 #include "NamespaceDefines.hpp"
+#include "gl/GLWindow.hpp"
 
 #include <string>
 #include <memory>
@@ -14,14 +15,14 @@ protected:
     static const std::string vertexShaderSource,
                              fragmentShaderSource;
 
-    static const std::string windowName;
+    static const std::string windowTitle,
+                 applicationId;
     
-    struct WindowData;
-    std::unique_ptr<WindowData> windowData;
+    std::unique_ptr<GLWindow> glWindow;
 
 public:
 
-    GLContext(int argc, char** argv);
+    GLContext();
 
     void run();
 };

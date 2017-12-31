@@ -80,6 +80,13 @@ public:
     }
 
     virtual ~GLWindow() {}
+
+    void run(const char* applicationId)
+    {
+        const auto app = Gtk::Application::create(applicationId);
+
+        app->run(*this);
+    }
 };
 
 END_PYRAMID_GL_NAMESPACE
