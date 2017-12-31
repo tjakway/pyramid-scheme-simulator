@@ -19,6 +19,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/lodepng ${CMAKE_BINARY_DIR}/lodepng)
 
 add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 
+add_executable(demo demo.cpp)
+
 target_compile_options(${MAIN_LIB_GL_TARGET} INTERFACE ${GTKMM_CFLAGS_OTHER})
 
 target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${OPENGL_LIBRARIES})
@@ -29,6 +31,13 @@ target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${CROSSGUID_TARGET_NAME})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${SPDLOG_TARGET_NAME})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${GLEW_LIBRARIES})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${GTKMM_LIBRARIES})
+#TODO: only link this on linux
+target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC pthread)
+
+target_compile_options(demo INTERFACE ${GTKMM_CFLAGS_OTHER})
+target_link_libraries(demo PRIVATE ${GTKMM_LIBRARIES} ${MAIN_LIB_TARGET} ${MAIN_LIB_GL_TARGET})
+target_include_directories(demo INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(demo SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_DIRECTORIES})
