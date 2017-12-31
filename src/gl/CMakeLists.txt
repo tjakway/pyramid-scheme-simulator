@@ -19,7 +19,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/lodepng ${CMAKE_BINARY_DIR}/lodepng)
 
 add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 
-target_compile_definitions(${MAIN_LIB_GL_TARGET} INTERFACE ${GTKMM_CFLAGS_OTHER})
+target_compile_options(${MAIN_LIB_GL_TARGET} INTERFACE ${GTKMM_CFLAGS_OTHER})
 
 target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${OPENGL_LIBRARIES})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE lodepng)
@@ -35,7 +35,7 @@ target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${CROSSGUID_INCLUDE_DIR})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${GLEW_INCLUDE_DIRS})
-target_include_directories(${MAIN_LIB_GL_TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${MAIN_LIB_GL_TARGET} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_require_cxx11(${MAIN_LIB_GL_TARGET})
 process_warnings(${MAIN_LIB_GL_TARGET})

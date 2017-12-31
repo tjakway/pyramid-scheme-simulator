@@ -22,12 +22,13 @@ target_include_directories(${TEST_TARGET} PUBLIC include/)
 #add google test to the include path for the test target
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 target_include_directories(${TEST_TARGET} PUBLIC SYSTEM ${GTEST_INCLUDE_DIRS})
-target_link_libraries(${TEST_TARGET} ${MAIN_LIB_TARGET})
-target_link_libraries(${TEST_TARGET} gtest gtest_main)
+
+target_link_libraries(${TEST_TARGET} PUBLIC ${MAIN_LIB_TARGET})
+target_link_libraries(${TEST_TARGET} PUBLIC gtest gtest_main)
 
 if(BUILD_OPENGL_BACKEND)
-    target_link_libraries(${TEST_TARGET} ${OPENGL_LIBRARIES} ${MAIN_LIB_GL_TARGET})
-    target_include_directories(${TEST_TARGET} SYSTEM PUBLIC ${OPENGL_INCLUDE_DIR})
+    target_link_libraries(${TEST_TARGET} PUBLIC ${OPENGL_LIBRARIES} ${MAIN_LIB_GL_TARGET})
+    target_include_directories(${TEST_TARGET} SYSTEM PRIVATE ${OPENGL_INCLUDE_DIR})
 endif(BUILD_OPENGL_BACKEND)
 
 target_require_cxx11(${TEST_TARGET})
