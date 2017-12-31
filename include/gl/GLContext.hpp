@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Config.hpp"
 #include "NamespaceDefines.hpp"
 #include "gl/GLWindow.hpp"
 
@@ -15,6 +16,9 @@ protected:
     static const std::string vertexShaderSource,
                              fragmentShaderSource;
 
+    static const int openglRequiredMajorVersion = -1
+                     openglRequiredMinorVersion = -1;
+    
     static const std::string windowTitle,
                  applicationId;
     
@@ -27,7 +31,7 @@ protected:
 
 public:
 
-    GLContext();
+    GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
 
     void run();
     void run(Glib::RefPtr<Application>);
