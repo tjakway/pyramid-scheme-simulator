@@ -22,6 +22,7 @@ add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 target_compile_definitions(${MAIN_LIB_GL_TARGET} INTERFACE ${GTKMM_CFLAGS_OTHER})
 
 target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${OPENGL_LIBRARIES})
+target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE lodepng)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE glm)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE Boost::graph)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${CROSSGUID_TARGET_NAME})
