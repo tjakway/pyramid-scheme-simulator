@@ -81,7 +81,7 @@ public:
 
     virtual ~GLWindow() {}
 
-    void run(const Glib::RefPtr<Application>& app, 
+    void run(const Glib::RefPtr<Gtk::Application>& app, 
             const char* applicationId)
     {
         app->run(*this);
