@@ -2,10 +2,12 @@
 
 #include "NamespaceDefines.hpp"
 #include "Util/Util.hpp"
+#include "gl/GLUtil.hpp"
 
 #include <utility>
 #include <functional>
 
+#include <GL/glew.h>
 #include <gtkmm.h>
 
 BEGIN_PYRAMID_GL_NAMESPACE
@@ -39,6 +41,27 @@ void GLContext::run()
     const auto app = Gtk::Application::create(
             GLContext::applicationId);
     run(app);
+}
+
+void GLContext::glInit()
+{
+    //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
+    glewExperimental = GL_TRUE;
+    if(glewInit() != GLEW_OK) {
+        throw GLUtil::OpenGLException("Error occurred during GLEW initialization");
+    }
+
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void GLContext::glDraw()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void GLContext::glCleanup()
+{
+
 }
 
 END_PYRAMID_GL_NAMESPACE
