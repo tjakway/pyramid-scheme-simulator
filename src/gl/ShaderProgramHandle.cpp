@@ -1,4 +1,4 @@
-#include "gl/ShaderHandle.hpp"
+#include "gl/ShaderProgramHandle.hpp"
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
