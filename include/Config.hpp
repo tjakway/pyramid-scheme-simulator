@@ -164,10 +164,25 @@ public:
                         const double);
             };
 
-            GLBackendOptions(GraphLayoutOptions);
-        };
+            class WindowOptions
+            {
+            public:
+                const int width, height;
 
+                WindowOptions(int w, int h)
+                    : width(w), height(h)
+                {}
+
+                WindowOptions(const WindowOptions& other)
+                    : WindowOptions(other.width, other.height)
+                {}
+            };
+
+            GLBackendOptions(GraphLayoutOptions, WindowOptions);
+        };
         std::unique_ptr<GLBackendOptions> glBackendOptions;
+
+
     } backendOptions;
 
     class GraphGenerationOptions
@@ -235,6 +250,9 @@ public:
 
         static const BackendOptions::GLBackendOptions::GraphLayoutOptions 
             defaultGraphLayoutOptions;
+
+        static const BackendOptions::GLBackendOptions::WindowOptions
+            defaultWindowOptions;
     };
     Defaults defaults;
 
