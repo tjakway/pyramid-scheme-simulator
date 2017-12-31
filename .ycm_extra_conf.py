@@ -34,6 +34,8 @@ flags = [
 '-isystem',
 '/usr/include',
 '-isystem',
+'/usr/include/gtkmm-3.0',
+'-isystem',
 '/usr/local/include',
 ]
 
