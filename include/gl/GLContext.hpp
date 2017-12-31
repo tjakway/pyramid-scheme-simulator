@@ -19,12 +19,18 @@ protected:
                  applicationId;
     
     std::unique_ptr<GLWindow> glWindow;
+    
+    //rendering callbacks
+    void glInit();
+    void glDraw();
+    void glCleanup();
 
 public:
 
     GLContext();
 
     void run();
+    void run(Glib::RefPtr<Application>);
 };
 
 END_PYRAMID_GL_NAMESPACE
