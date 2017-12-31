@@ -4,7 +4,7 @@ Wishlist:
 Requires:
     * libuuid (for crossguid): install with `sudo apt-get install uuid-dev`
     * Boost::graph (libboost-graph-dev)
-    * (for opengl on linux) libgl1-mesa-dev
+    * for the opengl backend on linux: libgtkmm-3.0-dev libgl1-mesa-dev libglew-dev
 
 ----------------------------------
 
