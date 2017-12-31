@@ -16,8 +16,8 @@ protected:
     static const std::string vertexShaderSource,
                              fragmentShaderSource;
 
-    static const int openglRequiredMajorVersion = -1
-                     openglRequiredMinorVersion = -1;
+    static const int openglRequiredMajorVersion,
+                     openglRequiredMinorVersion;
     
     static const std::string windowTitle,
                  applicationId;
@@ -34,7 +34,7 @@ public:
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
 
     void run();
-    void run(Glib::RefPtr<Application>);
+    void run(Glib::RefPtr<Gtk::Application>);
 };
 
 END_PYRAMID_GL_NAMESPACE
