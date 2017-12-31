@@ -33,7 +33,7 @@ GLContext::GLContext(
 
 void GLContext::run(Glib::RefPtr<Gtk::Application> app)
 {
-    glWindow->run(app, GLContext::applicationId.c_str());
+    glWindow->run(app);
 }
 
 void GLContext::run()
