@@ -35,6 +35,8 @@ protected:
 
     bool onRender(const Glib::RefPtr<Gdk::GLContext>& /*context*/) {
         draw();
+
+        return true;
     }
 
 public:
