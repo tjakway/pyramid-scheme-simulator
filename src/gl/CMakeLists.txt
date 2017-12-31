@@ -10,7 +10,7 @@ find_package(GLEW REQUIRED)
 
 #see https://github.com/shlomif/gtk3-cmake-examples/blob/master/CMakeLists.txt
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTKMM REQUIRED gtk+-3.0)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
 link_directories(${GTKMM_LIBRARY_DIRS})
 
