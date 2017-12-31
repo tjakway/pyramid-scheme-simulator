@@ -59,4 +59,9 @@ void GLContext::glDraw()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void GLContext::glCleanup()
+{
+
+}
+
 END_PYRAMID_GL_NAMESPACE
