@@ -12,8 +12,6 @@ class GLUtil
 {
     GLUtil() = delete;
 
-    static void throwIfErrorInShader(GLuint);
-
     
     static std::string getShaderStringValue(
         GLuint, 
@@ -28,6 +26,7 @@ public:
     NEW_EXCEPTION_TYPE_WITH_BASE(GLUtilException, OpenGLException);
 
     static void throwIfError();
+    static void throwIfErrorInShader(GLuint);
 
     static void assertIsTexture(GLuint);
 

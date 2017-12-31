@@ -10,3 +10,6 @@
 [submodule "lib/lodepng"]
 	path = lib/lodepng
 	url = git@github.com:tjakway/lodepng.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/g-truc/glm.git
