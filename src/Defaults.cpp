@@ -35,4 +35,11 @@ const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions
                 0.00001, //default minEnergyThreshold
                 std::numeric_limits<double>::max() //default max speed
                 );
+
+
+const Config::BackendOptions::GLBackendOptions::WindowOptions
+    Config::Defaults::defaultWindowOptions =
+        Config::BackendOptions::GLBackendOptions::WindowOptions(
+                640, //640 x 480 is a reasonable default window size
+                480);
 }
