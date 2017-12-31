@@ -24,8 +24,8 @@ GLContext::GLContext(
             std::bind(&GLContext::glInit, this),
             std::bind(&GLContext::glDraw, this),
             std::bind(&GLContext::glCleanup, this),
-            openglRequiredMajorVersion = -1,
-            openglRequiredMinorVersion = -1))
+            openglRequiredMajorVersion,
+            openglRequiredMinorVersion))
 {}
 
 

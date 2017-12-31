@@ -14,10 +14,10 @@ include(${CMAKE_SOURCE_DIR}/cmake/build_crossguid.cmake)
 
 add_library(${MAIN_LIB_TARGET} ${MAIN_LIB_SRC})
 #link dependencies
-target_link_libraries(${MAIN_LIB_TARGET} ${CROSSGUID_TARGET_NAME})
-target_link_libraries(${MAIN_LIB_TARGET} ${SPDLOG_TARGET_NAME})
+target_link_libraries(${MAIN_LIB_TARGET} PRIVATE ${CROSSGUID_TARGET_NAME})
+target_link_libraries(${MAIN_LIB_TARGET} PRIVATE ${SPDLOG_TARGET_NAME})
 #see https://stackoverflow.com/a/43885372/450153 for an explanation of this syntax
-target_link_libraries(${MAIN_LIB_TARGET} Boost::graph)
+target_link_libraries(${MAIN_LIB_TARGET} INTERFACE Boost::graph)
 
 #include directories
 target_include_directories(${MAIN_LIB_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_DIRECTORIES})
