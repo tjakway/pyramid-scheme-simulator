@@ -21,6 +21,9 @@ protected:
         : handlePtr(new T(_handle), deleterObject)
     {}
 
+    GLResourceHandle()
+    {}
+
     const std::function<void(T*)> deleterObject = 
         //dereference the pointer so subclasses don't have to bother with it
         [this](T* toDelete){
