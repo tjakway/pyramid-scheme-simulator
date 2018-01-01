@@ -43,6 +43,8 @@ void GLContext::run()
     run(app);
 }
 
+#include <iostream>
+
 void GLContext::glInit()
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
@@ -52,15 +54,19 @@ void GLContext::glInit()
     }
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    std::cout << "glInit called" << std::endl;
 }
 
 void GLContext::glDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+    std::cout << "glDraw called" << std::endl;
 }
 
 void GLContext::glCleanup()
 {
+    std::cout << "glCleanup called" << std::endl;
 
 }
 

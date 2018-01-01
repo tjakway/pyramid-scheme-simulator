@@ -27,15 +27,18 @@ protected:
     void onRealize() {
         mGlArea.make_current();
         init();
+        mGlArea.throw_if_error();
     }
 
     void onUnrealize() {
         cleanup();
+        mGlArea.throw_if_error();
     }
 
     bool onRender(const Glib::RefPtr<Gdk::GLContext>& /*context*/) {
         draw();
 
+        mGlArea.throw_if_error();
         return true;
     }
 
@@ -53,7 +56,6 @@ public:
     {
         set_title(title);
 
-        add(mGlArea);
         mGlArea.set_auto_render();
         mGlArea.set_hexpand();
         mGlArea.set_vexpand();
@@ -79,12 +81,20 @@ public:
         &GLWindow::onUnrealize), false);
         mGlArea.signal_render().connect(sigc::mem_fun(this, 
         &GLWindow::onRender));
+
+        mGlArea.set_auto_render();
+        assert(!mGlArea.has_error());
+        mGlArea.throw_if_error();
+
+        add(mGlArea);
+        this->queue_draw();
     }
 
     virtual ~GLWindow() {}
 
     void run(const Glib::RefPtr<Gtk::Application>& app)
     {
+        show();
         app->run(*this);
     }
 };
