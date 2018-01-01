@@ -35,6 +35,11 @@ protected:
         errorCheck = f;
     }
 
+    void callErrorChecker()
+    {
+        errorCheck();
+    }
+    
     //subclasses just have to implement this to get the right cleanup semantics
     virtual void freeResource(T resourceHandle) = 0;
 
