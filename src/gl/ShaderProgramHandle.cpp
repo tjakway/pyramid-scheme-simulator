@@ -14,8 +14,9 @@ ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle)
 {}
 
 
-void ShaderProgramHandle::freeResource(GLuint)
+void ShaderProgramHandle::freeResource(GLuint handle)
 {
+    callErrorChecker(handle);
 
 }
 

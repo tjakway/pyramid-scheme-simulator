@@ -15,11 +15,11 @@ class ShaderProgramHandle : public GLResourceHandle<GLuint>
 protected:
     ShaderProgramHandle(GLuint);
 
+    virtual void freeResource(GLuint) override;
+
 public:
     ShaderProgramHandle(ShaderProgramHandle&&);
     virtual ~ShaderProgramHandle();
-
-    virtual GLuint get() const override;
 
     static ShaderProgramHandle loadShaderProgramFromStrings(
             const std::string&, const std::string&);
