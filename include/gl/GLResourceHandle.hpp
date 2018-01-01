@@ -35,9 +35,9 @@ protected:
         errorCheck = f;
     }
 
-    void callErrorChecker()
+    void callErrorChecker(T handle)
     {
-        errorCheck();
+        errorCheck(handle);
     }
     
     //subclasses just have to implement this to get the right cleanup semantics
