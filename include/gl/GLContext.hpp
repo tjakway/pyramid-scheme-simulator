@@ -4,6 +4,8 @@
 #include "Config.hpp"
 #include "NamespaceDefines.hpp"
 #include "gl/GLWindow.hpp"
+#include "gl/GLResourceHandle.hpp"
+#include "gl/ShaderProgramHandle.hpp"
 
 #include <string>
 #include <memory>
@@ -25,7 +27,7 @@ protected:
     std::unique_ptr<GLWindow> glWindow;
 
     //opengl data
-    ShaderProgramHandle
+    ShaderProgramHandle shaderProgramHandle;
     
     //rendering callbacks
     void glInit();

@@ -3,6 +3,7 @@
 #include "NamespaceDefines.hpp"
 #include "Util/Util.hpp"
 #include "gl/GLUtil.hpp"
+#include "gl/ShaderProgramHandle.hpp"
 
 #include <utility>
 #include <functional>
@@ -52,6 +53,10 @@ void GLContext::glInit()
     if(glewInit() != GLEW_OK) {
         throw GLUtil::OpenGLException("Error occurred during GLEW initialization");
     }
+
+    shaderProgramHandle = 
+            ShaderProgramHandle::loadShaderProgramFromStrings(
+                vertexShaderSource, fragmentShaderSource)
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 

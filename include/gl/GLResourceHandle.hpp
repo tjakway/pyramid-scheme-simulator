@@ -11,7 +11,7 @@ BEGIN_PYRAMID_GL_NAMESPACE
  * encapsulates some OpenGL resource handle of type T
  * (e.g. GLuint)
  */
-template <typename T>
+template <typename T, typename XType>
 class GLResourceHandle
 {
 protected:
@@ -49,14 +49,14 @@ public:
         : handlePtr(std::move(other.handlePtr))
     {}
 
-    virtual GLResourceHandle<T>& operator=(GLResourceHandle<T>&& other)
+    virtual XType& operator=(XType&& other)
     {
         if(this != &other)
         {
             handlePtr = std::move(other.handlePtr);
         }
 
-        return *this;
+        return static_cast<XType&>(*this);
     }
 
     //don't need to call freeResource because unique_ptr will call it for us

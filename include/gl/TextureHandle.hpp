@@ -8,7 +8,7 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-class TextureHandle : public GLResourceHandle<GLuint>
+class TextureHandle : public GLResourceHandle<GLuint, TextureHandle>
 {
 protected:
     TextureHandle(GLuint);
@@ -17,7 +17,7 @@ public:
     TextureHandle(TextureHandle&&);
     virtual ~TextureHandle();
 
-    virtual GLuint get() const override;
+    virtual void freeResource(GLuint) override;
 
     static TextureHandle loadTextureFromPNG(const char*);
     static TextureHandle loadTextureFromPNG(const std::string&);

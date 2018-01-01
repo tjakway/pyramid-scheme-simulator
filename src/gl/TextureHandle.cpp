@@ -10,21 +10,20 @@ BEGIN_PYRAMID_GL_NAMESPACE
 
 TextureHandle::TextureHandle(GLuint _handle)
     : GLResourceHandle(_handle)
-{}
+{
+    setErrorChecker(std::bind(&GLUtil::assertIsTexture, std::placeholders::_1));
+}
 
 TextureHandle::TextureHandle(TextureHandle&& other)
     : GLResourceHandle(std::move(other))
-{}
+{
+    setErrorChecker(std::bind(&GLUtil::assertIsTexture, std::placeholders::_1));
+}
 
 TextureHandle::~TextureHandle()
 {
+    const GLuint handle = get();
     glDeleteTextures(1, &handle);
-}
-
-GLuint TextureHandle::get() const
-{
-    GLUtil::assertIsTexture(handle);
-    return handle;
 }
 
 
