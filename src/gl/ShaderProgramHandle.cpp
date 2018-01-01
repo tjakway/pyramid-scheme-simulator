@@ -14,10 +14,38 @@ ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle)
 {}
 
 
-void ShaderProgramHandle::freeResource(GLuint handle)
+void ShaderProgramHandle::freeResource(GLuint programHandle)
 {
-    callErrorChecker(handle);
+    if(glIsProgram(programHandle) == GL_TRUE)
+    {
+        //detach & delete the individual shaders
+        GLint numShaders = -1;
+        glGetProgramiv(programHandle, GL_ATTACHED_SHADERS, &numShaders);
+        GLUtil::throwIfError();
 
+        GLsizei actualNumShaders = -1;
+        GLuint attachedShaders[numShaders];
+        glGetAttachedShaders(programHandle, numShaders, &actualNumShaders, attachedShaders);
+        GLUtil::throwIfError();
+
+        if(numShaders != actualNumShaders)
+        {
+            throw GLUtil::OpenGLException(STRCAT("numShaders != actualNumShaders in ", __func__,
+                        ", numShaders (expected): ", numShaders, 
+                        ", actualNumShaders: ", actualNumShaders));
+        }
+
+        for(GLint i = 0; i < numShaders; i++)
+        {
+            glDetachShader(programHandle, attachedShaders[i]);
+            glDeleteShader(attachedShaders[i]);
+
+            GLUtil::throwIfError();
+        }
+
+
+        glDeleteProgram(programHandle);
+    }
 }
 
 ShaderProgramHandle ShaderProgramHandle::loadShaderProgramFromStrings(
