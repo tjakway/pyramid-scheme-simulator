@@ -54,9 +54,8 @@ void GLContext::glInit()
         throw GLUtil::OpenGLException("Error occurred during GLEW initialization");
     }
 
-    shaderProgramHandle = 
-            ShaderProgramHandle::loadShaderProgramFromStrings(
-                vertexShaderSource, fragmentShaderSource)
+    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
+                vertexShaderSource, fragmentShaderSource);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 

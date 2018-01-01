@@ -1,4 +1,4 @@
-#include "GLContext.cpp"
+#include "gl/GLContext.hpp"
 
 BEGIN_PYRAMID_GL_NAMESPACE
 

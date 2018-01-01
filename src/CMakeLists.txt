@@ -31,4 +31,5 @@ add_subdirectory(exe)
 
 if(${BUILD_OPENGL_BACKEND})
     add_subdirectory(gl)
+    target_link_libraries(${MAIN_LIB_TARGET} PUBLIC ${MAIN_LIB_GL_TARGET})
 endif(${BUILD_OPENGL_BACKEND})

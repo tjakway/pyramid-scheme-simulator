@@ -20,6 +20,12 @@ TextureHandle::TextureHandle(TextureHandle&& other)
     setErrorChecker(std::bind(&GLUtil::assertIsTexture, std::placeholders::_1));
 }
 
+TextureHandle::TextureHandle()
+    : GLResourceHandle(-1)
+{
+    setErrorChecker(std::bind(&GLUtil::assertIsTexture, std::placeholders::_1));
+}
+
 TextureHandle::~TextureHandle()
 {
     const GLuint handle = get();
