@@ -18,16 +18,17 @@ protected:
     std::unique_ptr<T, std::function<void(T*)>> handlePtr;
 
     GLResourceHandle(T _handle)
-        : handlePtr(make_unique<T>(_handle), deleterObject)
+        : handlePtr(new T(_handle), deleterObject)
     {}
 
     const std::function<void(T*)> deleterObject = 
         //dereference the pointer so subclasses don't have to bother with it
         [this](T* toDelete){
             this->freeResource(*toDelete);
+            delete toDelete;
         };
 
-    std::function<void(T)> errorCheck = [](){};
+    std::function<void(T)> errorCheck = [](T){};
 
     //set an error checking function to be called in get()
     void setErrorChecker(std::function<void(T)> f)
@@ -45,7 +46,7 @@ protected:
 
 public:
     GLResourceHandle(GLResourceHandle&& other)
-        : handlePtr(std::move(other.handlePtr), deleterObject)
+        : handlePtr(std::move(other.handlePtr))
     {}
 
     virtual GLResourceHandle<T>& operator=(GLResourceHandle<T>&& other)
