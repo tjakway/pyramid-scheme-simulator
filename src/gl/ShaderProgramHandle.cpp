@@ -15,7 +15,7 @@ ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle)
 
 
 ShaderProgramHandle::ShaderProgramHandle()
-    : GLResourceHandle(-1)
+    : GLResourceHandle()
 {}
 
 void ShaderProgramHandle::freeResource(GLuint programHandle)
