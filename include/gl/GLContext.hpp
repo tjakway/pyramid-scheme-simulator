@@ -23,6 +23,9 @@ protected:
                  applicationId;
     
     std::unique_ptr<GLWindow> glWindow;
+
+    //opengl data
+    ShaderProgramHandle
     
     //rendering callbacks
     void glInit();
