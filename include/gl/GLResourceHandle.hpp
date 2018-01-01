@@ -22,10 +22,26 @@ protected:
     {}
 
     const std::function<void(T*)> deleterObject = 
-        std::bind(&GLResourceHandle::freeResource, this, std::placeholders::_1);
+        //dereference the pointer so subclasses don't have to bother with it
+        [this](T* toDelete){
+            this->freeResource(*toDelete);
+        };
 
+    std::function<void(T)> errorCheck = [](){};
+
+    //set an error checking function to be called in get()
+    void setErrorChecker(std::function<void(T)> f)
+    {
+        errorCheck = f;
+    }
+
+    void callErrorChecker(T handle)
+    {
+        errorCheck(handle);
+    }
+    
     //subclasses just have to implement this to get the right cleanup semantics
-    virtual void freeResource(T* resource) = 0;
+    virtual void freeResource(T resourceHandle) = 0;
 
 public:
     GLResourceHandle(GLResourceHandle&& other)
@@ -45,6 +61,7 @@ public:
     virtual ~GLResourceHandle() {}
     virtual T get() const
     {
+        errorCheck(*handlePtr);
         return *handlePtr;
     }
 };

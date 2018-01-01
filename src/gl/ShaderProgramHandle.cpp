@@ -5,16 +5,18 @@ BEGIN_PYRAMID_GL_NAMESPACE
 
 ShaderProgramHandle::ShaderProgramHandle(GLuint handle)
     : GLResourceHandle(handle)
-{}
+{
+    setErrorChecker(std::bind(&GLUtil::throwIfErrorInShader, std::placeholders::_1));
+}
 
 ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle)
     : GLResourceHandle(std::move(handle))
 {}
 
-GLuint ShaderProgramHandle::get() const
+
+void ShaderProgramHandle::freeResource(GLuint)
 {
-    GLUtil::throwIfErrorInShader(handle);
-    return handle;
+
 }
 
 ShaderProgramHandle ShaderProgramHandle::loadShaderProgramFromStrings(
