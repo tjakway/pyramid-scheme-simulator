@@ -10,7 +10,7 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-class ShaderProgramHandle : public GLResourceHandle<GLuint>
+class ShaderProgramHandle : public GLResourceHandle<GLuint, ShaderProgramHandle>
 {
 protected:
     ShaderProgramHandle(GLuint);
@@ -19,7 +19,7 @@ protected:
 
 public:
     ShaderProgramHandle(ShaderProgramHandle&&);
-    virtual ~ShaderProgramHandle();
+    virtual ~ShaderProgramHandle() {}
 
     static ShaderProgramHandle loadShaderProgramFromStrings(
             const std::string&, const std::string&);
