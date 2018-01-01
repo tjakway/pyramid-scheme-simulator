@@ -14,6 +14,10 @@ ShaderProgramHandle::ShaderProgramHandle(ShaderProgramHandle&& handle)
 {}
 
 
+ShaderProgramHandle::ShaderProgramHandle()
+    : GLResourceHandle(-1)
+{}
+
 void ShaderProgramHandle::freeResource(GLuint programHandle)
 {
     if(glIsProgram(programHandle) == GL_TRUE)

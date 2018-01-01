@@ -36,8 +36,13 @@ target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC pthread)
 
 target_compile_options(demo INTERFACE ${GTKMM_CFLAGS_OTHER})
 target_link_libraries(demo PRIVATE ${GTKMM_LIBRARIES} ${MAIN_LIB_TARGET} ${MAIN_LIB_GL_TARGET})
+#TODO: only link this on linux
+target_link_libraries(demo PUBLIC pthread)
 target_include_directories(demo INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(demo SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+
+target_require_cxx11(demo)
+process_warnings(demo)
 
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${SPDLOG_INCLUDE_DIRECTORIES})

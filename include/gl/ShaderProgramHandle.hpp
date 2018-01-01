@@ -19,7 +19,14 @@ protected:
 
 public:
     ShaderProgramHandle(ShaderProgramHandle&&);
+    ShaderProgramHandle();
+
     virtual ~ShaderProgramHandle() {}
+
+
+    //needed because of https://stackoverflow.com/questions/15351341/move-constructors-and-inheritance
+    virtual ShaderProgramHandle& operator=(ShaderProgramHandle&& o) override
+    { return GLResourceHandle::operator=(std::move(o)); }
 
     static ShaderProgramHandle loadShaderProgramFromStrings(
             const std::string&, const std::string&);

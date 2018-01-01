@@ -15,6 +15,8 @@ protected:
 
 public:
     TextureHandle(TextureHandle&&);
+    TextureHandle();
+
     virtual ~TextureHandle();
 
     virtual void freeResource(GLuint) override;
