@@ -59,7 +59,9 @@ public:
         return *this;
     }
 
+    //don't need to call freeResource because unique_ptr will call it for us
     virtual ~GLResourceHandle() {}
+
     virtual T get() const
     {
         errorCheck(*handlePtr);
