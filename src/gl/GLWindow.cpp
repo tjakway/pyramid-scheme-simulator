@@ -14,6 +14,7 @@
 #include <SDL.h>
 
 #include "Util/Util.hpp"
+#include "Util/Strcat.hpp"
 #include "Util/NewExceptionType.hpp"
 
 namespace {
@@ -66,6 +67,18 @@ private:
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLInitException, SDLException);
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateWindowException, SDLInitException);
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateGLContextException, SDLInitException);
+
+    static void throwIfSDLError()
+    {
+#ifndef GL_WINDOW_SKIP_SDL_ERROR_CHECKING
+        const char* errMsg = SDL_GetError();
+        if(errMsg != "")
+        {
+            SDL_ClearError();
+            throw SDLException(STRCAT("SDL error: ", errMsg));
+        }
+#endif
+    }
 
     static void setOpenGLAttributes();
 
@@ -124,16 +137,21 @@ private:
     {
         //TODO: do I need this?
 	SDL_GL_SetSwapInterval(1);
+        throwIfSDLError();
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+        throwIfSDLError();
 
         if(majorVersion >= 1 && minorVersion >= 1)
         {
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
+            throwIfSDLError();
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
+            throwIfSDLError();
         }
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        throwIfSDLError();
     }
 
 public:
@@ -145,11 +163,15 @@ public:
             int openglRequiredMinorVersion)
     {
         SDLGLHandle handle;
+
         handle.window = createWindow(title, windowDimensions);
+        throwIfSDLError();
+
         handle.glContext = createGLContext(
                 handle.window,
                 openglRequiredMajorVersion,
                 openglRequiredMinorVersion);
+        throwIfSDLError();
 
         return handle;
     }
@@ -157,8 +179,7 @@ public:
     static void runLoop(SDLGLHandle handle, 
             std::function<void()> _init,  
             std::function<void()> _draw,
-            std::function<void()> _cleanup,
-            bool checkForSDLErrors = true)
+            std::function<void()> _cleanup)
     {
         _init();
 
@@ -169,11 +190,15 @@ public:
             //should we draw first then poll or poll then draw?
             _draw();
 
+            throwIfSDLError();
+
             SDL_Event event;
             while (SDL_PollEvent(&event))
             {
                 if (event.type == SDL_QUIT)
-                        loop = false;
+                {
+                    loop = false;
+                }
 
                 if (event.type == SDL_KEYDOWN)
                 {
@@ -187,12 +212,14 @@ public:
                         }
                 }
 
+                throwIfSDLError();
                 //TODO: should we swap windows here?
                 //alternatively, just do it in the render loop
                 //SDL_GL_SwapWindow(handle.window);
             }
 
             SDL_GL_SwapWindow(handle.window);
+            throwIfSDLError();
 	}
 
         _cleanup();
@@ -225,8 +252,7 @@ void GLWindow::run()
             *sdlGlHandle,
             init,
             draw,
-            cleanup,
-            GL_WINDOW_SKIP_SDL_ERROR_CHECKING_VALUE);
+            cleanup);
 }
 
 GLWindow::~GLWindow() {}
