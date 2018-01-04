@@ -27,6 +27,7 @@ target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${GLEW_LIBRARIES})
 #TODO: only link this on linux
 target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC pthread)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${SDL2_LIBRARY})
+target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${MAIN_LIB_TARGET})
 
 target_link_libraries(demo PRIVATE ${MAIN_LIB_TARGET} ${MAIN_LIB_GL_TARGET})
 #TODO: only link this on linux
