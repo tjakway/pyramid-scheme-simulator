@@ -19,9 +19,9 @@ private:
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateWindowException, SDLInitException);
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateGLContextException, SDLInitException);
 
-    void setOpenGLAttributes();
+    static void setOpenGLAttributes();
 
-    void initSDL()
+    static void initSDL()
     {
         if(!sdlInitialized.load())
         {
@@ -36,7 +36,7 @@ private:
         }
     }
 
-    SDL_Window* createWindow(
+    static SDL_Window* createWindow(
             const std::string& title, 
             std::pair<int, int> windowDimensions)
     {
@@ -55,7 +55,7 @@ private:
         return win;
     }
 
-    SDL_GLContext createGLContext(
+    static SDL_GLContext createGLContext(
             SDL_Window* win, 
             int majorVersion, 
             int minorVersion)
@@ -72,7 +72,7 @@ private:
         return context;
     }
 
-    void setOpenGLAttributes(int majorVersion, int minorVersion)
+    static void setOpenGLAttributes(int majorVersion, int minorVersion)
     {
         //TODO: do I need this?
 	SDL_GL_SetSwapInterval(1);
@@ -98,7 +98,7 @@ public:
         SDL_GLContext glContext;
     };
 
-    SDLGLHandle makeSDLGLWindow(
+    static SDLGLHandle makeSDLGLWindow(
             const std::string& title, 
             std::pair<int, int> windowDimensions,
             int openglRequiredMajorVersion, //ignored if <1
