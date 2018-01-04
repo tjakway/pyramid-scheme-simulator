@@ -7,12 +7,11 @@
 
 #include <utility>
 #include <functional>
+#include <atomic>
 
 #include <GL/glew.h>
-#include <gtkmm.h>
 
 BEGIN_PYRAMID_GL_NAMESPACE
-
 
 const std::string GLContext::windowTitle = "Pyramid Scheme Simulator";
 const std::string GLContext::applicationId = "pyramid_scheme_simulator";
@@ -32,16 +31,9 @@ GLContext::GLContext(
 {}
 
 
-void GLContext::run(Glib::RefPtr<Gtk::Application> app)
-{
-    glWindow->run(app);
-}
-
 void GLContext::run()
 {
-    const auto app = Gtk::Application::create(
-            GLContext::applicationId);
-    run(app);
+    glWindow->run();
 }
 
 #include <iostream>

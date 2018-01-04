@@ -38,7 +38,7 @@ protected:
     }
 
 public:
-    NEW_EXCEPTION_TYPE(GLWindowInitException);
+    NEW_EXCEPTION_TYPE(GLWindowException);
 
     GLWindow(const std::string& title, 
             std::pair<int, int> windowDimensions,

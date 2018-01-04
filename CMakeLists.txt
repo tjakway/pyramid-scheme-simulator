@@ -14,6 +14,10 @@ option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
 option(BUILD_TESTS "whether to build unit tests" ON)
 option(BUILD_OPENGL_BACKEND "whether to build the OpenGL backend" ON)
 
+#need to tell cmake where to find our SDL2 find scripts
+#from https://github.com/tcbrindle/sdl2-cmake-scripts
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2")
+
 include("cmake/default_build_type.cmake"    OPTIONAL)
 include("cmake/build_spdlog_dep.cmake"      REQUIRED)
 include("cmake/signal_handler_option.cmake" REQUIRED)
