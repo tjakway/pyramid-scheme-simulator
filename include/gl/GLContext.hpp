@@ -39,7 +39,6 @@ public:
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
 
     void run();
-    void run(Glib::RefPtr<Gtk::Application>);
 };
 
 END_PYRAMID_GL_NAMESPACE
