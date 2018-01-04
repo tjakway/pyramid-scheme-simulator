@@ -97,12 +97,25 @@ private:
 
 public:
     //TODO: make fields const & add ctor
-    struct SDLGLHandle
+    class SDLGLHandle
     {
     friend GLWindow::SDL;
     protected:
         SDL_Window* window;
         SDL_GLContext glContext;
+
+    public:
+        virtual ~SDLGLHandle()
+        {
+            if(glContext)
+            {
+                SDL_GL_DeleteContext(glContext);
+            }
+            if(window)
+            {
+                SDL_DestroyWindow(window);
+            }
+        }
     };
 
     static SDLGLHandle makeSDLGLWindow(
@@ -121,9 +134,48 @@ public:
         return handle;
     }
 
-    static void runLoop()
+    static void runLoop(SDLGLHandle handle, 
+            std::function<void()> _init,  
+            std::function<void()> _draw,
+            std::function<void()> _cleanup,
+            bool checkForSDLErrors = true)
     {
+        _init();
 
+        //need this flag to be able to break out of the nested loop
+        bool loop = true;
+	while(loop)
+	{
+            //should we draw first then poll or poll then draw?
+            _draw();
+
+            SDL_Event event;
+            while (SDL_PollEvent(&event))
+            {
+                if (event.type == SDL_QUIT)
+                        loop = false;
+
+                if (event.type == SDL_KEYDOWN)
+                {
+                        switch (event.key.keysym.sym)
+                        {
+                        case SDLK_ESCAPE:
+                                loop = false;
+                                break;
+                        default:
+                                break;
+                        }
+                }
+
+                //TODO: should we swap windows here?
+                //alternatively, just do it in the render loop
+                //SDL_GL_SwapWindow(handle.window);
+            }
+
+            SDL_GL_SwapWindow(handle.window);
+	}
+
+        _cleanup();
     }
 };
 
