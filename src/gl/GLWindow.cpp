@@ -8,8 +8,11 @@
 #include "gl/GLWindow.hpp"
 
 #include <string>
+#include <atomic>
 
 #include <SDL.h>
+
+#include "Util/Util.hpp"
 #include "Util/NewExceptionType.hpp"
 
 BEGIN_PYRAMID_GL_NAMESPACE
@@ -193,7 +196,7 @@ GLWindow::GLWindow(const std::string& title,
     draw(_draw), 
     cleanup(_cleanup)
 {
-    sdlGlHandle = make_unique(GLWindow::SDL::makeSDLGLWindow(title,
+    sdlGlHandle = make_unique<SDLGLHandle>(GLWindow::SDL::makeSDLGLWindow(title,
             windowDimensions, 
             openglRequiredMajorVersion,
             openglRequiredMinorVersion));
@@ -209,5 +212,6 @@ void GLWindow::run()
             GL_WINDOW_SKIP_SDL_ERROR_CHECKING_VALUE);
 }
 
+GLWindow::~GLWindow() {}
 
 END_PYRAMID_GL_NAMESPACE

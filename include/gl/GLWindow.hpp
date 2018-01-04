@@ -45,7 +45,7 @@ public:
             int openglRequiredMajorVersion = -1, //ignored if <1
             int openglRequiredMinorVersion = -1);//ignored if <1
 
-    virtual ~GLWindow() {}
+    virtual ~GLWindow();
 
     void run();
 };
