@@ -199,5 +199,15 @@ GLWindow::GLWindow(const std::string& title,
             openglRequiredMinorVersion));
 }
 
+void GLWindow::run()
+{
+    GLWindow::SDL::runLoop(
+            *sdlGlHandle,
+            init,
+            draw,
+            cleanup,
+            GL_WINDOW_SKIP_SDL_ERROR_CHECKING_VALUE);
+}
+
 
 END_PYRAMID_GL_NAMESPACE
