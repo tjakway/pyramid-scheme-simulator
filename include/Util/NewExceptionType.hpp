@@ -35,21 +35,29 @@
     class A : public B \
     { \
         const std::string msg;\
+        const std::string whatMsg;\
     public: \
-        virtual std::string getExceptionTypeName() const noexcept \
+        virtual const char* getExceptionTypeName() const noexcept \
             { return XSTRINGIFY_MACRO__(A); } \
             \
-        A(const std::string& message) \
-            : B(message), msg(message)\
-        {} \
-        \
-        virtual const char* what() const throw() override \
-        { \
+    private:\
+        std::string getWhatMsg() const noexcept\
+        {\
             std::ostringstream os;\
             os << "Exception of type " << \
             getExceptionTypeName() << \
             " thrown: " << msg << std::endl;\
-            return os.str().c_str();\
+            return os.str();\
+        }\
+    public: \
+        A(const std::string& message) \
+            : B(message), msg(message), \
+                whatMsg(getWhatMsg())\
+        {} \
+        \
+        virtual const char* what() const noexcept override \
+        { \
+            return whatMsg.c_str(); \
         }\
     }; \
     END_SUPPRESS_OVERRIDE_WARNING
