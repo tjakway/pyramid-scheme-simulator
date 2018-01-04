@@ -5,7 +5,7 @@
 #include <string>
 #include <functional>
 #include <iostream>
-#include <atomic>
+#include <memory>
 
 #include "gl/GLUtil.hpp"
 #include "Util/NewExceptionType.hpp"
@@ -14,10 +14,20 @@
 BEGIN_PYRAMID_GL_NAMESPACE
 
 
+#ifdef GL_WINDOW_SKIP_SDL_ERROR_CHECKING
+#define GL_WINDOW_SKIP_SDL_ERROR_CHECKING_VALUE true
+#else
+#define GL_WINDOW_SKIP_SDL_ERROR_CHECKING_VALUE false
+#endif
+
 class GLWindow
 {
 protected:
     class SDL;
+    class SDLGLHandle;
+
+    std::unique_ptr<SDLGLHandle> sdlGlHandle;
+
 
     /**
      * the functions passed by GLContext
