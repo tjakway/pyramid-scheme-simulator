@@ -1,9 +1,7 @@
 #include "Util/Util.hpp"
 
 #include <string>
-#include <algorithm>
-#include <cctype>
-#include <locale>
+
 
 //see https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
 #include <algorithm> 
