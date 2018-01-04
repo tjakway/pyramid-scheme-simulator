@@ -55,7 +55,10 @@ private:
         return win;
     }
 
-    SDL_GLContext createGLContext(SDL_Window* win)
+    SDL_GLContext createGLContext(
+            SDL_Window* win, 
+            int majorVersion, 
+            int minorVersion)
     {
         SDL_GLContext context = SDL_GL_CreateContext(win);
 
@@ -64,7 +67,7 @@ private:
             throw SDLCreateGLContextException(__func__);
         }
 
-        setOpenGLAttributes();
+        setOpenGLAttributes(majorVersion, minorVersion);
 
         return context;
     }
@@ -83,6 +86,32 @@ private:
         }
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    }
+
+public:
+    //TODO: make fields const & add ctor
+    struct SDLGLHandle
+    {
+    friend GLWindow::SDL;
+    protected:
+        SDL_Window* window;
+        SDL_GLContext glContext;
+    };
+
+    SDLGLHandle makeSDLGLWindow(
+            const std::string& title, 
+            std::pair<int, int> windowDimensions,
+            int openglRequiredMajorVersion, //ignored if <1
+            int openglRequiredMinorVersion)
+    {
+        SDLGLHandle handle;
+        handle.window = createWindow(title, windowDimensions);
+        handle.glContext = createGLContext(
+                handle.window,
+                openglRequiredMajorVersion,
+                openglRequiredMinorVersion);
+
+        return handle;
     }
 };
 
