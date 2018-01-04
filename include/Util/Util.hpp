@@ -130,6 +130,7 @@ public:
     //from https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
     class StringTrim
     {
+        StringTrim() = delete;
     public:
         static void ltrim_inplace(std::string&);
         static void rtrim_inplace(std::string&);
