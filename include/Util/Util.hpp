@@ -126,6 +126,20 @@ public:
     static rd_ptr rdFromSeed(rd_seed_type);
 
     static rd_seed_type getCurrentTimeMillis();
+
+    //from https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+    class StringTrim
+    {
+        StringTrim() = delete;
+    public:
+        static void ltrim_inplace(std::string&);
+        static void rtrim_inplace(std::string&);
+        static void trim_inplace(std::string&);
+
+        static std::string ltrim_copy(std::string);
+        static std::string rtrim_copy(std::string);
+        static std::string trim_copy(std::string);
+    };
 };
 
 
