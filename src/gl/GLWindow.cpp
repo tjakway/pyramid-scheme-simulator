@@ -14,6 +14,27 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
+
+//TODO: make fields const & add ctor
+class GLWindow::SDLGLHandle
+{
+public:
+    SDL_Window* window;
+    SDL_GLContext glContext;
+
+    virtual ~SDLGLHandle()
+    {
+        if(glContext)
+        {
+            SDL_GL_DeleteContext(glContext);
+        }
+        if(window)
+        {
+            SDL_DestroyWindow(window);
+        }
+    }
+};
+
 class GLWindow::SDL
 {
 private:
@@ -96,27 +117,6 @@ private:
     }
 
 public:
-    //TODO: make fields const & add ctor
-    class SDLGLHandle
-    {
-    friend GLWindow::SDL;
-    protected:
-        SDL_Window* window;
-        SDL_GLContext glContext;
-
-    public:
-        virtual ~SDLGLHandle()
-        {
-            if(glContext)
-            {
-                SDL_GL_DeleteContext(glContext);
-            }
-            if(window)
-            {
-                SDL_DestroyWindow(window);
-            }
-        }
-    };
 
     static SDLGLHandle makeSDLGLWindow(
             const std::string& title, 
@@ -193,10 +193,10 @@ GLWindow::GLWindow(const std::string& title,
     draw(_draw), 
     cleanup(_cleanup)
 {
-
-    if(openglRequiredMajorVersion >= 1 && openglRequiredMinorVersion >= 1)
-    {
-    }
+    sdlGlHandle = make_unique(GLWindow::SDL::makeSDLGLWindow(title,
+            windowDimensions, 
+            openglRequiredMajorVersion,
+            openglRequiredMinorVersion));
 }
 
 
