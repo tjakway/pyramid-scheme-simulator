@@ -2,6 +2,7 @@
 
 #include "NamespaceDefines.hpp"
 #include "Util/Util.hpp"
+#include "Util/Strcat.hpp"
 #include "gl/GLUtil.hpp"
 #include "gl/ShaderProgramHandle.hpp"
 
@@ -42,9 +43,13 @@ void GLContext::glInit()
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
     glewExperimental = GL_TRUE;
-    if(glewInit() != GLEW_OK) {
-        throw GLUtil::OpenGLException("Error occurred during GLEW initialization");
+    GLenum glewErr = glewInit();
+    if(glewErr != GLEW_OK) {
+        throw GLUtil::OpenGLException(STRCAT(
+                    "Error occurred during GLEW initialization: ",
+                    glewGetErrorString(glewErr)));
     }
+    
 
     shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
                 vertexShaderSource, fragmentShaderSource);
