@@ -1,3 +1,10 @@
+//the below SDL code is derived from the tutorial at http://headerphile.com/sdl2/opengl-part-1-sdl-opengl-awesome/
+//can also be found at https://gist.githubusercontent.com/olevegard/e1ce53d9302c4ed3be8d/raw/8c61a54f29694ff0fb0013d473849cb7a84f6e68/Simple%20OpenGL%20%20test.cpp
+//header reproduced below:
+    // Headerphile.com OpenGL Tutorial part 1
+    // A Hello World in the world of OpenGL ( creating a simple windonw and setting background color )
+    // Source code is an C++ adaption / simplicication of : https://www.opengl.org/wiki/Tutorial1:_Creating_a_Cross_Platform_OpenGL_3.2_Context_in_SDL_(C_/_SDL)
+
 #include "gl/GLWindow.hpp"
 
 #include <string>
@@ -112,6 +119,11 @@ public:
                 openglRequiredMinorVersion);
 
         return handle;
+    }
+
+    static void runLoop()
+    {
+
     }
 };
 
