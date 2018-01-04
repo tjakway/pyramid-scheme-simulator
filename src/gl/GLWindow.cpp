@@ -22,8 +22,11 @@ namespace {
     void logSDLError()
     {
         const char* errMsg = SDL_GetError();
-        std::cerr << "SDL error: " << errMsg << std::endl;
-        SDL_ClearError();
+        if(errMsg != "")
+        {
+            std::cerr << "SDL error: " << errMsg << std::endl;
+            SDL_ClearError();
+        }
     }
 }
 
