@@ -34,19 +34,6 @@ protected:
      */
     const std::function<void()> init, draw, cleanup;
 
-
-    void onRealize() {
-        init();
-    }
-
-    void onUnrealize() {
-        cleanup();
-    }
-
-    void onRender() {
-        draw();
-    }
-
 public:
     NEW_EXCEPTION_TYPE(GLWindowException);
 
