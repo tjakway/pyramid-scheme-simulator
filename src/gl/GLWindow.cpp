@@ -9,11 +9,26 @@
 
 #include <string>
 #include <atomic>
+#include <iostream>
 
 #include <SDL.h>
 
 #include "Util/Util.hpp"
 #include "Util/NewExceptionType.hpp"
+
+namespace {
+    //nonfatal SDL error logging
+    //for use in destructors
+    void logSDLError()
+    {
+        const char* errMsg = SDL_GetError();
+        if(errMsg != "")
+        {
+            std::cerr << "SDL error: " << errMsg << std::endl;
+            SDL_ClearError();
+        }
+    }
+}
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
@@ -30,10 +45,12 @@ public:
         if(glContext)
         {
             SDL_GL_DeleteContext(glContext);
+            logSDLError();
         }
         if(window)
         {
             SDL_DestroyWindow(window);
+            logSDLError();
         }
     }
 };
