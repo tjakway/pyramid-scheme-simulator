@@ -18,12 +18,18 @@
 #include "Util/NewExceptionType.hpp"
 
 namespace {
+    std::string getSDLErrorString()
+    {
+        using namespace pyramid_scheme_simulator;
+        return Util::StringTrim::trim_copy(std::string(SDL_GetError()));
+    }
+
     //nonfatal SDL error logging
     //for use in destructors
     void logSDLError()
     {
-        const char* errMsg = SDL_GetError();
-        if(errMsg != "")
+        const auto  errMsg = getSDLErrorString();
+        if(!errMsg.empty())
         {
             std::cerr << "SDL error: " << errMsg << std::endl;
             SDL_ClearError();
@@ -71,8 +77,8 @@ private:
     static void throwIfSDLError()
     {
 #ifndef GL_WINDOW_SKIP_SDL_ERROR_CHECKING
-        const char* errMsg = SDL_GetError();
-        if(errMsg != "")
+        const std::string errMsg = getSDLErrorString();
+        if(errMsg != std::string("") && !errMsg.empty())
         {
             SDL_ClearError();
             throw SDLException(STRCAT("SDL error: ", errMsg));
