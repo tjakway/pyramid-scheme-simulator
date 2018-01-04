@@ -107,6 +107,9 @@ private:
             const std::string& title, 
             std::pair<int, int> windowDimensions)
     {
+        //make sure SDL has been set up
+        initSDL();
+
         SDL_Window* win = SDL_CreateWindow(title.c_str(),
                 SDL_WINDOWPOS_CENTERED,
                 SDL_WINDOWPOS_CENTERED,
