@@ -187,6 +187,10 @@ public:
             std::function<void()> _draw,
             std::function<void()> _cleanup)
     {
+        //ensure that this OpenGL context is ready to go
+        SDL_GL_MakeCurrent(handle.window, handle.glContext);
+        throwIfSDLError();
+
         _init();
 
         //need this flag to be able to break out of the nested loop
