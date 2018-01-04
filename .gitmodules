@@ -13,3 +13,6 @@
 [submodule "lib/glm"]
 	path = lib/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "cmake/sdl2"]
+	path = cmake/sdl2
+	url = git@github.com:tcbrindle/sdl2-cmake-scripts.git
