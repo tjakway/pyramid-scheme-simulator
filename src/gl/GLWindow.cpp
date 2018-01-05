@@ -56,8 +56,8 @@ BEGIN_PYRAMID_GL_NAMESPACE
 //TODO: make fields const & add ctor
 class GLWindow::SDLGLHandle
 {
-    const SDL_Window* window;
-    const SDL_GLContext glContext;
+    SDL_Window* window;
+    SDL_GLContext glContext;
 
 public:
     SDL_Window* getWindow() { return window; }
@@ -208,15 +208,13 @@ public:
                     openglRequiredMinorVersion));
     }
 
-    static void runLoop(SDLGLHandle handle, 
+    static void runLoop(SDLGLHandle* handle, 
             std::function<void()> _init,  
             std::function<void()> _draw,
             std::function<void()> _cleanup)
     {
         //ensure that this OpenGL context is ready to go
-        assert(handle.window != nullptr);
-        assert(handle.glContext != nullptr);
-        if(!SDL_GL_MakeCurrent(handle.getWindow(), handle.getGLContext()))
+        if(!SDL_GL_MakeCurrent(handle->getWindow(), handle->getGLContext()))
         {
             throwIfSDLError();
         }
@@ -256,7 +254,7 @@ public:
                 //SDL_GL_SwapWindow(handle.window);
             }
 
-            SDL_GL_SwapWindow(handle.window);
+            SDL_GL_SwapWindow(handle->getWindow());
 	}
 
         _cleanup();
@@ -287,7 +285,7 @@ GLWindow::GLWindow(const std::string& title,
 void GLWindow::run()
 {
     GLWindow::SDL::runLoop(
-            *sdlGlHandle,
+            sdlGlHandle,
             init,
             draw,
             cleanup);
