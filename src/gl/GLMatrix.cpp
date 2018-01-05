@@ -10,8 +10,8 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-static const glm::vec3 origin = glm::vec3(0, 0, 0);
-static const glm::mat4 identityMatrix = glm::mat4(1.0f);
+const glm::vec3 GLMatrix::origin = glm::vec3(0, 0, 0);
+const glm::mat4 GLMatrix::identityMatrix = glm::mat4(1.0f);
 
 static const glm::mat4 startingProjection = glm::ortho(-1.0, 1.0, -1.0, 1.0);
 
