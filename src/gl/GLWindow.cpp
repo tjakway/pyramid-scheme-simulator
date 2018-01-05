@@ -76,15 +76,14 @@ public:
 
     virtual ~SDLGLHandle()
     {
-        if(glContext)
-        {
-            SDL_GL_DeleteContext(glContext);
-            logSDLError();
-        }
+        //even though there's a page for this I *really* don't think we're
+        //supposed to call it... I get segfaults on Ubuntu 16.04.3
+        //with Nvidia drivers when I call it
+        //SDL_GL_DeleteContext(glContext);
+        
         if(window)
         {
             SDL_DestroyWindow(window);
-            logSDLError();
         }
     }
 };
