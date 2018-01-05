@@ -5,10 +5,19 @@ cmake_minimum_required(VERSION 3.1)
 FILE(GLOB MAIN_LIB_GL_SRC *.cpp *.c *.cxx)
 FILE(GLOB DEMO_SRC demo/*.cpp demo/*.c demo/*.cxx)
 
+
+include(${CMAKE_SOURCE_DIR}/cmake/fetch_and_build_sdl_2.0.7.cmake)
+option(FETCH_SDL2_RELEASE ON)
+
 find_package(Boost COMPONENTS graph REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-find_package(SDL2 REQUIRED)
+
+if(FETCH_SDL2_RELEASE)
+    fetch_and_build_sdl2_release()
+else()
+    find_package(SDL2 REQUIRED)
+endif()
 
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/glm ${CMAKE_BINARY_DIR}/glm)
