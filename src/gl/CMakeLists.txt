@@ -6,7 +6,7 @@ FILE(GLOB MAIN_LIB_GL_SRC *.cpp *.c *.cxx)
 FILE(GLOB DEMO_SRC demo/*.cpp demo/*.c demo/*.cxx)
 
 
-include(${CMAKE_SOURCE_DIR}/cmake/fetch_and_build_sdl_2.0.7.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/fetch_and_build_sdl_2.cmake)
 option(FETCH_SDL2_RELEASE ON)
 
 find_package(Boost COMPONENTS graph REQUIRED)
