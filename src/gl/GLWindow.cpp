@@ -19,24 +19,13 @@
 #include "Util/Strcat.hpp"
 #include "Util/NewExceptionType.hpp"
 
-//namespace {
+namespace {
     std::string getSDLErrorString()
     {
         using namespace pyramid_scheme_simulator;
         return Util::StringTrim::trim_copy(std::string(SDL_GetError()));
     }
-
-    const char* getSDLErrorCString()
-    {
-        return getSDLErrorString().c_str();
-    }
-
-    bool isSDLError()
-    {
-        std::string s = getSDLErrorString();
-        return !s.empty() && (s != std::string(""));
-    }
-
+    
     //nonfatal SDL error logging
     //for use in destructors
     void logSDLError()
@@ -48,12 +37,11 @@
             SDL_ClearError();
         }
     }
-//}
+}
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
 
-//TODO: make fields const & add ctor
 class GLWindow::SDLGLHandle
 {
     SDL_Window* window;
