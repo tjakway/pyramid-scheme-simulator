@@ -1,5 +1,7 @@
 #include "gl/GLContext.hpp"
 
+#include "gl/ShaderDefines.hpp"
+
 BEGIN_PYRAMID_GL_NAMESPACE
 
 const std::string GLContext::vertexShaderSource = 
@@ -8,10 +10,20 @@ const std::string GLContext::vertexShaderSource =
 R"RAW(
 #version 420
 
-in vec3 vertex_position;
+uniform mat4 mvp_matrix;
+
+layout(location = VS_MODELSPACE_LOC) in vec3 in_vertex_position;
+layout(location = VS_TEXCOORD_LOC) in vec2 in_tex_coords;
+layout(location = VS_COLOR_LOC) in vec4 in_colors;
+
+out vec2 out_tex_coords;
+out vec4 out_colors;
 
 void main() {
   gl_Position = vec4(vertex_position, 1.0);
+
+  out_tex_coords = in_tex_coords;
+  out_colors = in_colors;
 }
 )RAW";
 
