@@ -28,23 +28,26 @@ void ShaderProgramHandle::freeResource(GLuint programHandle)
         GLUtil::throwIfError();
 
         GLsizei actualNumShaders = -1;
-        GLuint attachedShaders[numShaders];
-        glGetAttachedShaders(programHandle, numShaders, &actualNumShaders, attachedShaders);
-        GLUtil::throwIfError();
-
-        if(numShaders != actualNumShaders)
+        if(numShaders > 0)
         {
-            throw GLUtil::OpenGLException(STRCAT("numShaders != actualNumShaders in ", __func__,
-                        ", numShaders (expected): ", numShaders, 
-                        ", actualNumShaders: ", actualNumShaders));
-        }
-
-        for(GLint i = 0; i < numShaders; i++)
-        {
-            glDetachShader(programHandle, attachedShaders[i]);
-            glDeleteShader(attachedShaders[i]);
-
+            GLuint attachedShaders[numShaders];
+            glGetAttachedShaders(programHandle, numShaders, &actualNumShaders, attachedShaders);
             GLUtil::throwIfError();
+
+            if(numShaders != actualNumShaders)
+            {
+                throw GLUtil::OpenGLException(STRCAT("numShaders != actualNumShaders in ", __func__,
+                            ", numShaders (expected): ", numShaders, 
+                            ", actualNumShaders: ", actualNumShaders));
+            }
+
+            for(GLint i = 0; i < numShaders; i++)
+            {
+                glDetachShader(programHandle, attachedShaders[i]);
+                glDeleteShader(attachedShaders[i]);
+
+                GLUtil::throwIfError();
+            }
         }
 
 
