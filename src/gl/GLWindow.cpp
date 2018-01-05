@@ -207,6 +207,8 @@ public:
             throwIfSDLError();
         }
 
+        SDL_GL_SwapWindow(handle->getWindow());
+
         _init();
 
         //need this flag to be able to break out of the nested loop
