@@ -12,13 +12,17 @@ function(fetch_and_build_sdl2_release)
     #download the zip
     set(SDL2_DOWNLOAD_DEST ${SDL2_EXTRACT_DIR}/${SDL2_RELEASE_FILENAME})
 
-    file(DOWNLOAD "https://www.libsdl.org/release/${SDL2_RELEASE_FILENAME}" 
-        ${SDL2_DOWNLOAD_DEST} SHOW_PROGRESS)
+    if(NOT EXISTS ${SDL2_DOWNLOAD_DEST})
+        message(STATUS "Downloading SDL2...")
+        file(DOWNLOAD "https://www.libsdl.org/release/${SDL2_RELEASE_FILENAME}" 
+            ${SDL2_DOWNLOAD_DEST} SHOW_PROGRESS)
 
-    execute_process(COMMAND unzip ${SDL2_RELEASE_FILENAME} 
-        WORKING_DIRECTORY ${SDL2_EXTRACT_DIR}
-        OUTPUT_QUIET)
+        execute_process(COMMAND unzip ${SDL2_RELEASE_FILENAME} 
+            WORKING_DIRECTORY ${SDL2_EXTRACT_DIR}
+            OUTPUT_QUIET)
 
-    #build the archive we just extracted
-    add_subdirectory(${SDL2_EXTRACT_DIR} ${CMAKE_BINARY_DIR}/sdl2_bin)
+        message(STATUS "Building SDL2...")
+        #build the archive we just extracted
+        add_subdirectory(${SDL2_EXTRACT_DIR}/${SDL2_RELEASE} ${CMAKE_BINARY_DIR}/sdl2_bin)
+    endif()
 endfunction()
