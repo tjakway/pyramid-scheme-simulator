@@ -45,6 +45,11 @@ BEGIN_PYRAMID_GL_NAMESPACE
 class GLWindow::SDLGLHandle
 {
     SDL_Window* window;
+
+    /** ***XXX WARNING*** 
+     * DO *NOT* COPY THE SDL_GLContext
+     * IT *WILL* CAUSE THE WINDOW TO CRASH
+     * AND WILL NOT TELL YOU WHY */
     SDL_GLContext& glContext;
 
 public:
