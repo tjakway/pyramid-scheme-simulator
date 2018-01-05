@@ -57,7 +57,7 @@ BEGIN_PYRAMID_GL_NAMESPACE
 class GLWindow::SDLGLHandle
 {
     SDL_Window* window;
-    SDL_GLContext glContext;
+    SDL_GLContext& glContext;
 
 public:
     SDL_Window* getWindow() { return window; }
@@ -67,6 +67,11 @@ public:
             SDL_GLContext&& _glContext)
         : window(_window),
         glContext(_glContext)
+    {}
+
+    SDLGLHandle(SDLGLHandle&& other)
+        : window(other.window),
+        glContext(other.glContext)
     {}
 
     virtual ~SDLGLHandle()
@@ -192,7 +197,7 @@ private:
 
 public:
 
-    static SDLGLHandle makeSDLGLWindow(
+    static std::unique_ptr<SDLGLHandle> makeSDLGLWindow(
             const std::string& title, 
             std::pair<int, int> windowDimensions,
             int openglRequiredMajorVersion,
@@ -200,7 +205,7 @@ public:
     {
         SDL_Window* win = createWindow(title, windowDimensions);
 
-        return SDLGLHandle(
+        return make_unique<SDLGLHandle>(
                 win,
                 createGLContext(
                     win,
@@ -275,25 +280,22 @@ GLWindow::GLWindow(const std::string& title,
     draw(_draw), 
     cleanup(_cleanup)
 {
-    const auto res = GLWindow::SDL::makeSDLGLWindow(title,
+    sdlGlHandle = GLWindow::SDL::makeSDLGLWindow(title,
             windowDimensions, 
             openglRequiredMajorVersion,
             openglRequiredMinorVersion);
-    sdlGlHandle = new SDLGLHandle(res);
 }
 
 void GLWindow::run()
 {
     GLWindow::SDL::runLoop(
-            sdlGlHandle,
+            sdlGlHandle.get(),
             init,
             draw,
             cleanup);
 }
 
 GLWindow::~GLWindow() 
-{
-    delete sdlGlHandle;
-}
+{ }
 
 END_PYRAMID_GL_NAMESPACE
