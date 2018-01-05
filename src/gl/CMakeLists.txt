@@ -18,7 +18,7 @@ if(FETCH_SDL2_RELEASE)
 else()
     #need to tell cmake where to find our SDL2 find scripts
     #from https://github.com/tcbrindle/sdl2-cmake-scripts
-    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/sdl2")
     find_package(SDL2 REQUIRED)
 endif()
 
