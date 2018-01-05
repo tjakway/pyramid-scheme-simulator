@@ -49,13 +49,16 @@ class GLWindow::SDLGLHandle
     /** ***XXX WARNING*** 
      * DO *NOT* COPY THE SDL_GLContext
      * IT *WILL* CAUSE THE WINDOW TO CRASH
-     * AND WILL NOT TELL YOU WHY */
+     * AND WILL NOT TELL YOU WHY
+     * *ONLY*, **ONLY** MOVE IT 
+     * AND ONLY THEN IF YOU REALLY KNOW WHAT YOU'RE DOING */
     SDL_GLContext& glContext;
 
 public:
     SDL_Window* getWindow() { return window; }
     SDL_GLContext& getGLContext() { return glContext; }
 
+    //move semantics only!
     SDLGLHandle(SDL_Window* _window,
             SDL_GLContext&& _glContext)
         : window(_window),
