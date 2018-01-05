@@ -18,7 +18,7 @@ const std::string GLContext::windowTitle = "Pyramid Scheme Simulator";
 const std::string GLContext::applicationId = "pyramid_scheme_simulator";
 
 const int GLContext::openglRequiredMajorVersion = 4;
-const int GLContext::openglRequiredMinorVersion = 2;
+const int GLContext::openglRequiredMinorVersion = 5;
 
 GLContext::GLContext(
         const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions)
@@ -42,17 +42,17 @@ void GLContext::run()
 void GLContext::glInit()
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
-    glewExperimental = GL_TRUE;
-    GLenum glewErr = glewInit();
+    //glewExperimental = GL_TRUE;
+    /*GLenum glewErr = glewInit();
     if(glewErr != GLEW_OK) {
         throw GLUtil::OpenGLException(STRCAT(
                     "Error occurred during GLEW initialization: ",
                     glewGetErrorString(glewErr)));
-    }
+    }*/
     
 
-    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
-                vertexShaderSource, fragmentShaderSource);
+//    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
+//                vertexShaderSource, fragmentShaderSource);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -62,7 +62,7 @@ void GLContext::glInit()
 void GLContext::glDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    std::cout << "glDraw called" << std::endl;
+    //std::cout << "glDraw called" << std::endl;
 }
 
 void GLContext::glCleanup()
