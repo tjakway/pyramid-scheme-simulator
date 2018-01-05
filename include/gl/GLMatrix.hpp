@@ -9,8 +9,8 @@ BEGIN_PYRAMID_GL_NAMESPACE
 
 class GLMatrix
 {
-private:
-    static glm::mat4 getViewMatrix(glm::vec3 viewDirection);
+public:
+    glm::mat4 calculateWithModelMatrix(const glm::mat4&);
 };
 
 END_PYRAMID_GL_NAMESPACE
