@@ -19,11 +19,22 @@
 #include "Util/Strcat.hpp"
 #include "Util/NewExceptionType.hpp"
 
-namespace {
+//namespace {
     std::string getSDLErrorString()
     {
         using namespace pyramid_scheme_simulator;
         return Util::StringTrim::trim_copy(std::string(SDL_GetError()));
+    }
+
+    const char* getSDLErrorCString()
+    {
+        return getSDLErrorString().c_str();
+    }
+
+    bool isSDLError()
+    {
+        std::string s = getSDLErrorString();
+        return !s.empty() && (s != std::string(""));
     }
 
     //nonfatal SDL error logging
@@ -37,7 +48,7 @@ namespace {
             SDL_ClearError();
         }
     }
-}
+//}
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
@@ -45,9 +56,18 @@ BEGIN_PYRAMID_GL_NAMESPACE
 //TODO: make fields const & add ctor
 class GLWindow::SDLGLHandle
 {
+    const SDL_Window* window;
+    const SDL_GLContext glContext;
+
 public:
-    SDL_Window* window;
-    SDL_GLContext glContext;
+    SDL_Window* getWindow() { return window; }
+    SDL_GLContext& getGLContext() { return glContext; }
+
+    SDLGLHandle(SDL_Window* _window,
+            SDL_GLContext&& _glContext)
+        : window(_window),
+        glContext(_glContext)
+    {}
 
     virtual ~SDLGLHandle()
     {
@@ -103,6 +123,8 @@ private:
                 sdlInitialized.store(true);
             }
         }
+
+        assert(sdlInitialized.load());
     }
 
     static SDL_Window* createWindow(
@@ -111,7 +133,6 @@ private:
     {
         //make sure SDL has been set up
         initSDL();
-        assert(sdlInitialized.load() == true);
 
         SDL_Window* win = SDL_CreateWindow(title.c_str(),
                 SDL_WINDOWPOS_CENTERED,
@@ -142,9 +163,14 @@ private:
             throw SDLCreateGLContextException(__func__);
         }
 
-        setOpenGLAttributes(majorVersion, minorVersion);
+        if(!SDL_GL_MakeCurrent(win, context))
+        {
+            throwIfSDLError();
+        }
 
-        return context;
+
+        setOpenGLAttributes(majorVersion, minorVersion);
+        return std::move(context);
     }
 
     static void setOpenGLAttributes(int majorVersion, int minorVersion)
@@ -172,18 +198,14 @@ public:
             int openglRequiredMajorVersion,
             int openglRequiredMinorVersion)
     {
-        SDLGLHandle handle;
+        SDL_Window* win = createWindow(title, windowDimensions);
 
-        handle.window = createWindow(title, windowDimensions);
-        assert(handle.window != nullptr);
-
-        handle.glContext = createGLContext(
-                handle.window,
-                openglRequiredMajorVersion,
-                openglRequiredMinorVersion);
-        assert(handle.glContext != nullptr);
-
-        return handle;
+        return SDLGLHandle(
+                win,
+                createGLContext(
+                    win,
+                    openglRequiredMajorVersion,
+                    openglRequiredMinorVersion));
     }
 
     static void runLoop(SDLGLHandle handle, 
@@ -194,13 +216,10 @@ public:
         //ensure that this OpenGL context is ready to go
         assert(handle.window != nullptr);
         assert(handle.glContext != nullptr);
-        if(!SDL_GL_MakeCurrent(handle.window, handle.glContext))
+        if(!SDL_GL_MakeCurrent(handle.getWindow(), handle.getGLContext()))
         {
             throwIfSDLError();
         }
-        glClearColor(0.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        SDL_GL_SwapWindow(handle.window);
 
         _init();
 
@@ -258,10 +277,11 @@ GLWindow::GLWindow(const std::string& title,
     draw(_draw), 
     cleanup(_cleanup)
 {
-    sdlGlHandle = make_unique<SDLGLHandle>(GLWindow::SDL::makeSDLGLWindow(title,
+    const auto res = GLWindow::SDL::makeSDLGLWindow(title,
             windowDimensions, 
             openglRequiredMajorVersion,
-            openglRequiredMinorVersion));
+            openglRequiredMinorVersion);
+    sdlGlHandle = new SDLGLHandle(res);
 }
 
 void GLWindow::run()
@@ -273,6 +293,9 @@ void GLWindow::run()
             cleanup);
 }
 
-GLWindow::~GLWindow() {}
+GLWindow::~GLWindow() 
+{
+    delete sdlGlHandle;
+}
 
 END_PYRAMID_GL_NAMESPACE
