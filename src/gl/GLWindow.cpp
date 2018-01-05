@@ -58,6 +58,7 @@ public:
     SDL_Window* getWindow() { return window; }
     SDL_GLContext& getGLContext() { return glContext; }
 
+    //move semantics only!
     SDLGLHandle(SDL_Window* _window,
             SDL_GLContext&& _glContext)
         : window(_window),
