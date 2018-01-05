@@ -10,8 +10,10 @@
 #include <string>
 #include <atomic>
 #include <iostream>
+#include <cassert>
 
-#include <SDL.h>
+#include <GL/glew.h>
+#include <SDL2/SDL.h>
 
 #include "Util/Util.hpp"
 #include "Util/Strcat.hpp"
@@ -109,13 +111,14 @@ private:
     {
         //make sure SDL has been set up
         initSDL();
+        assert(sdlInitialized.load() == true);
 
         SDL_Window* win = SDL_CreateWindow(title.c_str(),
                 SDL_WINDOWPOS_CENTERED,
                 SDL_WINDOWPOS_CENTERED,
 		windowDimensions.first,
                 windowDimensions.second, 
-                SDL_WINDOW_OPENGL);
+                SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
         if(!win)
         {
@@ -130,6 +133,8 @@ private:
             int majorVersion, 
             int minorVersion)
     {
+        assert(win != nullptr);
+
         SDL_GLContext context = SDL_GL_CreateContext(win);
 
         if(!context)
@@ -146,21 +151,17 @@ private:
     {
         //TODO: do I need this?
 	SDL_GL_SetSwapInterval(1);
-        throwIfSDLError();
 
+        //use core profile
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        throwIfSDLError();
 
         if(majorVersion >= 1 && minorVersion >= 1)
         {
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
-            throwIfSDLError();
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
-            throwIfSDLError();
         }
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        throwIfSDLError();
     }
 
 public:
@@ -168,19 +169,19 @@ public:
     static SDLGLHandle makeSDLGLWindow(
             const std::string& title, 
             std::pair<int, int> windowDimensions,
-            int openglRequiredMajorVersion, //ignored if <1
+            int openglRequiredMajorVersion,
             int openglRequiredMinorVersion)
     {
         SDLGLHandle handle;
 
         handle.window = createWindow(title, windowDimensions);
-        throwIfSDLError();
+        assert(handle.window != nullptr);
 
         handle.glContext = createGLContext(
                 handle.window,
                 openglRequiredMajorVersion,
                 openglRequiredMinorVersion);
-        throwIfSDLError();
+        assert(handle.glContext != nullptr);
 
         return handle;
     }
@@ -191,8 +192,15 @@ public:
             std::function<void()> _cleanup)
     {
         //ensure that this OpenGL context is ready to go
-        SDL_GL_MakeCurrent(handle.window, handle.glContext);
-        throwIfSDLError();
+        assert(handle.window != nullptr);
+        assert(handle.glContext != nullptr);
+        if(!SDL_GL_MakeCurrent(handle.window, handle.glContext))
+        {
+            throwIfSDLError();
+        }
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        SDL_GL_SwapWindow(handle.window);
 
         _init();
 
@@ -203,7 +211,6 @@ public:
             //should we draw first then poll or poll then draw?
             _draw();
 
-            throwIfSDLError();
 
             SDL_Event event;
             while (SDL_PollEvent(&event))
@@ -225,14 +232,12 @@ public:
                         }
                 }
 
-                throwIfSDLError();
                 //TODO: should we swap windows here?
                 //alternatively, just do it in the render loop
                 //SDL_GL_SwapWindow(handle.window);
             }
 
             SDL_GL_SwapWindow(handle.window);
-            throwIfSDLError();
 	}
 
         _cleanup();

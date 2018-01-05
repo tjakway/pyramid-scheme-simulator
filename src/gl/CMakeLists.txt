@@ -3,6 +3,7 @@ project(pyramid_lib_opengl LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.1)
 
 FILE(GLOB MAIN_LIB_GL_SRC *.cpp *.c *.cxx)
+FILE(GLOB DEMO_SRC demo/*.cpp demo/*.c demo/*.cxx)
 
 find_package(Boost COMPONENTS graph REQUIRED)
 find_package(OpenGL REQUIRED)
@@ -15,7 +16,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/lodepng ${CMAKE_BINARY_DIR}/lodepng)
 
 add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 
-add_executable(demo demo.cpp)
+add_executable(demo ${DEMO_SRC})
 
 target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${OPENGL_LIBRARIES})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE lodepng)
