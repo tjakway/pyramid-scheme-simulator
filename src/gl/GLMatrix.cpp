@@ -1,4 +1,7 @@
 #include "gl/GLMatrix.hpp"
+#include "gl/ShaderDefines.hpp"
+
+#include <GL/glew.h>
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -29,6 +32,11 @@ static const glm::mat4 calculateMVP(
 glm::mat4 GLMatrix::calculateWithModelMatrix(const glm::mat4& model)
 {
     return calculateMVP(startingProjection, startingCamera, model);
+}
+
+void GLMatrix::updateMVPUniform(const glm::mat4& matrix)
+{
+    glUniformMatrix4fv(VS_MVP_LOC, 1, GL_FALSE, &matrix[0][0]);
 }
 
 END_PYRAMID_GL_NAMESPACE

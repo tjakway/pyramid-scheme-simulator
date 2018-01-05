@@ -11,6 +11,8 @@ class GLMatrix
 {
 public:
     glm::mat4 calculateWithModelMatrix(const glm::mat4&);
+
+    void updateMVPUniform(const glm::mat4&);
 };
 
 END_PYRAMID_GL_NAMESPACE
