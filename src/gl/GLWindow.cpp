@@ -25,18 +25,6 @@ namespace {
         using namespace pyramid_scheme_simulator;
         return Util::StringTrim::trim_copy(std::string(SDL_GetError()));
     }
-    
-    //nonfatal SDL error logging
-    //for use in destructors
-    void logSDLError()
-    {
-        const auto  errMsg = getSDLErrorString();
-        if(!errMsg.empty())
-        {
-            std::cerr << "SDL error: " << errMsg << std::endl;
-            SDL_ClearError();
-        }
-    }
 }
 
 BEGIN_PYRAMID_GL_NAMESPACE
