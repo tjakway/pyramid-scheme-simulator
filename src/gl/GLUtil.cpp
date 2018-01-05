@@ -118,11 +118,47 @@ GLuint GLUtil::compileShaderProgram(
         std::string vertexShaderSrc, 
         std::string fragmentShaderSrc)
 {
+    const OpenGLException compileShaderException(
+            STRCAT("Error while creating program with vertex shader: ",
+                std::endl, vertexShaderSrc, std::endl,
+                "fragment shader: ", fragmentShaderSrc));
+
     const GLuint vs = glCreateShader(GL_VERTEX_SHADER);
     if(vs == 0)
     {
-
+        throw compileShaderException;
     }
 
-    return vs;
+    const char* vsSource = vertexShaderSrc.c_str();
+    glShaderSource(vs, 1, &vsSource, NULL);
+    glCompileShader(vs);
+    throwIfErrorInShader(vs);
+
+    const GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    if(fs == 0)
+    {
+        throw compileShaderException;
+    }
+
+    const char* fsSource = fragmentShaderSrc.c_str();
+    glShaderSource(fs, 1, &fsSource, NULL);
+    glCompileShader(fs);
+    throwIfErrorInShader(fs);
+
+    GLuint program = glCreateProgram();
+    if(program == 0)
+    {
+        throw compileShaderException;
+    }
+
+    //need to check error codes manually via glGetError after each subsequent call:
+    glAttachShader(program, vs);
+    GLUtil::throwIfError();
+
+    glAttachShader(program, fs);
+    GLUtil::throwIfError();
+    glLinkProgram(program);
+    GLUtil::throwIfError();
+
+    return program;
 }
