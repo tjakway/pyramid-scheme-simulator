@@ -17,8 +17,8 @@ BEGIN_PYRAMID_GL_NAMESPACE
 const std::string GLContext::windowTitle = "Pyramid Scheme Simulator";
 const std::string GLContext::applicationId = "pyramid_scheme_simulator";
 
-const int GLContext::openglRequiredMajorVersion = -1;
-const int GLContext::openglRequiredMinorVersion = -1;
+const int GLContext::openglRequiredMajorVersion = 4;
+const int GLContext::openglRequiredMinorVersion = 2;
 
 GLContext::GLContext(
         const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions)
