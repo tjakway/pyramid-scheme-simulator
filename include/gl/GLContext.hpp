@@ -35,7 +35,6 @@ protected:
     void glCleanup();
 
 public:
-
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
 
     void run();
