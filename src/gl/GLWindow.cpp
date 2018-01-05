@@ -49,7 +49,9 @@ class GLWindow::SDLGLHandle
     /** ***XXX WARNING*** 
      * DO *NOT* COPY THE SDL_GLContext
      * IT *WILL* CAUSE THE WINDOW TO CRASH
-     * AND WILL NOT TELL YOU WHY */
+     * AND WILL NOT TELL YOU WHY
+     * *ONLY*, **ONLY** MOVE IT 
+     * AND ONLY THEN IF YOU REALLY KNOW WHAT YOU'RE DOING */
     SDL_GLContext& glContext;
 
 public:
