@@ -37,38 +37,31 @@ void GLContext::run()
     glWindow->run();
 }
 
-#include <iostream>
-
 void GLContext::glInit()
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
     //glewExperimental = GL_TRUE;
-    /*GLenum glewErr = glewInit();
+    GLenum glewErr = glewInit();
     if(glewErr != GLEW_OK) {
         throw GLUtil::OpenGLException(STRCAT(
                     "Error occurred during GLEW initialization: ",
                     glewGetErrorString(glewErr)));
-    }*/
+    }
     
 
-//    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
-//                vertexShaderSource, fragmentShaderSource);
+    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
+                vertexShaderSource, fragmentShaderSource);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-    std::cout << "glInit called" << std::endl;
 }
 
 void GLContext::glDraw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-    //std::cout << "glDraw called" << std::endl;
 }
 
 void GLContext::glCleanup()
-{
-    std::cout << "glCleanup called" << std::endl;
-
-}
+{ }
 
 END_PYRAMID_GL_NAMESPACE
