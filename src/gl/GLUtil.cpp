@@ -151,9 +151,14 @@ GLuint GLUtil::compileShaderProgram(
         throw compileShaderException;
     }
 
+    //need to check error codes manually via glGetError after each subsequent call:
     glAttachShader(program, vs);
+    GLUtil::throwIfError();
+
     glAttachShader(program, fs);
+    GLUtil::throwIfError();
     glLinkProgram(program);
+    GLUtil::throwIfError();
 
     return program;
 }
