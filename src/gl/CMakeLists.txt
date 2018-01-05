@@ -15,9 +15,12 @@ find_package(GLEW REQUIRED)
 
 if(FETCH_SDL2_RELEASE)
     fetch_and_build_sdl2_release()
-else(FETCH_SDL2_RELEASE)
+else()
+    #need to tell cmake where to find our SDL2 find scripts
+    #from https://github.com/tcbrindle/sdl2-cmake-scripts
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/sdl2")
     find_package(SDL2 REQUIRED)
-endif(FETCH_SDL2_RELEASE)
+endif()
 
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/glm ${CMAKE_BINARY_DIR}/glm)
