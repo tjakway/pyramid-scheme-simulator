@@ -1,6 +1,9 @@
 #include "gl/NodeRenderer.hpp"
 
 #include "gl/Resources.hpp"
+#include "gl/GLMatrix.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <utility>
 
@@ -11,10 +14,9 @@ NodeRenderer::NodeRenderer(
         std::shared_ptr<GraphLayout::Graph> _layout)
     : nodeVAO(),
     nodeTexture(TextureHandle::loadTextureFromPNG(Resources::getNodeTexturePath())),
-    layout(_layout)
-{
-    matrixState.setCurrentMatrix(currentMatrix);
-}
+    layout(_layout),
+    initialMatrix(currentMatrix)
+{}
 
 void NodeRenderer::draw()
 {
@@ -36,6 +38,15 @@ void NodeRenderer::drawAllNodes()
         const GraphLayout::Node& thisNode = (*layout)[*vIt];
         const GraphLayout::Point& thisPoint = thisNode.getPoint();
 
+        glm::mat4 translatedMat = glm::translate(
+                initialMatrix,
+                glm::vec3(thisPoint.position.x,
+                    thisPoint.position.y,
+                    0.0));
+
+        GLMatrix::updateMVPUniform(translatedMat);
+
+        nodeVAO.draw();
     }
 }
 
