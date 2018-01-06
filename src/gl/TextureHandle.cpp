@@ -58,4 +58,9 @@ TextureHandle TextureHandle::loadTextureFromPNG(const char* filename)
     return TextureHandle(handle);
 }
 
+void TextureHandle::bind() const
+{
+    glBindTexture(GL_TEXTURE_2D, get());
+}
+
 END_PYRAMID_GL_NAMESPACE
