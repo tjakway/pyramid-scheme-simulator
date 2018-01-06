@@ -16,15 +16,15 @@ NodeRenderer::NodeRenderer(
     layout(_layout)
 {}
 
-void NodeRenderer::draw(const glm::mat4& initialMatrix)
+void NodeRenderer::draw(const glm::mat4& initialMatrix) const
 {
     nodeVAO.bind();
     nodeTexture.bind();
 
-    drawAllNodes();
+    drawAllNodes(initialMatrix);
 }
 
-void NodeRenderer::drawAllNodes(const glm::mat4& initialMatrix)
+void NodeRenderer::drawAllNodes(const glm::mat4& initialMatrix) const
 {
     //TODO: draw consumer and distributor nodes differently
 

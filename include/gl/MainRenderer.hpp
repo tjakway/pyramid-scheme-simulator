@@ -24,7 +24,7 @@ BEGIN_PYRAMID_GL_NAMESPACE
 class MainRenderer
 {
     MatrixState matrixState;
-    const NodeRenderer renderer;
+    const NodeRenderer nodeRenderer;
 
     std::shared_ptr<GraphLayout::Graph> layout;
 
