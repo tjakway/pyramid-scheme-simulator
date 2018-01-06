@@ -177,8 +177,10 @@ public:
 
     void draw();
 
+
+
     //the color you get if you don't override getColorData()
-    static std::array<float, numColorDimensions> defaultSolidColor;
+    static const std::array<float, numColorDimensions> defaultSolidColor;
 };
 
 END_PYRAMID_GL_NAMESPACE
