@@ -10,6 +10,7 @@
 
 #include <GL/glew.h>
 
+#include <functional>
 #include <utility>
 #include <array>
 
@@ -145,7 +146,11 @@ private:
     }
 
 public:
-
+    VAOHandle()
+        : GLResourceHandle(genVAO())
+    {
+        setErrorChecker(std::bind(&VAOHandle::errorCheck, std::placeholders::_1));
+    }
 
 };
 
