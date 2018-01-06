@@ -119,6 +119,13 @@ std::vector<float> VAOHandle::interleaveVertexData()
     return vData;
 }
 
+void VAOHandle::draw()
+{
+    //really simple
+    //just draw 4 vertices
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, numVertices);
+}
+
 
 VAOHandle& VAOHandle::operator=(VAOHandle&& other) 
 {
