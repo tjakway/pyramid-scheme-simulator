@@ -12,10 +12,12 @@ BEGIN_PYRAMID_GL_NAMESPACE
 
 class NodeRenderer
 {
-    NodeVAO nodeVAO;
-    TextureHandle nodeTexture;
+    const NodeVAO nodeVAO;
+    const TextureHandle nodeTexture;
 
-    std::shared_ptr<GraphLayout::Graph> layout;
+    const std::shared_ptr<GraphLayout::Graph> layout;
+
+    void drawAllNodes();
 
 public:
     NodeRenderer(std::shared_ptr<GraphLayout::Graph>);
