@@ -61,4 +61,12 @@ std::array<float, VAOHandle::numColorElems> VAOHandle::getColorData() const
     }};
 }
 
+
+std::vector<float> VAOHandle::interleaveVertexData()
+{
+    std::vector<float> vData;
+
+    assert(vData.size() == numVBOElements);
+}
+
 END_PYRAMID_GL_NAMESPACE
