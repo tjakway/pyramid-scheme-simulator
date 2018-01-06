@@ -56,12 +56,14 @@ private:
                      //the start of each dimension's data in the array
                      positionOffset = sizeof(GLfloat) * 0,
                      texCoordOffset = positionOffset + (sizeof(GLfloat) * numPositionDimensions),
-                     colorOffset = texCoordOffset + (sizeof(GLfloat) * numTexCoordDimensions);
+                     colorOffset = texCoordOffset + (sizeof(GLfloat) * numTexCoordDimensions),
 
-
-    virtual std::array<float, numPositionDimensions*numVertices> getPositionData();
-    virtual std::array<float, numTexCoordDimensions*numVertices> getTexCoordData();
-    virtual std::array<float, numColorDimensions*numVertices> getColorData();
+                     numPositionElems = numPositionDimensions*numVertices,
+                     numTexCoordElems = numTexCoordDimensions*numVertices,
+                     numColorElems    = numColorDimensions*numVertices;
+    virtual std::array<float, numPositionElems> getPositionData() const;
+    virtual std::array<float, numTexCoordElems> getTexCoordData() const;
+    virtual std::array<float, numColorElems> getColorData() const;
 
     static constexpr int numVBOElements = 
         (numPositionDimensions + numTexCoordDimensions + numColorDimensions) * numVertices;
@@ -152,6 +154,8 @@ public:
         setErrorChecker(std::bind(&VAOHandle::errorCheck, std::placeholders::_1));
     }
 
+    //the color you get if you don't override getColorData()
+    static std::array<float, numColorDimensions> defaultSolidColor;
 };
 
 END_PYRAMID_GL_NAMESPACE
