@@ -84,6 +84,7 @@ private:
         //fill the vbo
         glBindBuffer(GL_ARRAY_BUFFER, handle.vboId);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * numVBOElements, vertexData.data(), hint);
+        GLUtil::throwIfError();
         
         //indicate offsets into the VBO for each attribute
         //position data:
@@ -95,6 +96,7 @@ private:
                 stride,
                 //the last argument is an int-ish value that's added the VBO pointer
                 (void*)(sizeof(GLfloat) * positionOffset)); 
+        GLUtil::throwIfError();
 
         //tex coord data:
         glVertexAttribPointer(VS_TEXCOORD_LOC, 
@@ -103,6 +105,7 @@ private:
                 GL_FALSE,
                 stride,
                 (void*)(sizeof(GLfloat) * texCoordOffset)); 
+        GLUtil::throwIfError();
 
         //color data:
         glVertexAttribPointer(VS_COLOR_LOC, 
@@ -111,6 +114,7 @@ private:
                 GL_FALSE,
                 stride,
                 (void*)(sizeof(GLfloat) * colorOffset)); 
+        GLUtil::throwIfError();
     }
 
     static void errorCheck(InternalVAOHandle handle)
