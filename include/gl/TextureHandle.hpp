@@ -19,6 +19,8 @@ public:
 
     virtual ~TextureHandle();
 
+    void bind() const;
+
     virtual void freeResource(GLuint) override;
 
     static TextureHandle loadTextureFromPNG(const char*);
