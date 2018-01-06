@@ -47,8 +47,7 @@ private:
                      numTexCoordDimensions = 2, //u, v
                      numColorDimensions = 4,    //r, g, b, a
                      
-                     //AKA stride
-                     totalOffset = sizeof(GLfloat) *  //stride needs to be in bytes
+                     stride = sizeof(GLfloat) *  //stride needs to be in bytes
                                     (numPositionDimensions + 
                                      numTexCoordDimensions + 
                                      numColorDimensions),
@@ -86,8 +85,32 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, handle.vboId);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * numVBOElements, vertexData.data(), hint);
         
-        //indicate data offsets for each attribute
-        glVertexAttribPointer(VS_POSITION_LOC, )
+        //indicate offsets into the VBO for each attribute
+        //position data:
+        glVertexAttribPointer(VS_POSITION_LOC, 
+                numPositionDimensions,
+                GL_FLOAT, 
+                GL_FALSE,
+                //stride is the same for all of these calls because we're using the same VBO
+                stride,
+                //the last argument is an int-ish value that's added the VBO pointer
+                (void*)(sizeof(GLfloat) * positionOffset)); 
+
+        //tex coord data:
+        glVertexAttribPointer(VS_TEXCOORD_LOC, 
+                numTexCoordDimensions,
+                GL_FLOAT, 
+                GL_FALSE,
+                stride,
+                (void*)(sizeof(GLfloat) * texCoordOffset)); 
+
+        //color data:
+        glVertexAttribPointer(VS_COLOR_LOC, 
+                numColorDimensions,
+                GL_FLOAT, 
+                GL_FALSE,
+                stride,
+                (void*)(sizeof(GLfloat) * colorOffset)); 
     }
 
     static void errorCheck(InternalVAOHandle handle)
