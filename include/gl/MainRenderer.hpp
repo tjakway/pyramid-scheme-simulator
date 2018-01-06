@@ -10,13 +10,31 @@
 #include "gl/GraphLayout.hpp"
 #include "gl/NodeRenderer.hpp"
 
+#include "glm/matrix.hpp"
+
 #include <memory>
 #include <utility>
+#include <vector>
+#include <deque>
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
 class MainRenderer
 {
+    class MatrixState
+    {
+        void sizeCheck() const;
+        std::deque<glm::mat4> matrixStack;
+    public:
+        MatrixState();
+
+        glm::mat4 getCurrentMatrix() const;
+        void setCurrentMatrix(const glm::mat4&);
+
+        glm::mat4 popMatrix();
+        void pushMatrix(const glm::mat4&);
+    };
+
     const NodeRenderer renderer;
 
     std::shared_ptr<GraphLayout::Graph> layout;
