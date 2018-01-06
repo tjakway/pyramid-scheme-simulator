@@ -13,6 +13,7 @@
 #include <functional>
 #include <utility>
 #include <array>
+#include <vector>
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
@@ -61,6 +62,7 @@ private:
                      numPositionElems = numPositionDimensions*numVertices,
                      numTexCoordElems = numTexCoordDimensions*numVertices,
                      numColorElems    = numColorDimensions*numVertices;
+
     virtual std::array<float, numPositionElems> getPositionData() const;
     virtual std::array<float, numTexCoordElems> getTexCoordData() const;
     virtual std::array<float, numColorElems> getColorData() const;
@@ -68,8 +70,13 @@ private:
     static constexpr int numVBOElements = 
         (numPositionDimensions + numTexCoordDimensions + numColorDimensions) * numVertices;
 
-    //combine the arrays of each dimension
-    std::array<float, numVBOElements> interleaveVertexData();
+    /** combine the arrays of each dimension
+     * it's definitely possible to do this as a constexpr and return an std::array
+     * but C++11 does *not* make it easy
+     *
+     * returned vector size should be equal to numVBOElements
+     */
+    std::vector<float> interleaveVertexData();
 
     InternalVAOHandle genVAO(GLenum hint = GL_STATIC_DRAW)
     {
