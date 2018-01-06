@@ -42,10 +42,10 @@ class VAOHandle : public GLResourceHandle<InternalVAOHandle, VAOHandle>
 public:
     NEW_EXCEPTION_TYPE_WITH_BASE(VAOException, GLUtil::OpenGLException);
 
+    static constexpr int numVertices = 4;
 private:
     //triangle strip requires 4 vertices to draw a square
-    static constexpr int numVertices = 4,
-                     numPositionDimensions = 3, //x, y, z
+    static constexpr int numPositionDimensions = 3, //x, y, z
                      numTexCoordDimensions = 2, //u, v
                      numColorDimensions = 4,    //r, g, b, a
                      
