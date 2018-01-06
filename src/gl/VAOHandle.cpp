@@ -1,5 +1,11 @@
 #include "gl/VAOHandle.hpp"
 
+#include "Util/GeneralExceptions.hpp"
+
+#include "Util/Strcat.hpp"
+
+#include <cassert>
+
 BEGIN_PYRAMID_GL_NAMESPACE
 
 
@@ -61,12 +67,56 @@ std::array<float, VAOHandle::numColorElems> VAOHandle::getColorData() const
     }};
 }
 
+namespace {
+    template <typename It, typename T> 
+    void takeFrom(
+            It& from, 
+            T& giveTo, 
+            const int num, 
+            //used to make sure the from iterator is valid
+            const It& fromContainerEnd)
+    {
+        for(int i = 0; i < num; i++)
+        {
+            giveTo.emplace_back(*from);
+            ++from;
+
+            if(from == fromContainerEnd)
+            {
+                throw ImplementationException(STRCAT("Error in function ", 
+                            __func__,
+                            " in ", __FILE__, 
+                            ": iterator is past the end"));
+            }
+        }
+    }
+}
 
 std::vector<float> VAOHandle::interleaveVertexData()
 {
     std::vector<float> vData;
 
+    auto pData = getPositionData();
+    auto tData = getTexCoordData();
+    auto cData = getColorData();
+
+    auto pIt = pData.cbegin(),
+         pEnd = pData.cend();
+    auto tIt = tData.cbegin(),
+         tEnd = tData.cend();
+    auto cIt = cData.cbegin(),
+         cEnd = cData.cend();
+
+    for(int i = 0; i < numVertices; i++)
+    {
+        takeFrom(pIt, vData, numPositionDimensions, pEnd);
+        takeFrom(tIt, vData, numTexCoordDimensions, tEnd);
+        takeFrom(cIt, vData, numColorDimensions, cEnd);
+    }
+
     assert(vData.size() == numVBOElements);
+
+    return vData;
 }
 
 END_PYRAMID_GL_NAMESPACE
