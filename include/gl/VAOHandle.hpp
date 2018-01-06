@@ -175,8 +175,6 @@ public:
 
     void bind() { glBindVertexArray(get().vaoId); }
 
-    void draw();
-
     
     //operators are inherited but the default generated operator 
     //doesn't call the implementation in base
