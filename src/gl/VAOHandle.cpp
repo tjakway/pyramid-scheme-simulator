@@ -119,7 +119,7 @@ std::vector<float> VAOHandle::interleaveVertexData()
     return vData;
 }
 
-void VAOHandle::draw()
+void VAOHandle::draw() const
 {
     //really simple
     //just draw 4 vertices
