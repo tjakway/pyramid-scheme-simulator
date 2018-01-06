@@ -17,14 +17,12 @@ class NodeRenderer
     const TextureHandle nodeTexture;
     const std::shared_ptr<GraphLayout::Graph> layout;
 
-    const glm::mat4 initialMatrix;
-
-    void drawAllNodes();
+    void drawAllNodes(const glm::mat4& initialMatrix);
 
 public:
     NodeRenderer(glm::mat4, std::shared_ptr<GraphLayout::Graph>);
 
-    void draw();
+    void draw(const glm::mat4&);
 };
 
 END_PYRAMID_GL_NAMESPACE
