@@ -17,7 +17,7 @@ class NodeRenderer
     const TextureHandle nodeTexture;
     const std::shared_ptr<GraphLayout::Graph> layout;
 
-    MatrixState matrixState;
+    const glm::mat4 initialMatrix;
 
     void drawAllNodes();
 
