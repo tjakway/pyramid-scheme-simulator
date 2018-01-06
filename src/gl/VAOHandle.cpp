@@ -12,7 +12,7 @@ BEGIN_PYRAMID_GL_NAMESPACE
 //we're using triangle strips to draw a square, so need to specify
 //attribute data for 4 vertices
 
-std::array<float, VAOHandle::numColorDimensions> VAOHandle::defaultSolidColor = 
+const std::array<float, VAOHandle::numColorDimensions> VAOHandle::defaultSolidColor = 
     {{ 0, 0, 0, 1 }};
 
 
