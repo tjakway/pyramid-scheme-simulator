@@ -28,6 +28,16 @@ class MainRenderer
 
     std::shared_ptr<GraphLayout::Graph> layout;
 
+    static const std::string vertexShaderSource,
+                             fragmentShaderSource;
+
+
+    //opengl data
+    ShaderProgramHandle shaderProgramHandle;
+
+
+    void glInit();
+
 public:
     //TODO: pass relevant state
     MainRenderer(std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);

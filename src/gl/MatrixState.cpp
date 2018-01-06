@@ -23,7 +23,7 @@ MatrixState::MatrixState()
     matrixStack.emplace_front(GLMatrix::identityMatrix);
 }
 
-glm::mat4& MatrixState::getCurrentMatrix() const
+glm::mat4 MatrixState::getCurrentMatrix() const
 {
     sizeCheck();
     return matrixStack.front();

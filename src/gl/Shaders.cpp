@@ -1,10 +1,10 @@
-#include "gl/GLContext.hpp"
+#include "gl/MainRenderer.hpp"
 
 #include "gl/ShaderDefines.hpp"
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-const std::string GLContext::vertexShaderSource = 
+const std::string MainRenderer::vertexShaderSource = 
 //C++11 raw string litearl
 //see https://stackoverflow.com/questions/1135841/c-multiline-string-literal
 R"RAW(
@@ -27,7 +27,7 @@ void main() {
 }
 )RAW";
 
-const std::string GLContext::fragmentShaderSource = 
+const std::string MainRenderer::fragmentShaderSource = 
 //note: gl_FragColor is deprecated, see https://www.opengl.org/discussion_boards/showthread.php/184313-where-has-built-in-variable-gl_FragColor-gone-in-OpenGL-4-4
 R"RAW(
 #version 420

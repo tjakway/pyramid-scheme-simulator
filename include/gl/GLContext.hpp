@@ -4,8 +4,9 @@
 #include "Config.hpp"
 #include "NamespaceDefines.hpp"
 #include "gl/GLWindow.hpp"
-#include "gl/GLResourceHandle.hpp"
-#include "gl/ShaderProgramHandle.hpp"
+
+#include "gl/MainRenderer.hpp"
+
 
 #include <string>
 #include <memory>
@@ -15,9 +16,6 @@ BEGIN_PYRAMID_GL_NAMESPACE
 class GLContext
 {
 protected:
-    static const std::string vertexShaderSource,
-                             fragmentShaderSource;
-
     static const int openglRequiredMajorVersion,
                      openglRequiredMinorVersion;
     
@@ -26,9 +24,8 @@ protected:
     
     std::unique_ptr<GLWindow> glWindow;
 
-    //opengl data
-    ShaderProgramHandle shaderProgramHandle;
-    
+    std::unique_ptr<MainRenderer> mainRenderer;
+
     //rendering callbacks
     void glInit();
     void glDraw();
