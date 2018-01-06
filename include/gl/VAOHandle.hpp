@@ -132,6 +132,7 @@ private:
         GLUtil::throwIfError();
 
 
+        return handle;
     }
 
     static void errorCheck(InternalVAOHandle handle)
@@ -171,6 +172,10 @@ public:
     VAOHandle(VAOHandle&& other)
         : GLResourceHandle(std::move(other))
     {}
+
+    void bind() { glBindVertexArray(get().vaoId); }
+
+    void draw();
 
     //the color you get if you don't override getColorData()
     static std::array<float, numColorDimensions> defaultSolidColor;
