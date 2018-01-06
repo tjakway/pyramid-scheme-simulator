@@ -95,7 +95,8 @@ private:
         glBindBuffer(GL_ARRAY_BUFFER, handle.vboId);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * numVBOElements, vertexData.data(), hint);
         GLUtil::throwIfError();
-        
+
+
         //indicate offsets into the VBO for each attribute
         //position data:
         glVertexAttribPointer(VS_POSITION_LOC, 
@@ -106,6 +107,8 @@ private:
                 stride,
                 //the last argument is an int-ish value that's added the VBO pointer
                 (void*)(sizeof(GLfloat) * positionOffset)); 
+        //enable the attribute for this VAO
+        glEnableVertexAttribArray(VS_POSITION_LOC);
         GLUtil::throwIfError();
 
         //tex coord data:
@@ -115,6 +118,7 @@ private:
                 GL_FALSE,
                 stride,
                 (void*)(sizeof(GLfloat) * texCoordOffset)); 
+        glEnableVertexAttribArray(VS_TEXCOORD_LOC);
         GLUtil::throwIfError();
 
         //color data:
@@ -124,7 +128,10 @@ private:
                 GL_FALSE,
                 stride,
                 (void*)(sizeof(GLfloat) * colorOffset)); 
+        glEnableVertexAttribArray(VS_COLOR_LOC);
         GLUtil::throwIfError();
+
+
     }
 
     static void errorCheck(InternalVAOHandle handle)
@@ -160,6 +167,10 @@ public:
     {
         setErrorChecker(std::bind(&VAOHandle::errorCheck, std::placeholders::_1));
     }
+
+    VAOHandle(VAOHandle&& other)
+        : GLResourceHandle(std::move(other))
+    {}
 
     //the color you get if you don't override getColorData()
     static std::array<float, numColorDimensions> defaultSolidColor;
