@@ -51,26 +51,16 @@ void GLContext::glInit()
                     glewGetErrorString(glewErr)));
     }
     
-
-    shaderProgramHandle = ShaderProgramHandle::loadShaderProgramFromStrings(
-                vertexShaderSource, fragmentShaderSource);
-
-    //don't forget to set this as the current shader
-    glUseProgram(shaderProgramHandle.get());
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    //set up the mvp matrix with no transformations yet
-    GLMatrix::updateMVPUniform(GLMatrix::identityMatrix);
+    //TODO: pass CTOR args
+    mainRenderer = new MainRenderer();
 }
 
 void GLContext::glDraw()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    mainRenderer->draw();
 }
 
 void GLContext::glCleanup()
-{ 
-}
+{ }
 
 END_PYRAMID_GL_NAMESPACE
