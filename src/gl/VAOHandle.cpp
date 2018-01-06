@@ -126,4 +126,10 @@ void VAOHandle::draw()
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numVertices);
 }
 
+
+VAOHandle& VAOHandle::operator=(VAOHandle&& other) 
+{
+    return GLResourceHandle<InternalVAOHandle, VAOHandle>::operator=(std::move(other));
+}
+
 END_PYRAMID_GL_NAMESPACE
