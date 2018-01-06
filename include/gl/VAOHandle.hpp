@@ -173,9 +173,9 @@ public:
         : GLResourceHandle(std::move(other))
     {}
 
-    void bind() { glBindVertexArray(get().vaoId); }
+    void bind() const { glBindVertexArray(get().vaoId); }
 
-    void draw();
+    void draw() const;
 
     
     //operators are inherited but the default generated operator 
