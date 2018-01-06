@@ -177,7 +177,11 @@ public:
 
     void draw();
 
-
+    
+    //operators are inherited but the default generated operator 
+    //doesn't call the implementation in base
+    //so we need to override it
+    virtual VAOHandle& operator=(VAOHandle&& other) override;
 
     //the color you get if you don't override getColorData()
     static const std::array<float, numColorDimensions> defaultSolidColor;
