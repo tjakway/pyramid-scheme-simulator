@@ -7,6 +7,7 @@
 #include "gl/ShaderProgramHandle.hpp"
 #include "gl/NodeVAO.hpp"
 #include "gl/GraphLayout.hpp"
+#include "gl/MatrixState.hpp"
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
@@ -14,13 +15,14 @@ class NodeRenderer
 {
     const NodeVAO nodeVAO;
     const TextureHandle nodeTexture;
-
     const std::shared_ptr<GraphLayout::Graph> layout;
+
+    MatrixState matrixState;
 
     void drawAllNodes();
 
 public:
-    NodeRenderer(std::shared_ptr<GraphLayout::Graph>);
+    NodeRenderer(glm::mat4, std::shared_ptr<GraphLayout::Graph>);
 
     void draw();
 };

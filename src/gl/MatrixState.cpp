@@ -1,4 +1,4 @@
-#include "gl/MainRenderer.hpp"
+#include "gl/MatrixState.hpp"
 
 #include "gl/GLMatrix.hpp"
 
@@ -7,7 +7,7 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-void MainRenderer::MatrixState::sizeCheck() const
+void MatrixState::sizeCheck() const
 {
     //(!) doesn't throw when empty
     //see http://www.cplusplus.com/reference/deque/deque/pop_front/
@@ -17,38 +17,38 @@ void MainRenderer::MatrixState::sizeCheck() const
     }
 }
 
-MainRenderer::MatrixState::MatrixState()
+MatrixState::MatrixState()
 {
     //the starting matrix is the identity matrix
     matrixStack.emplace_front(GLMatrix::identityMatrix);
 }
 
-glm::mat4 MainRenderer::MatrixState::getCurrentMatrix() const
+glm::mat4& MatrixState::getCurrentMatrix() const
 {
     sizeCheck();
     return matrixStack.front();
 }
 
-void MainRenderer::MatrixState::setCurrentMatrix(const glm::mat4& x)
+void MatrixState::setCurrentMatrix(const glm::mat4& x)
 {
     //the current matrix is the one at the top of the stack
     if(matrixStack.size() > 0)
     {
         popMatrix();
-        pushMatrix(x);
+        matrixStack.emplace_front(x);
     }
     else
     {
-        pushMatrix(x);
+        matrixStack.emplace_front(x);
     }
 }
 
-void MainRenderer::MatrixState::pushMatrix(const glm::mat4& x)
+void MatrixState::pushMatrix()
 {
-    matrixStack.emplace_front(x);
+    matrixStack.emplace_front(getCurrentMatrix());
 }
 
-glm::mat4 MainRenderer::MatrixState::popMatrix()
+glm::mat4 MatrixState::popMatrix()
 {
     sizeCheck();
 
