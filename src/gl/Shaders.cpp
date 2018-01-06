@@ -12,7 +12,7 @@ R"RAW(
 
 layout(location = VS_MVP_LOC) uniform mat4 mvp_matrix;
 
-layout(location = VS_MODELSPACE_LOC) in vec3 in_vertex_position;
+layout(location = VS_POSITION_LOC) in vec3 in_vertex_position;
 layout(location = VS_TEXCOORD_LOC) in vec2 in_tex_coords;
 layout(location = VS_COLOR_LOC) in vec4 in_colors;
 
