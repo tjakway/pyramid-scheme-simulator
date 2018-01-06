@@ -10,23 +10,21 @@
 BEGIN_PYRAMID_GL_NAMESPACE
 
 NodeRenderer::NodeRenderer(
-        glm::mat4 currentMatrix,
         std::shared_ptr<GraphLayout::Graph> _layout)
     : nodeVAO(),
     nodeTexture(TextureHandle::loadTextureFromPNG(Resources::getNodeTexturePath())),
-    layout(_layout),
-    initialMatrix(currentMatrix)
+    layout(_layout)
 {}
 
-void NodeRenderer::draw()
+void NodeRenderer::draw(const glm::mat4& initialMatrix) const
 {
     nodeVAO.bind();
     nodeTexture.bind();
 
-    drawAllNodes();
+    drawAllNodes(initialMatrix);
 }
 
-void NodeRenderer::drawAllNodes()
+void NodeRenderer::drawAllNodes(const glm::mat4& initialMatrix) const
 {
     //TODO: draw consumer and distributor nodes differently
 

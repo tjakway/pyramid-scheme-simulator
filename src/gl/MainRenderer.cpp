@@ -20,7 +20,8 @@ void MainRenderer::glInit()
 
 MainRenderer::MainRenderer(
         std::pair<std::unique_ptr<GraphLayout::Graph>, 
-        GraphLayout::BoundingBox>)
+        GraphLayout::BoundingBox> layout)
+    : nodeRenderer(layout)
 {
     glInit();
 }
@@ -28,6 +29,9 @@ MainRenderer::MainRenderer(
 void MainRenderer::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glm::mat4 matrix = GLMatrix::identityMatrix;
+    nodeRenderer.draw(matrix);
 }
 
 END_PYRAMID_GL_NAMESPACE
