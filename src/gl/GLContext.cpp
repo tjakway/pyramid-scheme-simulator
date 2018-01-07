@@ -55,14 +55,11 @@ void GLContext::glInit()
     mainRenderer = new MainRenderer();
 }
 
-void GLContext::glDraw()
+void GLContext::drawAndSwapFrames()
 {
     mainRenderer->draw();
+    glWindow->swapWindow();
 }
-
-void GLContext::glCleanup()
-{ }
-
 
 std::shared_ptr<GLWindow::EventPoller> GLContext::getEventPoller()
 {
