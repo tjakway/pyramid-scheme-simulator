@@ -216,7 +216,7 @@ void GraphLayout::Node::setUnique(const Unique& newId)
 }
 
 
-GraphLayout::Node::NodeCopier GraphLayout::Node::getNodeCopier(Graph& from, Graph& to)
+GraphLayout::Node::NodeCopier GraphLayout::Node::getNodeCopier(const Graph& from, Graph& to)
 {
     return NodeCopier(from, to);
 }

@@ -332,12 +332,13 @@ void GraphLayout::Layout::makeGraph(Graph& to, const PopulationGraph& population
 }
 
 
-std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph() const
+std::unique_ptr<GraphLayout::Graph> 
+    GraphLayout::Layout::copyGraph(const Graph& source)
 {
     std::unique_ptr<Graph> newGraph = make_unique<Graph>();
 
-    boost::copy_graph(*graph, *newGraph, 
-            boost::vertex_copy(Node::getNodeCopier(*graph, *newGraph)));
+    boost::copy_graph(source, *newGraph, 
+            boost::vertex_copy(Node::getNodeCopier(source, *newGraph)));
 
     //this is probably unnecessary since the internal unique_ptr<Point> in Node
     //should only be changed by setting it to a new Point (i.e. not modifying the data
@@ -350,6 +351,13 @@ std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::copyGraph() const
     }
 
     return newGraph;
+}
+
+//calls the static version with the member graph
+std::unique_ptr<GraphLayout::Graph> 
+    GraphLayout::Layout::copyGraph() const
+{
+    return copyGraph(*graph);
 }
 
 std::unique_ptr<GraphLayout::Graph> GraphLayout::Layout::runSimulation(
