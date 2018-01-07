@@ -318,8 +318,6 @@ GLWindow::GLWindow(const std::string& title,
             openglRequiredMajorVersion,
             openglRequiredMinorVersion);
 
-    makeCurrent();
-
     eventPoller = std::make_shared<EventPoller>();
 }
 
