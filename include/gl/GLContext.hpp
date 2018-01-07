@@ -26,11 +26,6 @@ protected:
 
     std::unique_ptr<MainRenderer> mainRenderer;
 
-    //rendering callbacks
-    void glInit();
-    void glDraw();
-    void glCleanup();
-
 public:
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&,
             std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);
