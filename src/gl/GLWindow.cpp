@@ -255,6 +255,58 @@ public:
 
 std::atomic_bool GLWindow::SDL::sdlInitialized {false};
 
+//EventPoller implementation
+GLWindow::EventPoller::EventType GLWindow::EventPoller::getEvent()
+{
+    LockType {eventQueueMutex};
+
+    if(eventQueue.empty())
+    {
+        return NO_EVENT;
+    }
+    else
+    {
+        EventType ev = eventQueue.front();
+        eventQueue.pop_front();
+        return ev;
+    }
+}
+
+void GLWindow::EventPoller::addEvent(EventType ev)
+{
+    LockType {eventQueueMutex};
+
+    eventQueue.emplace_back(ev);
+}
+
+void GLWindow::EventPoller::poll()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT)
+        {
+            addEvent(QUIT);
+        }
+
+        if (event.type == SDL_KEYDOWN)
+        {
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_ESCAPE:
+                        addEvent(QUIT);
+                        break;
+                default:
+                        break;
+                }
+        }
+    }
+}
+
+GLWindow::EventPoller::EventPoller()
+    : pollThread(std::bind(&GLWindow::EventPoller::poll, this))
+{}
+
 
 GLWindow::GLWindow(const std::string& title, 
     std::pair<int, int> windowDimensions,
@@ -267,6 +319,8 @@ GLWindow::GLWindow(const std::string& title,
             openglRequiredMinorVersion);
 
     makeCurrent();
+
+    eventPoller = std::make_shared<EventPoller>();
 }
 
 void GLWindow::makeCurrent()
@@ -284,5 +338,10 @@ void GLWindow::swapWindow()
 
 GLWindow::~GLWindow() 
 { }
+
+std::shared_ptr<GLWindow::EventPoller> GLWindow::getEventPoller()
+{
+    return eventPoller;
+}
 
 END_PYRAMID_GL_NAMESPACE
