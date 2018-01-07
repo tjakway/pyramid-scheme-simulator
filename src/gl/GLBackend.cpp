@@ -9,6 +9,7 @@
 #include <functional>
 #include <atomic>
 #include <iostream>
+#include <utility>
 
 #include <spdlog/spdlog.h>
 
@@ -134,9 +135,20 @@ public:
 
 
 GLBackend::GLBackend(
-        const Config::BackendOptions::GLBackendOptions::WindowOptions& options)
-{
+            const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& layoutOptions,
+            const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions)
+    //kick off the work thread in the CTOR
+    //it'll wait until Simulation calls exportData
+    : glWorkThread(
+            make_unique<GLWorkThread>(layoutOptions, windowOptions, std::ref(workQueue)))
+{}
 
+
+//add new work to the queue
+//GLWorkThread will handle it in FIFO order
+void GLBackend::exportData(const std::shared_ptr<Simulation::Backend::Data> data)
+{
+    workQueue.emplace_front(data);
 }
 
 END_PYRAMID_GL_NAMESPACE

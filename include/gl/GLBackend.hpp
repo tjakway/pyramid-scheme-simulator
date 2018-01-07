@@ -22,12 +22,14 @@ class GLBackend : public Simulation::Backend
     WorkQueue workQueue;
     bool builtLayout = false;
 
-    std::unique_ptr<GLContext> glContext;
+    std::unique_ptr<GLWorkThread> glWorkThread;
 
 public:
     virtual void exportData(const std::shared_ptr<Simulation::Backend::Data>) override;
 
-    GLBackend(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
+    GLBackend(
+            const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& layoutOptions,
+            const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions);
 };
 
 END_PYRAMID_GL_NAMESPACE
