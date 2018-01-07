@@ -25,20 +25,19 @@ GLContext::GLContext(
         const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions)
     : glWindow(make_unique<GLWindow>(GLContext::windowTitle,
             std::make_pair(windowOptions.width, windowOptions.height),
-            std::bind(&GLContext::glInit, this),
-            std::bind(&GLContext::glDraw, this),
-            std::bind(&GLContext::glCleanup, this),
             openglRequiredMajorVersion,
             openglRequiredMinorVersion))
-{}
+{
+    glWindow->makeCurrent();
+    //only call glInit after we have an OpenGL context
+    glInit();
+}
 
 
 void GLContext::run()
 {
     glWindow->run();
 }
-
-static GLuint TEST_VAO;
 
 void GLContext::glInit()
 {
