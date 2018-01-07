@@ -81,7 +81,7 @@ class GLWorkThread
                         layout = GraphLayout(layoutOptions,
                             *task->graph).calculateLayout();
 
-                    glContext = make_unique<GLContext>(windowOptions, layout);
+                    glContext = make_unique<GLContext>(windowOptions, *layout.first);
                 }
 
                 if(eventPoller == nullptr)
