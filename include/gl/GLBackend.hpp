@@ -20,7 +20,6 @@ class GLWorkThread;
 class GLBackend : public Simulation::Backend
 {
     WorkQueue workQueue;
-    bool builtLayout = false;
 
     std::unique_ptr<GLWorkThread> glWorkThread;
 
