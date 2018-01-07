@@ -84,6 +84,7 @@ private:
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateWindowException, SDLInitException);
     NEW_EXCEPTION_TYPE_WITH_BASE(SDLCreateGLContextException, SDLInitException);
 
+public:
     static void throwIfSDLError()
     {
 #ifndef GL_WINDOW_SKIP_SDL_ERROR_CHECKING
@@ -96,6 +97,7 @@ private:
 #endif
     }
 
+private:
     static void setOpenGLAttributes();
 
     static void initSDL()
@@ -256,28 +258,28 @@ std::atomic_bool GLWindow::SDL::sdlInitialized {false};
 
 GLWindow::GLWindow(const std::string& title, 
     std::pair<int, int> windowDimensions,
-    std::function<void()> _init,
-    std::function<void()> _draw,
-    std::function<void()> _cleanup,
     int openglRequiredMajorVersion, //ignored if <1
     int openglRequiredMinorVersion) //ignored if <1
-    : init(_init), 
-    draw(_draw), 
-    cleanup(_cleanup)
 {
     sdlGlHandle = GLWindow::SDL::makeSDLGLWindow(title,
             windowDimensions, 
             openglRequiredMajorVersion,
             openglRequiredMinorVersion);
+
+    makeCurrent();
 }
 
-void GLWindow::run()
+void GLWindow::makeCurrent()
 {
-    GLWindow::SDL::runLoop(
-            sdlGlHandle.get(),
-            init,
-            draw,
-            cleanup);
+    if(!SDL_GL_MakeCurrent(sdlGlHandle->getWindow(), sdlGlHandle->getGLContext()))
+    {
+        GLWindow::SDL::throwIfSDLError();
+    }
+}
+
+void GLWindow::swapWindow()
+{
+    SDL_GL_SwapWindow(sdlGlHandle->getWindow());
 }
 
 GLWindow::~GLWindow() 
