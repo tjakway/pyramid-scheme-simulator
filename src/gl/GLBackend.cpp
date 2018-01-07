@@ -170,4 +170,6 @@ void GLBackend::join() noexcept
     glWorkThread->workThread.join();
 }
 
+GLBackend::~GLBackend() {}
+
 END_PYRAMID_GL_NAMESPACE

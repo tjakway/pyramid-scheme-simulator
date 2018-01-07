@@ -30,7 +30,7 @@ public:
             const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& layoutOptions,
             const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions);
 
-    virtual ~GLBackend() {}
+    virtual ~GLBackend();
 
     virtual void interrupt() noexcept override;
     virtual bool interrupted() const noexcept override;
