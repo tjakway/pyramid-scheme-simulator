@@ -19,9 +19,9 @@ void MainRenderer::glInit()
 }
 
 MainRenderer::MainRenderer(
-        std::pair<std::unique_ptr<GraphLayout::Graph>, 
+    std::pair<const GraphLayout::Graph&, 
         GraphLayout::BoundingBox> layout)
-    : nodeRenderer(layout)
+    : nodeRenderer(layout.first)
 {
     glInit();
 }

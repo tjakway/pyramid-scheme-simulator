@@ -11,7 +11,7 @@
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
-using WorkQueue = AtomicDeque<const std::shared_ptr<Simulation::Backend::Data>, 
+using WorkQueue = AtomicDeque<std::shared_ptr<Simulation::Backend::Data>, 
       //don't need a recursive mutex
       std::mutex>;
 

@@ -81,7 +81,9 @@ class GLWorkThread
                         layout = GraphLayout(layoutOptions,
                             *task->graph).calculateLayout();
 
-                    glContext = make_unique<GLContext>(windowOptions, *layout.first);
+                    std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox>
+                        refLayout = std::make_pair(std::ref(*layout.first), layout.second);
+                    glContext = make_unique<GLContext>(windowOptions, refLayout);
                 }
 
                 if(eventPoller == nullptr)

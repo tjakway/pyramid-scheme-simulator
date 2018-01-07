@@ -3,17 +3,20 @@
 #include "gl/Resources.hpp"
 #include "gl/GLMatrix.hpp"
 
+#include "Util/Util.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <utility>
+#include <memory>
 
 BEGIN_PYRAMID_GL_NAMESPACE
 
 NodeRenderer::NodeRenderer(
-        std::shared_ptr<GraphLayout::Graph> _layout)
+        const GraphLayout::Graph& _layout)
     : nodeVAO(),
     nodeTexture(TextureHandle::loadTextureFromPNG(Resources::getNodeTexturePath())),
-    layout(_layout)
+    layout(GraphLayout::Layout::copyGraph(_layout))
 {}
 
 void NodeRenderer::draw(const glm::mat4& initialMatrix) const

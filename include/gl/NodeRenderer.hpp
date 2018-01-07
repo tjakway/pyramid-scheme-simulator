@@ -20,7 +20,8 @@ class NodeRenderer
     void drawAllNodes(const glm::mat4& initialMatrix) const;
 
 public:
-    NodeRenderer(std::shared_ptr<GraphLayout::Graph>);
+    NodeRenderer(
+        const GraphLayout::Graph&);
 
     void draw(const glm::mat4&) const;
 };

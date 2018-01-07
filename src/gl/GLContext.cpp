@@ -46,8 +46,7 @@ void GLContext::glInit(
                     glewGetErrorString(glewErr)));
     }
     
-    //TODO: pass CTOR args
-    mainRenderer = new MainRenderer(layoutParams);
+    mainRenderer = make_unique<MainRenderer>(layoutParams);
 }
 
 void GLContext::drawAndSwapFrames()

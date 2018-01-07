@@ -67,6 +67,7 @@ public:
                 const std::shared_ptr<const SaleHandler::RecordType>);
 
             Data(const Data&);
+            virtual ~Data() {}
         };
 
         virtual void interrupt() noexcept = 0;
