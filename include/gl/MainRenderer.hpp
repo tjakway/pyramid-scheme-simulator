@@ -40,7 +40,7 @@ class MainRenderer
 
 public:
     //TODO: pass relevant state
-    MainRenderer(std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);
+    MainRenderer(std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox>);
 
     void draw();
 };
