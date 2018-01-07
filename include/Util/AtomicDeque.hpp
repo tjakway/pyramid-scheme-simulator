@@ -12,6 +12,13 @@ protected:
 
     using LockType = std::lock_guard<MutexType>;
     using Container = std::deque<T>;
+
+    T pop_return_back_st()
+    {
+        T backElem = container.back();
+        container.pop_back();
+        return backElem;
+    }
 public:
     
     typename Container::size_type size() const
@@ -24,10 +31,7 @@ public:
     T pop_return_back()
     {
         LockType {mut};
-
-        T backElem = container.back();
-        container.pop_back();
-        return backElem;
+        return pop_return_back_st();
     }
 
     template <typename... Args>
@@ -37,14 +41,18 @@ public:
         container.emplace_front(std::forward<Args...>(args...));
     }
 
-    //TODO: specialize for pointer types to just return T instead of T*
-    //pass an instance of std::chrono::duration
-    //returns nullptr if timed out (in which case no state will be changed)
-    template <typename Duration>
-    T* pop_return_back_or_wait(Duration timeout)
+    T* pop_return_back_or_null()
     {
         LockType {mut};
-        //TODO: implement
+        if(container.empty())
+        {
+            return nullptr;
+        }
+        else
+        {
+            //in case our mutex isn't recursive,
+            //make sure we don't lock again by calling pop_return_back()
+            return pop_return_back_st();
+        }
     }
-
 };
