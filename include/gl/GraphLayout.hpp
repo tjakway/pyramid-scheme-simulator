@@ -136,7 +136,7 @@ public:
 
     //bottom left and top right
     using BoundingBox = std::pair<Position, Position>;
-protected:
+
     class Layout
     {
         const double stiffness, 
