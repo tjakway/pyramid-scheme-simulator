@@ -33,12 +33,6 @@ GLContext::GLContext(
     glInit();
 }
 
-
-void GLContext::run()
-{
-    glWindow->run();
-}
-
 void GLContext::glInit()
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
