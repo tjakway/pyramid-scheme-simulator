@@ -4,9 +4,6 @@
 #include <mutex>
 #include <memory>
 
-#include "Util/Util.hpp"        //for make_unique
-using namespace pyramid_scheme_simulator;
-
 template <typename T, typename MutexType = std::recursive_mutex>
 class AtomicDeque
 {
@@ -45,7 +42,7 @@ public:
         container.emplace_front(std::forward<Args...>(args...));
     }
 
-    std::unique_ptr<T> pop_return_back_or_null()
+    std::shared_ptr<T> pop_return_back_or_null()
     {
         LockType {mut};
         if(container.empty())
@@ -57,7 +54,7 @@ public:
         {
             //in case our mutex isn't recursive,
             //make sure we don't lock again by calling pop_return_back()
-            return make_unique<T>(pop_return_back_st());
+            return std::make_shared<T>(pop_return_back_st());
         }
     }
 };
