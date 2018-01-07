@@ -22,7 +22,8 @@ const int GLContext::openglRequiredMajorVersion = 4;
 const int GLContext::openglRequiredMinorVersion = 5;
 
 GLContext::GLContext(
-        const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions)
+        const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions,
+        std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox> layoutParams)
     : glWindow(make_unique<GLWindow>(GLContext::windowTitle,
             std::make_pair(windowOptions.width, windowOptions.height),
             openglRequiredMajorVersion,
@@ -30,10 +31,11 @@ GLContext::GLContext(
 {
     glWindow->makeCurrent();
     //only call glInit after we have an OpenGL context
-    glInit();
+    glInit(layoutParams);
 }
 
-void GLContext::glInit()
+void GLContext::glInit(
+        std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox> layoutParams)
 {
     //see https://www.opengl.org/discussion_boards/showthread.php/185079-glewExperimental
     glewExperimental = GL_TRUE;
@@ -45,7 +47,7 @@ void GLContext::glInit()
     }
     
     //TODO: pass CTOR args
-    mainRenderer = new MainRenderer();
+    mainRenderer = new MainRenderer(layoutParams);
 }
 
 void GLContext::drawAndSwapFrames()

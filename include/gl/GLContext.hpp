@@ -26,13 +26,11 @@ protected:
 
     std::unique_ptr<MainRenderer> mainRenderer;
 
-    void glInit();
+    void glInit(std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox>);
 
 public:
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&,
-            std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);
-
-    void run();
+            std::pair<const GraphLayout::Graph&, GraphLayout::BoundingBox>);
 
     std::shared_ptr<GLWindow::EventPoller> getEventPoller();
 
