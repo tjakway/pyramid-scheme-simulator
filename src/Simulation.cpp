@@ -32,7 +32,7 @@ Simulation::Simulation(Config* c, std::vector<std::unique_ptr<Backend>>&& _backe
     populationGraph = buildGraph(config);
 }
 
-std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config> config)
+std::unique_ptr<PopulationGraph> Simulation::buildGraph(std::shared_ptr<Config> config)
 {
     return std::unique_ptr<PopulationGraph>(new PopulationGraph(*config));
 }
