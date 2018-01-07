@@ -26,6 +26,8 @@ protected:
 
     std::unique_ptr<MainRenderer> mainRenderer;
 
+    void glInit();
+
 public:
     GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&,
             std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);
