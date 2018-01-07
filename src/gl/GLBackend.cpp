@@ -61,7 +61,7 @@ class GLWorkThread
             std::shared_ptr<Simulation::Backend::Data> task;
 
             {
-                const std::shared_ptr<Simulation::Backend::Data>* ret = 
+                std::unique_ptr<const std::shared_ptr<Simulation::Backend::Data>> ret = 
                     workQueue.pop_return_back_or_null();
 
                 if(ret != nullptr)
