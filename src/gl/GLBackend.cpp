@@ -17,9 +17,11 @@ BEGIN_PYRAMID_GL_NAMESPACE
 
 class GLWorkThread
 {
+public:
     std::thread workThread;
     std::atomic_bool interrupted;
 
+private:
     void run(
             WorkQueue& workQueue,
             const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& layoutOptions,
@@ -149,6 +151,23 @@ GLBackend::GLBackend(
 void GLBackend::exportData(const std::shared_ptr<Simulation::Backend::Data> data)
 {
     workQueue.emplace_front(data);
+}
+
+
+//thread bookkeeping
+void GLBackend::interrupt() noexcept
+{
+    glWorkThread->interrupted.store(true);
+}
+
+bool GLBackend::interrupted() const noexcept
+{
+    return glWorkThread->interrupted.load();
+}
+
+void GLBackend::join() noexcept
+{
+    glWorkThread->workThread.join();
 }
 
 END_PYRAMID_GL_NAMESPACE

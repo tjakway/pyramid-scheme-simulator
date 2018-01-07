@@ -29,6 +29,13 @@ public:
     GLBackend(
             const Config::BackendOptions::GLBackendOptions::GraphLayoutOptions& layoutOptions,
             const Config::BackendOptions::GLBackendOptions::WindowOptions& windowOptions);
+
+    virtual ~GLBackend() {}
+
+    virtual void interrupt() noexcept override;
+    virtual bool interrupted() const noexcept override;
+
+    virtual void join() noexcept override;
 };
 
 END_PYRAMID_GL_NAMESPACE
