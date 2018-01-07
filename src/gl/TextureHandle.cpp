@@ -64,4 +64,12 @@ void TextureHandle::bind() const
     GLUtil::throwIfError();
 }
 
+void TextureHandle::freeResource(GLuint x)
+{
+    if(glIsTexture(x))
+    {
+        glDeleteTextures(1, &x);
+    }
+}
+
 END_PYRAMID_GL_NAMESPACE
