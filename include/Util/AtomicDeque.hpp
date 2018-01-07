@@ -37,4 +37,14 @@ public:
         container.emplace_front(std::forward<Args...>(args...));
     }
 
+    //TODO: specialize for pointer types to just return T instead of T*
+    //pass an instance of std::chrono::duration
+    //returns nullptr if timed out (in which case no state will be changed)
+    template <typename Duration>
+    T* pop_return_back_or_wait(Duration timeout)
+    {
+        LockType {mut};
+        //TODO: implement
+    }
+
 };
