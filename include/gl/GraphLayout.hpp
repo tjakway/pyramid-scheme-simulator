@@ -200,6 +200,7 @@ public:
 
 protected:
     const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
+    Layout layout;
 
 public:
     GraphLayout(
