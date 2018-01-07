@@ -45,6 +45,8 @@ public:
     //but will not respect the timeout in rendering code
     template <typename Duration>
     void runWithTimeout(Duration);
+
+    std::shared_ptr<GLWindow::EventPoller> getEventPoller();
 };
 
 END_PYRAMID_GL_NAMESPACE

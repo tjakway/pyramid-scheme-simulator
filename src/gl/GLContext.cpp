@@ -63,4 +63,10 @@ void GLContext::glDraw()
 void GLContext::glCleanup()
 { }
 
+
+std::shared_ptr<GLWindow::EventPoller> GLContext::getEventPoller()
+{
+    return glWindow->getEventPoller();
+}
+
 END_PYRAMID_GL_NAMESPACE
