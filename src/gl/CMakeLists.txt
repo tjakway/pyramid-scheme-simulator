@@ -30,9 +30,9 @@ add_library(${MAIN_LIB_GL_TARGET} ${MAIN_LIB_GL_SRC})
 
 add_executable(demo ${DEMO_SRC})
 
+target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC glm)
 target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${OPENGL_LIBRARIES})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE lodepng)
-target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE glm)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE Boost::graph)
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${CROSSGUID_TARGET_NAME})
 target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${SPDLOG_TARGET_NAME})

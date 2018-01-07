@@ -2,7 +2,7 @@
 
 #include "NamespaceDefines.hpp"
 
-#include "glm/matrix.hpp"
+#include <glm/matrix.hpp>
 
 #include <deque>
 
