@@ -136,7 +136,7 @@ public:
 
     //bottom left and top right
     using BoundingBox = std::pair<Position, Position>;
-protected:
+
     class Layout
     {
         const double stiffness, 
@@ -200,7 +200,6 @@ protected:
 
 protected:
     const std::unique_ptr<GraphLayoutTick> maxTicksPtr;
-    Layout layout;
 
 public:
     GraphLayout(
