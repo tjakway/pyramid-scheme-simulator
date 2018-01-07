@@ -128,7 +128,7 @@ public:
 
         Unique getUnique() const { return *id; }
 
-        static NodeCopier getNodeCopier(Graph&, Graph&);
+        static NodeCopier getNodeCopier(const Graph&, Graph&);
 
         std::string print() const;
     };
@@ -190,7 +190,9 @@ protected:
         Layout(const Layout&);
 
         BoundingBox getBoundingBox();
+
         std::unique_ptr<Graph> copyGraph() const;
+        static std::unique_ptr<Graph> copyGraph(const Graph&);
 
         std::unique_ptr<Graph> runSimulation();
         std::unique_ptr<Graph> runSimulation(GraphLayoutTick maxTicks);
@@ -216,11 +218,11 @@ public:
 
 class GraphLayout::Node::NodeCopier
 {
-    Graph& from;
+    const Graph& from;
     Graph& to;
 
 public:
-    NodeCopier(Graph& _from, Graph& _to)
+    NodeCopier(const Graph& _from, Graph& _to)
         : from(_from), to(_to)
     {}
 
