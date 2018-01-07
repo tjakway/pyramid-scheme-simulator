@@ -32,9 +32,19 @@ protected:
     void glCleanup();
 
 public:
-    GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&);
+    GLContext(const Config::BackendOptions::GLBackendOptions::WindowOptions&,
+            std::pair<std::unique_ptr<GraphLayout::Graph>, GraphLayout::BoundingBox>);
 
     void run();
+
+    //pass an instance of std::chrono::duration
+    //GLContext will not poll for events longer than the passed timeout
+    //BUT more time may elapse in the draw loop
+    //
+    //i.e. runWithTimeout is useful to stop GLContext from spinning while waiting for input,
+    //but will not respect the timeout in rendering code
+    template <typename Duration>
+    void runWithTimeout(Duration);
 };
 
 END_PYRAMID_GL_NAMESPACE
