@@ -26,7 +26,7 @@ class MainRenderer
     MatrixState matrixState;
     const NodeRenderer nodeRenderer;
 
-    std::shared_ptr<GraphLayout::Graph> layout;
+    std::unique_ptr<GraphLayout::Graph> layout;
 
     static const std::string vertexShaderSource,
                              fragmentShaderSource;

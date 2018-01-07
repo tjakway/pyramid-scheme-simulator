@@ -16,7 +16,8 @@ protected:
 
     T pop_return_back_st()
     {
-        T backElem = container.back();
+        //make sure it's copied
+        T backElem(container.back());
         container.pop_back();
         return backElem;
     }
@@ -47,8 +48,7 @@ public:
         LockType {mut};
         if(container.empty())
         {
-            //return null
-            return std::unique_ptr<T>();
+            return nullptr;
         }
         else
         {
