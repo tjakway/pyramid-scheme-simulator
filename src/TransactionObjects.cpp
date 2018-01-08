@@ -27,6 +27,15 @@ namespace {
 
 namespace pyramid_scheme_simulator {
 
+
+ConversionHandler::RecordType ConversionHandler::operator()(SimulationTick,
+    CapitalHolder&, 
+    CapitalHolder&)
+{
+    //TODO: implement
+    return emptyListTransactionRecord<ConversionHandler::ElementType>();
+}
+
 const ConversionHandler::ComparatorType ConversionHandler::comparator =
     mkCmpUniqueables<ConversionHandler::Conversion>();
 
