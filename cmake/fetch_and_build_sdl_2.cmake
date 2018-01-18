@@ -24,5 +24,8 @@ function(fetch_and_build_sdl2_release)
         message(STATUS "Building SDL2...")
         #build the archive we just extracted
         add_subdirectory(${SDL2_EXTRACT_DIR}/${SDL2_RELEASE} ${CMAKE_BINARY_DIR}/sdl2_bin)
+
+        include_directories(${SDL2_EXTRACT_DIR}/${SDL2_RELEASE}/include )
+
     endif()
 endfunction()
