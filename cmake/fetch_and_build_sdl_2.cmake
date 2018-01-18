@@ -22,6 +22,11 @@ function(fetch_and_build_sdl2_release)
             OUTPUT_QUIET)
 
         message(STATUS "Building SDL2...")
+
+        #disable OpenGL ES support or it'll exclude regular OpenGL
+        #see https://bugzilla.libsdl.org/show_bug.cgi?id=1428
+        set(VIDEO_OPENGLES OFF CACHE BOOL "disabled because of https://bugzilla.libsdl.org/show_bug.cgi?id=1428")
+
         #build the archive we just extracted
         add_subdirectory(${SDL2_EXTRACT_DIR}/${SDL2_RELEASE} ${CMAKE_BINARY_DIR}/sdl2_bin)
 
