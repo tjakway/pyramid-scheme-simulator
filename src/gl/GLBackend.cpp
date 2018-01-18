@@ -61,17 +61,9 @@ private:
         while(!interrupted.load() && !receivedQuitEvent)
         {
             //check if there's new work in the queue
-            std::shared_ptr<Simulation::Backend::Data> task;
+            const std::shared_ptr<Simulation::Backend::Data> task = 
+                workQueue.pop_return_back_or_null();
 
-            {
-                std::unique_ptr<const std::shared_ptr<Simulation::Backend::Data>> ret = 
-                    workQueue.pop_return_back_or_null();
-
-                if(ret != nullptr)
-                {
-                    task = std::shared_ptr<Simulation::Backend::Data>(*ret);
-                }
-            }
             
             if(task != nullptr)
             {
@@ -99,7 +91,9 @@ private:
 
 
             //check if it's time to shutdown
-            if(eventPoller->getEvent() == GLWindow::EventPoller::EventType::QUIT)
+            if(eventPoller != nullptr && 
+                    (eventPoller->getEvent() == 
+                     GLWindow::EventPoller::EventType::QUIT))
             {
                 receivedQuitEvent = true;
                 logger->info("Received quit event from GLWindow::EventPoller");

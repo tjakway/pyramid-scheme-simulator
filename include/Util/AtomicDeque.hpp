@@ -17,7 +17,7 @@ protected:
     T pop_return_back_st()
     {
         //make sure it's copied
-        T backElem(container.back());
+        T backElem(std::move(container.back()));
         container.pop_back();
         return backElem;
     }
@@ -43,7 +43,7 @@ public:
         container.emplace_front(std::forward<Args...>(args...));
     }
 
-    std::unique_ptr<T> pop_return_back_or_null()
+    T pop_return_back_or_null()
     {
         LockType {mut};
         if(container.empty())
@@ -54,7 +54,7 @@ public:
         {
             //in case our mutex isn't recursive,
             //make sure we don't lock again by calling pop_return_back()
-            return std::unique_ptr<T>(new T(pop_return_back_st()));
+            return T(pop_return_back_st());
         }
     }
 };
