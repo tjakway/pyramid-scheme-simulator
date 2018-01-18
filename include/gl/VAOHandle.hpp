@@ -63,9 +63,10 @@ private:
                      numTexCoordElems = numTexCoordDimensions*numVertices,
                      numColorElems    = numColorDimensions*numVertices;
 
-    virtual std::array<float, numPositionElems> getPositionData() const;
-    virtual std::array<float, numTexCoordElems> getTexCoordData() const;
-    virtual std::array<float, numColorElems> getColorData() const;
+    //a strange compiler bug causes a sigsegv if the get*Data() methods are virtual
+    std::array<float, numPositionElems> getPositionData() const;
+    std::array<float, numTexCoordElems> getTexCoordData() const;
+    std::array<float, numColorElems> getColorData() const;
 
     static constexpr int numVBOElements = 
         (numPositionDimensions + numTexCoordDimensions + numColorDimensions) * numVertices;
