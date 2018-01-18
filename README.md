@@ -21,6 +21,7 @@ TODO:
     * implement upstream profit transfer... this is what makes it a pyramid scheme, after all
 
     * disable building dependency tests (xgtest, catch_tests)
+    * need to generate the correct SDL include line.  for -DFETCH_SDL2_RELEASE=ON it should be <SDL.h>, otherwise it should be <SDL2/SDL.h>
 
 Config TODO:
     * have flags for default graph sizes: --verysmall --small --medium --big --verybig etc.
