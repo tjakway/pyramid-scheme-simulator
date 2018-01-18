@@ -4,7 +4,7 @@ Wishlist:
 Requires:
     * libuuid (for crossguid): install with `sudo apt-get install uuid-dev`
     * Boost::graph (libboost-graph-dev)
-    * for the opengl backend on linux: libgtkmm-3.0-dev libgl1-mesa-dev libglew-dev
+    * for the opengl backend on linux: libgl1-mesa-dev libglew-dev libsdl2-dev
 
 *for a bug in SDL <2.5, pass -DFETCH_SDL2_RELEASE=ON to cmake to automatically download and use a newer SDL2 version (see https://bugzilla.libsdl.org/show_bug.cgi?id=3858)*
 
