@@ -43,8 +43,8 @@ StaticConsumer::StaticConsumer(Unique u, Money m,
 StaticConsumer::StaticConsumer(const StaticConsumer& c)
     : StaticConsumer(c.id, c.getMoney(),
             //copy pointer referands
-            salesChance->clone().get(),
-            conversionChance->clone().get())
+            c.salesChance->clone().get(),
+            c.conversionChance->clone().get())
 {}
 
 
