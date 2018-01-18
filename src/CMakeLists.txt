@@ -7,7 +7,7 @@ find_package(Boost COMPONENTS graph REQUIRED)
 
 #WARNING: CMAKE WON'T BE ABLE TO DETECT WHEN NEW SOURCE FILES ARE ADDED!
 #note: DONT recurse because we don't want to build src/exe/main.cpp here
-FILE(GLOB MAIN_LIB_SRC *.cpp *.c *.cxx)
+FILE(GLOB MAIN_LIB_SRC *.cpp *.c *.cxx ai/*.cpp ai/*.c ai/*.cxx)
 
 #build crossguid dependency
 include(${CMAKE_SOURCE_DIR}/cmake/build_crossguid.cmake)

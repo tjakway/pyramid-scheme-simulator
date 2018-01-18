@@ -15,5 +15,12 @@ int main(int argc, char** argv)
 {
     std::cout << "Hello, SDL2!" << std::endl;
 
+    GLBackend glBackend(
+            Config::Defaults::defaultGraphLayoutOptions,
+            Config::Defaults::defaultWindowOptions);
 
+    while(true)
+    {
+        glBackend.exportData(nullptr);
+    }
 }
