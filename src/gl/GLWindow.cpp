@@ -13,7 +13,7 @@
 #include <cassert>
 
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "Util/Util.hpp"
 #include "Util/Strcat.hpp"
