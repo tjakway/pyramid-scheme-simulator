@@ -78,9 +78,8 @@ namespace {
     {
         for(int i = 0; i < num; i++)
         {
-            giveTo.emplace_back(*from);
-            ++from;
-
+            //check *before* we dereference the iterator--it's allowed to be
+            //past the end
             if(from == fromContainerEnd)
             {
                 throw ImplementationException(STRCAT("Error in function ", 
@@ -88,6 +87,9 @@ namespace {
                             " in ", __FILE__, 
                             ": iterator is past the end"));
             }
+
+            giveTo.emplace_back(*from);
+            ++from;
         }
     }
 }
