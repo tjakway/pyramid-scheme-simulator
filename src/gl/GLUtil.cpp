@@ -58,10 +58,11 @@ void GLUtil::throwIfErrorInShader(GLuint shader)
 
     if(status != GL_TRUE)
     {
+        auto infoLog = getShaderInfoLog(shader);
         throw GLUtilException(STRCAT("Error in shader with source: ",
                     std::endl, getShaderSource(shader),
                     std::endl, "shader info log: ",
-                    getShaderInfoLog(shader), std::endl));
+                    infoLog, std::endl));
     }
 }
 
@@ -86,7 +87,8 @@ std::string GLUtil::getShaderStringValue(
 
         std::string strValue(buf.get());
 
-        if(writtenLength != lengthParam)
+        //written length might be lengthParam - 1 because lengthParam might include a null terminator
+        if(writtenLength != lengthParam && ((writtenLength + 1) != lengthParam))
         {
             throw GLUtil::GLUtilException(STRCAT(
                     "Got length of ", writtenLength, " but expected ", lengthParam, " for "

@@ -1,0 +1,44 @@
+diff --git a/cmake/fetch_and_build_sdl_2.cmake b/cmake/fetch_and_build_sdl_2.cmake
+index 11b4938..c42a2a1 100644
+--- a/cmake/fetch_and_build_sdl_2.cmake
++++ b/cmake/fetch_and_build_sdl_2.cmake
+@@ -22,7 +22,9 @@ function(fetch_and_build_sdl2_release)
+             OUTPUT_QUIET)
+ 
+         message(STATUS "Building SDL2...")
++
++        set(FETCHED_SDL2_SRC_DIR ${SDL2_EXTRACT_DIR}/${SDL2_RELEASE})
+         #build the archive we just extracted
+-        add_subdirectory(${SDL2_EXTRACT_DIR}/${SDL2_RELEASE} ${CMAKE_BINARY_DIR}/sdl2_bin)
++        add_subdirectory(${FETCHED_SDL2_SRC_DIR} ${CMAKE_BINARY_DIR}/sdl2_bin)
+     endif()
+ endfunction()
+diff --git a/src/gl/CMakeLists.txt b/src/gl/CMakeLists.txt
+index 3ae2561..e9dcc49 100644
+--- a/src/gl/CMakeLists.txt
++++ b/src/gl/CMakeLists.txt
+@@ -41,7 +41,7 @@ target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${GLEW_LIBRARIES})
+ target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC pthread)
+ target_link_libraries(${MAIN_LIB_GL_TARGET} INTERFACE ${MAIN_LIB_TARGET})
+ if(FETCH_SDL2_RELEASE)
+-    target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE SDL2)
++    target_link_libraries(${MAIN_LIB_GL_TARGET} PUBLIC SDL2)
+ else()
+     target_link_libraries(${MAIN_LIB_GL_TARGET} PRIVATE ${SDL2_LIBRARY})
+ endif()
+@@ -52,6 +52,7 @@ target_link_libraries(demo PUBLIC pthread)
+ target_include_directories(demo INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ if(NOT FETCH_SDL2_RELEASE)
+     target_include_directories(demo SYSTEM PRIVATE ${SDL2_INCLUDE_DIR})
++    target_include_directories(demo SYSTEM PRIVATE ${FETCHED_SDL2_SRC_DIR}/include)
+ endif()
+ 
+ target_require_cxx11(demo)
+@@ -64,6 +65,7 @@ target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PUBLIC ${GLEW_INCLUDE_DI
+ target_include_directories(${MAIN_LIB_GL_TARGET} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+ if(NOT FETCH_SDL2_RELEASE)
+     target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PRIVATE ${SDL2_INCLUDE_DIR})
++    target_include_directories(${MAIN_LIB_GL_TARGET} SYSTEM PRIVATE ${FETCHED_SDL2_SRC_DIR}/include)
+ endif()
+ 
+ target_require_cxx11(${MAIN_LIB_GL_TARGET})

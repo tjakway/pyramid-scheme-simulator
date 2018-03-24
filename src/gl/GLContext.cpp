@@ -29,7 +29,7 @@ GLContext::GLContext(
             openglRequiredMajorVersion,
             openglRequiredMinorVersion))
 {
-    glWindow->makeCurrent();
+    //glWindow->makeCurrent();
     //only call glInit after we have an OpenGL context
     glInit(layoutParams);
 }
