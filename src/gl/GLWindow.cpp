@@ -12,8 +12,9 @@
 #include <iostream>
 #include <cassert>
 
-#include <GL/glew.h>
 #include <SDL.h>
+#include <SDL_opengl_glext.h>
+#include <SDL_opengl.h>
 
 #include "Util/Util.hpp"
 #include "Util/Strcat.hpp"
@@ -163,6 +164,19 @@ private:
         return std::move(context);
     }
 
+    static void printOpenGLVersions()
+    {
+        int sdlMajorVersion = -1, sdlMinorVersion = -1;
+        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &sdlMajorVersion);
+        SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &sdlMinorVersion);
+
+        auto versionString = glGetString(GL_VERSION);
+
+        std::cout << "SDL OpenGL version returns: \t" 
+            << sdlMajorVersion << "." << sdlMinorVersion << std::endl
+            << "glGetString returns: \t" << versionString << std::endl;
+    }
+
     static void setOpenGLAttributes(int majorVersion, int minorVersion)
     {
         //TODO: do I need this?
@@ -171,14 +185,15 @@ private:
         //use core profile
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-        if(majorVersion >= 1 && minorVersion >= 1)
-        {
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
-        }
+        SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
 
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+        printOpenGLVersions();
     }
+
 
 public:
 

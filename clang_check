@@ -1,0 +1,7 @@
+true #pass
+test -f compile_commands.json || ln -s /home/thomas/git/pyramid-scheme-simulator//bin/compile_commands.json /home/thomas/git/pyramid-scheme-simulator//
+find src/ include/ test -regextype egrep -regex ".*\.(cpp|h|hpp|cxx|c)" -type f \
+    -exec clang-check -extra-arg=-Wno-undef -extra-arg=-Wno-unused-function {} +
+find: ‘clang-check’: No such file or directory
+Makefile:55: recipe for target 'clang-check' failed
+make: *** [clang-check] Error 1
