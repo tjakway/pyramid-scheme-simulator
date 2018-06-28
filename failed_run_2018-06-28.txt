@@ -1,0 +1,95 @@
+thomas@thomas-Z370:~/git/pyramid-scheme-simulator/bin$ make check
+[  5%] Built target xg
+[ 11%] Built target gtest
+[ 17%] Built target gtest_main
+[ 77%] Built target pyramid
+[100%] Built target test-pyramid-simulator
+Scanning dependencies of target check
+Running main() from gtest_main.cc
+[==========] Running 21 tests from 6 test cases.
+[----------] Global test environment set-up.
+[----------] 6 tests from BasicGraphTests
+[ RUN      ] BasicGraphTests.BasicSaleTest
+[       OK ] BasicGraphTests.BasicSaleTest (1 ms)
+[ RUN      ] BasicGraphTests.BasicNoInventoryTest
+[       OK ] BasicGraphTests.BasicNoInventoryTest (0 ms)
+[ RUN      ] BasicGraphTests.BasicRestockTest
+[       OK ] BasicGraphTests.BasicRestockTest (0 ms)
+[ RUN      ] BasicGraphTests.TestVertices
+[       OK ] BasicGraphTests.TestVertices (0 ms)
+[ RUN      ] BasicGraphTests.MutateVertices_MoneyTest
+[       OK ] BasicGraphTests.MutateVertices_MoneyTest (0 ms)
+[ RUN      ] BasicGraphTests.BecomeDistributorTest
+[       OK ] BasicGraphTests.BecomeDistributorTest (0 ms)
+[----------] 6 tests from BasicGraphTests (1 ms total)
+
+[----------] 1 test from GenGraphTests
+[ RUN      ] GenGraphTests.TestLinkChance
+[       OK ] GenGraphTests.TestLinkChance (1545 ms)
+[----------] 1 test from GenGraphTests (1545 ms total)
+
+[----------] 4 tests from MapCollectionTests
+[ RUN      ] MapCollectionTests.testGenUniqueSequenceContainers
+[       OK ] MapCollectionTests.testGenUniqueSequenceContainers (1 ms)
+[ RUN      ] MapCollectionTests.testGenUniqueSet
+[       OK ] MapCollectionTests.testGenUniqueSet (2 ms)
+[ RUN      ] MapCollectionTests.testEndofunctors
+[       OK ] MapCollectionTests.testEndofunctors (0 ms)
+[ RUN      ] MapCollectionTests.testXToAllCollections
+[       OK ] MapCollectionTests.testXToAllCollections (0 ms)
+[----------] 4 tests from MapCollectionTests (3 ms total)
+
+[----------] 3 tests from MiscTests
+[ RUN      ] MiscTests.TestUnorderedMapOfUniques
+[       OK ] MiscTests.TestUnorderedMapOfUniques (0 ms)
+[ RUN      ] MiscTests.TestSTRCAT
+[       OK ] MiscTests.TestSTRCAT (0 ms)
+[ RUN      ] MiscTests.TestSTRCATWithDebuggingMacros
+[       OK ] MiscTests.TestSTRCATWithDebuggingMacros (0 ms)
+[----------] 3 tests from MiscTests (0 ms total)
+
+[----------] 5 tests from SampleFromTests
+[ RUN      ] SampleFromTests.TestGeneratedSampleChance
+[       OK ] SampleFromTests.TestGeneratedSampleChance (1 ms)
+[ RUN      ] SampleFromTests.TestZeroSampleChance
+[       OK ] SampleFromTests.TestZeroSampleChance (0 ms)
+[ RUN      ] SampleFromTests.TestOneSampleChance
+[       OK ] SampleFromTests.TestOneSampleChance (1 ms)
+[ RUN      ] SampleFromTests.TestHalfSampleChance
+[       OK ] SampleFromTests.TestHalfSampleChance (0 ms)
+[ RUN      ] SampleFromTests.TestTwentyPctSampleChance
+/home/thomas/git/pyramid-scheme-simulator/test/src/SampleFromTests.cpp:48: Failure
+Value of: __impl::assertInRangeInclusive(average, Util::getMargins(sampleChance, TestConfig::MarginsOfError::defaultMargin))
+  Actual: false (0.18683333333333332 is not within the range [0.19, 0.21000000000000002])
+  Expected: true
+  To reproduce, re-run test with seed: 1530198452169 by changing the following code at line 29
+                  29      rd_ptr rd = Util::rdFromSeed(seed);
+                  to
+                                  29      rd_ptr rd = Util::rdFromSeed(1530198452169);
+
+                                  [  FAILED  ] SampleFromTests.TestTwentyPctSampleChance (1 ms)
+                                  [----------] 5 tests from SampleFromTests (3 ms total)
+
+                                  [----------] 2 tests from UndirectedEdgeTests
+                                  [ RUN      ] UndirectedEdgeTests.TestEquality
+                                  [       OK ] UndirectedEdgeTests.TestEquality (0 ms)
+                                  [ RUN      ] UndirectedEdgeTests.TestUnorderedSetMembership
+                                  [       OK ] UndirectedEdgeTests.TestUnorderedSetMembership (0 ms)
+                                  [----------] 2 tests from UndirectedEdgeTests (0 ms total)
+
+                                  [----------] Global test environment tear-down
+                                  [==========] 21 tests from 6 test cases ran. (1552 ms total)
+                                  [  PASSED  ] 20 tests.
+                                  [  FAILED  ] 1 test, listed below:
+                                  [  FAILED  ] SampleFromTests.TestTwentyPctSampleChance
+
+                                   1 FAILED TEST
+                                   test/CMakeFiles/check.dir/build.make:57: recipe for target 'test/CMakeFiles/check' failed
+                                   make[3]: *** [test/CMakeFiles/check] Error 1
+                                   CMakeFiles/Makefile2:1273: recipe for target 'test/CMakeFiles/check.dir/all' failed
+                                   make[2]: *** [test/CMakeFiles/check.dir/all] Error 2
+                                   CMakeFiles/Makefile2:1280: recipe for target 'test/CMakeFiles/check.dir/rule' failed
+                                   make[1]: *** [test/CMakeFiles/check.dir/rule] Error 2
+                                   Makefile:593: recipe for target 'check' failed
+                                   make: *** [check] Error 2
+
