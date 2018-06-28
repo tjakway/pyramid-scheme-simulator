@@ -1,6 +1,9 @@
 project(pyramid_tests)
 
-FILE(GLOB TEST_SRC src/*.cpp src/*.c src/*.cxx)
+#need 3.6 for list(FILTER), see https://stackoverflow.com/questions/42167432/cmake-list-does-not-recognize-sub-command-filter/42167646#42167646
+cmake_minimum_required(VERSION 3.6)
+
+file(GLOB TEST_SRC src/*.cpp src/*.c src/*.cxx)
 
 #build google test
 include(${CMAKE_SOURCE_DIR}/cmake/build_gtest.cmake)
@@ -13,6 +16,9 @@ if(BUILD_OPENGL_BACKEND)
     set(TEST_SRC ${TEST_SRC} ${TEST_GL_SRC})
 
     find_package(OpenGL REQUIRED)
+else(BUILD_OPENGL_BACKEND)
+    #remove opengl sources if we're not building the gl backend
+    list(FILTER TEST_SRC EXCLUDE REGEX ".*src/gl/[a-zA-Z_]+.cpp$")
 endif(BUILD_OPENGL_BACKEND)
 
 add_executable(${TEST_TARGET} ${TEST_SRC})
