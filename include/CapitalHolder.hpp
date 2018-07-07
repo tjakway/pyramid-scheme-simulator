@@ -13,7 +13,7 @@
 
 namespace pyramid_scheme_simulator {
 
-class CapitalHolder : public Uniqueable, protected Lockable
+class CapitalHolder : public PrettyPrintUniqueable, protected Lockable
 {
 protected:
     Money money;
@@ -31,7 +31,7 @@ protected:
     }
 
     CapitalHolder(Unique id, Money startingFunds) 
-        : Uniqueable(id), money(startingFunds) {}
+        : PrettyPrintUniqueable(id), money(startingFunds) {}
 
     CapitalHolder(Money startingFunds) 
         : CapitalHolder(Unique::emptyUnique, startingFunds) {}

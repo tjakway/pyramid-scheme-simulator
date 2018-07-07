@@ -9,6 +9,15 @@ namespace pyramid_scheme_simulator {
 
 class PrettyPrintUniqueable : public PrettyPrintable, public Uniqueable
 {
+protected:
+    PrettyPrintUniqueable() 
+        : Uniqueable()
+    {}
+
+    PrettyPrintUniqueable(Unique x)
+        : Uniqueable(x)
+    {}
+
 public:
     virtual std::string prettyPrintImpl() const override;
 
