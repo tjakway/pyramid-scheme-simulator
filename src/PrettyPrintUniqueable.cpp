@@ -12,7 +12,7 @@ namespace pyramid_scheme_simulator {
 PrettyPrintUniqueable::~PrettyPrintUniqueable() {}
 
 
-std::string PrettyPrintUniqueable::prettyPrint() const
+std::string PrettyPrintUniqueable::prettyPrintImpl() const
 {
     //see https://stackoverflow.com/questions/1024648/retrieving-a-c-class-name-programmatically
     const std::string concreteClassName = typeid(*this).name();

@@ -35,8 +35,8 @@ StaticChanceContributor::StaticChanceContributor(double staticChance)
 
 std::string ChanceContributor::Intersection::prettyPrintImpl() const
 {
-    return STRCAT("intersection of ", PrettyPrintable::getClassNameOrNull(firstSource), 
-            " and ", PrettyPrintable::getClassNameOrNull(secondSource));
+    return STRCAT("intersection of ", PrettyPrintable::tryPrettyPrint(firstSource.get()),
+            " and ", PrettyPrintable::tryPrettyPrint(secondSource.get()));
 }
 
 
@@ -67,6 +67,5 @@ std::unique_ptr<ChanceContributor> RandomChanceContributor::clone() const
 {
     return make_unique<RandomChanceContributor>();
 }
-
 
 }

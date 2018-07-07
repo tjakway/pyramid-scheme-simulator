@@ -134,7 +134,7 @@ public:
 
     bool operator<(const Unique&) const;
 
-    virtual std::string prettyPrint() const override;
+    virtual std::string prettyPrintImpl() const override;
 };
 
 std::ostream& operator<<(std::ostream& os, const Unique& res);

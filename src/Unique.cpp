@@ -48,7 +48,7 @@ std::string Unique::print() const
 }
 
 
-std::string Unique::prettyPrint() const
+std::string Unique::prettyPrintImpl() const
 {
     return print();
 }

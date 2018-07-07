@@ -36,30 +36,15 @@ public:
         std::string name;
         if(ptr == nullptr)
         {
-            name = "nullptr of type " + typeinfo(ptr).name();
+            name = "nullptr of type " + std::string(typeid(ptr).name());
         }
         else
         {
-            name = typeinfo(ptr).name();
+            name = typeid(ptr).name();
         }
 
         return surroundName(name);
     }
-
-
-    /**
-     * specializations for unique_ptr and shared_ptr
-     */
-    template <typename X> static std::string getClassNameOrNull(std::unique_ptr<X> ptr)
-    {
-        return getClassNameOrNull(ptr.get());
-    }
-
-    template <typename X> static std::string getClassNameOrNull(std::shared_ptr<X> ptr)
-    {
-        return getClassNameOrNull(ptr.get());
-    }
-
 
     /**
      * so you can pretty print pointers without checking if they're null
@@ -74,19 +59,5 @@ public:
         {
             return ptr->prettyPrint();
         }
-    }
-
-
-    /**
-     * specializations for unique_ptr and shared_ptr
-     */
-    template <typename X> static std::string tryPrettyPrint(std::unique_ptr<X> ptr)
-    {
-        return tryPrettyPrint(ptr.get());
-    }
-
-    template <typename X> static std::string tryPrettyPrint(std::shared_ptr<X> ptr)
-    {
-        return tryPrettyPrint(ptr.get());
     }
 };

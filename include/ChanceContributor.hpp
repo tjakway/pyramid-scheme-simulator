@@ -77,8 +77,6 @@ public:
 
     virtual std::unique_ptr<ChanceContributor> clone() const override;
     virtual ~RandomChanceContributor() {}
-
-    virtual std::string prettyPrint() const override;
 };
 
     
