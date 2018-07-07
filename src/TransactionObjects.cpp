@@ -52,7 +52,7 @@ const std::function<ConversionHandler::RecordType(
 
 class ConversionHandler::ConversionPredicateResult
 {
-    const std::shared_ptr<ConversionHandler::RecordType> conversionRecord;
+    const std::unique_ptr<ConversionHandler::RecordType> conversionRecord;
     const std::string msg;
 
 public:
@@ -68,7 +68,7 @@ protected:
     /**
      * success constructor (no need to pass a result code or message)
      */
-    ConversionPredicateResult(std::shared_ptr<ConversionHandler::RecordType> rec)
+    ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType> rec)
         : ConversionPredicateResult(SUCCESS, rec, std::string())
     {}
 
@@ -80,7 +80,7 @@ protected:
      * master constructor
      */
     ConversionPredicateResult(const Result _status, 
-            std::shared_ptr<ConversionHandler::RecordType> rec,
+            std::unique_ptr<ConversionHandler::RecordType> rec,
             std::string _msg)
         : status(_status), conversionRecord(rec), msg(_msg)
     {}
@@ -147,21 +147,44 @@ public:
         return ConversionPredicateResult(CANT_BE_DISTRIBUTOR, 
                 STRCAT("Consumer id=", consumer.prettyPrintId(), " canBecomeDistributor returned false"));
     }
+
+    static ConversionPredicateResult success(Conversion::RecordType&& rec)
+    {
+        return ConversionPredicateResult(std::unique_ptr<Conversion::RecordType>(rec));
+    }
 };
 
 
 
-bool ConversionHandler::testConversion(rd_ptr rd,
+ConversionPredicateResult ConversionHandler::testConversion(
+        rd_ptr rd,
+        const SimulationTick when,
         const Consumer& consumer,
         const Distributor& distributor,
         const Money buyIn)
 {
-    return consumer.canBecomeDistributor(buyIn) && 
-        (consumer.getDistributorConversionChanceContribution() +
-         distributor.getDistributorConversionChanceContribution())->sampleFrom(rd);
+    if(consumer.canBecomeDistributor(buyIn))
+    {
+        const auto combinedChanceContributor = consumer.getDistributorConversionChanceContribution() +
+            distributor.getDistributorConversionChanceContribution();
+            
+        if(combinedChanceContributor->sampleFrom(rd))
+        {
+            return ConversionPredicateResult::success(
+                    Conversion::RecordType(when, consumer.id, distributor.id));
+        }
+        else
+        {
+            return ConversionPredicateResult::procFailed(*combinedChanceContributor);
+        }
+    }
+    else
+    {
+        return ConversionPredicateResult::cantBeDistributor(consumer);
+    }
 }
 
-bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
+ConversionPredicateResult ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
 {
     const Consumer*    consumer = nullptr;
     const Distributor* distributor = nullptr;
@@ -201,13 +224,27 @@ bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs
 
     if(consumer == nullptr || distributor == nullptr)
     {
-        return ConversionPredicateResult::castFailed(consumer, distributor);
+        return ConversionPredicateResult::castFailed(consumer, lhs.id, 
+                distributor, rhs.id);
     }
     else
     {
-        return testConversion(rd, *consumer, *distributor, buyIn);
+        return testConversion(rd, when, *consumer, *distributor, buyIn);
     }
 }
+
+
+ConversionHandler::ConversionHandler(rd_ptr _rd, const Money _buyIn)
+    : rd(_rd), 
+    buyIn(_buyIn),
+    predicate(
+        [this](const CapitalHolder& lhs, const CapitalHolder& rhs) { 
+            return predF(lhs, rhs);
+        })
+{}
+
+
+
 
 const std::function<SaleHandler::RecordType(
         SaleHandler::RecordType&&, 

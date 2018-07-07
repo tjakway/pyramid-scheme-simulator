@@ -36,7 +36,7 @@ class ConversionHandler
      */
     class ConversionPredicateResult;
 
-    static bool testConversion(rd_ptr, 
+    static ConversionPredicateResult testConversion(rd_ptr, 
             const Consumer&, 
             const Distributor&, 
             const Money buyIn);
@@ -48,20 +48,20 @@ class ConversionHandler
      * wraps testConversion and makes sure the 2 capitalholders
      * are a Consumer and Distributor
      */
-    bool predF(const CapitalHolder&, const CapitalHolder&);
+    ConversionPredicateResult predF(const CapitalHolder&, const CapitalHolder&);
 public:
-    ConversionHandler(rd_ptr _rd, const Money _buyIn)
+    ConversionHandler(rd_ptr _rd, const Money _buyIn);
         : rd(_rd), buyIn(_buyIn) {}
 
     class Conversion : public UniqueRecord
     { 
     public:
-        const std::shared_ptr<Distributor> convertedBy;
+        const Unique convertedBy;
 
         Conversion(SimulationTick when, 
                 const Unique who, 
-                std::shared_ptr<Distributor> convertedBy)
-            : UniqueRecord(when, who), convertedBy(convertedBy)
+                const Unique& _convertedBy)
+            : UniqueRecord(when, who), convertedBy(_convertedBy)
         {}
     };
 
@@ -80,10 +80,7 @@ public:
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
-    const PopulationGraph::EdgePredicate predicate = 
-        [this](const CapitalHolder& lhs, const CapitalHolder& rhs) { 
-            return predF(lhs, rhs);
-        };
+    const PopulationGraph::EdgePredicate predicate;
 };
 
 
