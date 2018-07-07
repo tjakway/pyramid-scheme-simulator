@@ -86,6 +86,8 @@ public:
         buyer(_buyer)
     {}
 
+    virtual ~EffectTransferable() {}
+
 public:
     virtual void effectTransfers()
     {
@@ -205,6 +207,8 @@ public:
                     _chain))
     {}
 
+    virtual ~ChainedPercentWithGuarantee() {}
+
 protected:
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override
     {
@@ -249,6 +253,8 @@ public:
                 _wholesalePrice,
                 _chain)
     {}
+
+    virtual ~CompanyCommission() {}
 
 protected:
     virtual Money getBenefit(std::shared_ptr<Distributor> who) const override

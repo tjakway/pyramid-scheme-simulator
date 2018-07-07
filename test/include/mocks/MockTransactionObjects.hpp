@@ -10,6 +10,8 @@ public:
         //construct with an empty restock list
         : SaleHandler(std::set<Unique>())
     {}
+
+    virtual ~MockSaleHandler() {}
 };
 
 }

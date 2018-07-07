@@ -124,6 +124,8 @@ public:
     PercentOption(double pc) : BoundedOption(pc,
             std::pair<double, double>(0.0, 1.0))
         {}
+
+    virtual ~PercentOption() {}
 };
 
 }

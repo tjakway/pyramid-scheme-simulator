@@ -152,6 +152,8 @@ public:
 
     SaleHandler(const RestockHandler::RestockSet&);
 
+    virtual ~SaleHandler() {}
+
     virtual RecordType operator()(SimulationTick,
             Money, 
             rd_ptr,

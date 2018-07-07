@@ -19,6 +19,8 @@ public:
 
     std::unique_ptr<ChanceContributor> operator+(const ChanceContributor& other);
 
+    virtual ~ChanceContributor() {}
+
 private:
     class Intersection;
 };
@@ -39,6 +41,8 @@ public:
 
     virtual double getChance(rd_ptr) override;
     virtual std::unique_ptr<ChanceContributor> clone() const override;
+
+    virtual ~Intersection() {}
 };
 
 /**
@@ -53,6 +57,8 @@ public:
 
     virtual double getChance(rd_ptr) override;
     virtual std::unique_ptr<ChanceContributor> clone() const override;
+
+    virtual ~StaticChanceContributor() {}
 };
 
 /**
@@ -65,6 +71,7 @@ public:
     virtual double getChance(rd_ptr) override;
 
     virtual std::unique_ptr<ChanceContributor> clone() const override;
+    virtual ~RandomChanceContributor() {}
 };
 
 }
