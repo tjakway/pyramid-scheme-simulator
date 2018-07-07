@@ -128,7 +128,7 @@ public:
     static ConversionPredicateResult cantBeDistributor(const Consumer& consumer)
     {
         return ConversionPredicateResult(CANT_BE_DISTRIBUTOR, 
-                STRCAT("Consumer id=", consumer.prettPrintId(), " canBecomeDistributor returned false"));
+                STRCAT("Consumer id=", consumer.prettyPrintId(), " canBecomeDistributor returned false"));
     }
 };
 

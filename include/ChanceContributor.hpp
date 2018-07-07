@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Util/PrettyPrintable.hpp"
+#include "Util/PrettyPrintUniqueable.hpp"
 #include "Types.hpp"
 
 namespace pyramid_scheme_simulator {
 
-class ChanceContributor : public PrettyPrintable
+class ChanceContributor : public PrettyPrintUniqueable
 {
 public:
     virtual double getChance(rd_ptr) = 0;
