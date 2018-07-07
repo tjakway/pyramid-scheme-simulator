@@ -28,7 +28,7 @@ class PrettyPrintable
 public:
     std::string prettyPrint() const
     {
-        surroundPrettyPrint(prettyPrintImpl());
+        return surroundPrettyPrint(prettyPrintImpl());
     }
 
     template <typename T> static std::string getClassNameOrNull(T* ptr)
@@ -58,5 +58,35 @@ public:
     template <typename X> static std::string getClassNameOrNull(std::shared_ptr<X> ptr)
     {
         return getClassNameOrNull(ptr.get());
+    }
+
+
+    /**
+     * so you can pretty print pointers without checking if they're null
+     */
+    template <typename T> static std::string tryPrettyPrint(T* ptr)
+    {
+        if(ptr == nullptr)
+        {
+            return surroundPrettyPrint(getClassNameOrNull(ptr));
+        }
+        else
+        {
+            return ptr->prettyPrint();
+        }
+    }
+
+
+    /**
+     * specializations for unique_ptr and shared_ptr
+     */
+    template <typename X> static std::string tryPrettyPrint(std::unique_ptr<X> ptr)
+    {
+        return tryPrettyPrint(ptr.get());
+    }
+
+    template <typename X> static std::string tryPrettyPrint(std::shared_ptr<X> ptr)
+    {
+        return tryPrettyPrint(ptr.get());
     }
 };
