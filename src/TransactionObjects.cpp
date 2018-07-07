@@ -48,6 +48,8 @@ const std::function<ConversionHandler::RecordType(
             std::move(lhs), std::move(rhs), ConversionHandler::comparator);
 };
 
+
+
 class ConversionHandler::ConversionPredicateResult
 {
     const std::shared_ptr<ConversionHandler::RecordType> conversionRecord;
@@ -89,22 +91,37 @@ public:
 
     const Result status;
 
-    static ConversionPredicateResult castFailed(const Consumer* consumer, const Distributor* distributor)
+    bool success() const
+    {
+        return status == SUCCESS;
+    }
+
+    operator bool() const
+    {
+        return success();
+    }
+
+    static ConversionPredicateResult castFailed(
+            const Consumer* consumer, const Unique& consumerId,
+            const Distributor* distributor, const Unique& distributorId)
     {
         std::string msg;
 
         if(consumer == nullptr && distributor == nullptr)
         {
-            msg = "Neither entity could be cast to Consumer or Distributor";
+            msg = "Neither entity (id = ", consumerId.prettyPrint(), 
+                ", id = ", distributorId.prettyPrint(), "),"
+                "could be cast to Consumer or Distributor";
         }
         else if(consumer == nullptr && distributor != nullptr)
         {
-            msg = STRCAT("A distributor was found (id=", distributor->prettyPrintId(), 
-                    ") but the other entity could not be cast to a consumer");
+            msg = STRCAT("A distributor was found (", distributor->prettyPrint(), 
+                    ") but the other entity (id=", consumerId.prettyPrint(), 
+                    ") could not be cast to a consumer");
         }
         else if(consumer != nullptr && distributor == nullptr)
         {
-            msg = STRCAT("A consumer was found (id=", consumer->prettyPrintId(), "),",
+            msg = STRCAT("A consumer was found (", consumer->prettyPrint(), "),",
                     " but the other entity could not be cast to a distributor");
         }
         else
@@ -131,6 +148,8 @@ public:
                 STRCAT("Consumer id=", consumer.prettyPrintId(), " canBecomeDistributor returned false"));
     }
 };
+
+
 
 bool ConversionHandler::testConversion(rd_ptr rd,
         const Consumer& consumer,
@@ -182,7 +201,7 @@ bool ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs
 
     if(consumer == nullptr || distributor == nullptr)
     {
-        return false;
+        return ConversionPredicateResult::castFailed(consumer, distributor);
     }
     else
     {
