@@ -12,7 +12,6 @@ std::unique_ptr<ChanceContributor>
             other.clone());
 }
 
-
 double ChanceContributor::Intersection::getChance(rd_ptr rd)
 {
     return firstSource->getChance(rd) * secondSource->getChance(rd);
