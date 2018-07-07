@@ -35,6 +35,8 @@ private:
 class ChanceContributor::Intersection : public ChanceContributor
 {
     std::unique_ptr<ChanceContributor> firstSource, secondSource; 
+
+    virtual std::string prettyPrintImpl() const override;
 public:
     Intersection(std::unique_ptr<ChanceContributor> a, 
             std::unique_ptr<ChanceContributor> b)
@@ -53,6 +55,8 @@ public:
 class StaticChanceContributor : public ChanceContributor
 {
     double chance;
+
+    virtual std::string prettyPrintImpl() const override;
 public:
     StaticChanceContributor(double staticChance);
 
@@ -73,6 +77,9 @@ public:
 
     virtual std::unique_ptr<ChanceContributor> clone() const override;
     virtual ~RandomChanceContributor() {}
+
+    virtual std::string prettyPrint() const override;
 };
 
+    
 }

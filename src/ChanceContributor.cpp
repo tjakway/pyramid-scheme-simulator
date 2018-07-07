@@ -32,6 +32,19 @@ bool ChanceContributor::sampleFrom(rd_ptr rd)
 StaticChanceContributor::StaticChanceContributor(double staticChance)
     : chance(staticChance) {}
 
+
+std::string ChanceContributor::Intersection::prettyPrintImpl() const
+{
+    return STRCAT("intersection of ", PrettyPrintable::getClassNameOrNull(firstSource), 
+            " and ", PrettyPrintable::getClassNameOrNull(secondSource));
+}
+
+
+std::string StaticChanceContributor::prettyPrintImpl() const
+{
+    return STRCAT("chance=", chance);
+}
+
 /**
  * ignore the passed random device and return the chance we got in the CTOR
  */
