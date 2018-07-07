@@ -88,8 +88,6 @@ protected:
 public:
 
     const Result status;
-    std::shared_ptr<ConversionHandler::RecordType> conversionRecord;
-    
 
     static ConversionPredicateResult castFailed(const Consumer* consumer, const Distributor* distributor)
     {
