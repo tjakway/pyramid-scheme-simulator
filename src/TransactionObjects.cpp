@@ -124,7 +124,7 @@ public:
     static ConversionPredicateResult procFailed(const ChanceContributor& cc)
     {
         return ConversionPredicateResult(PROC_FAILED, 
-                STRCAT("ChanceContributor ", cc.prettyPrint(), " failed to proc"))
+                STRCAT("ChanceContributor ", cc.prettyPrint(), " failed to proc"));
     }
 
     static ConversionPredicateResult cantBeDistributor(const Consumer& consumer)
