@@ -48,6 +48,91 @@ const std::function<ConversionHandler::RecordType(
             std::move(lhs), std::move(rhs), ConversionHandler::comparator);
 };
 
+class ConversionHandler::ConversionPredicateResult
+{
+    const std::shared_ptr<ConversionHandler::RecordType> conversionRecord;
+    const std::string msg;
+
+public:
+    enum Result
+    {
+        SUCCESS,
+        CAST_FAILED,
+        PROC_FAILED,
+        CANT_BE_DISTRIBUTOR
+    };
+
+protected:
+    /**
+     * success constructor (no need to pass a result code or message)
+     */
+    ConversionPredicateResult(std::shared_ptr<ConversionHandler::RecordType> rec)
+        : ConversionPredicateResult(SUCCESS, rec, std::string())
+    {}
+
+    ConversionPredicateResult(const Result _status, std::string _msg)
+        : ConversionPredicateResult(_status, nullptr, _msg)
+    {}
+
+    /**
+     * master constructor
+     */
+    ConversionPredicateResult(const Result _status, 
+            std::shared_ptr<ConversionHandler::RecordType> rec,
+            std::string _msg)
+        : status(_status), conversionRecord(rec), msg(_msg)
+    {}
+
+    NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
+
+public:
+
+    const Result status;
+    std::shared_ptr<ConversionHandler::RecordType> conversionRecord;
+    
+
+    static ConversionPredicateResult castFailed(const Consumer* consumer, const Distributor* distributor)
+    {
+        std::string msg;
+
+        if(consumer == nullptr && distributor == nullptr)
+        {
+            msg = "Neither entity could be cast to Consumer or Distributor";
+        }
+        else if(consumer == nullptr && distributor != nullptr)
+        {
+            msg = STRCAT("A distributor was found (id=", distributor->prettyPrintId(), 
+                    ") but the other entity could not be cast to a consumer");
+        }
+        else if(consumer != nullptr && distributor == nullptr)
+        {
+            msg = STRCAT("A consumer was found (id=", consumer->prettyPrintId(), "),",
+                    " but the other entity could not be cast to a distributor");
+        }
+        else
+        {
+            //an error function shouldn't be called if there isn't an error
+            throw ConversionPredicateResultException(STRCAT(
+                "Method called but expected either consumer or distributor to be nullptr",
+                ": consumer id=", consumer->prettyPrintId(), 
+                ", distributor id=", distributor->prettyPrintId()));
+        }
+
+        return ConversionPredicateResult(CAST_FAILED, msg);
+    }
+
+    static ConversionPredicateResult procFailed(const ChanceContributor& cc)
+    {
+        return ConversionPredicateResult(PROC_FAILED, 
+                STRCAT("ChanceContributor ", cc.prettyPrint(), " failed to proc"))
+    }
+
+    static ConversionPredicateResult cantBeDistributor(const Consumer& consumer)
+    {
+        return ConversionPredicateResult(CANT_BE_DISTRIBUTOR, 
+                STRCAT("Consumer id=", consumer.prettPrintId(), " canBecomeDistributor returned false"));
+    }
+};
 
 bool ConversionHandler::testConversion(rd_ptr rd,
         const Consumer& consumer,

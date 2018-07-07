@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Util/PrettyPrintable.hpp"
+
 #include "Guid.hpp"
 #include "Types.hpp"
 
@@ -95,7 +97,7 @@ public:
     static const UniqueSet& emptyUniqueSet;
 };
 
-class Unique : public UniqueSet
+class Unique : public UniqueSet, public PrettyPrintable
 {
 public:
     const xg::Guid id;
@@ -131,6 +133,8 @@ public:
     std::string print() const;
 
     bool operator<(const Unique&) const;
+
+    virtual std::string prettyPrint() const override;
 };
 
 std::ostream& operator<<(std::ostream& os, const Unique& res);
@@ -156,13 +160,18 @@ namespace {
 /**
  * a trait for classes with Unique IDs
  */
-class Uniqueable 
+class Uniqueable
 {
 public:
     const Unique id;
     Uniqueable() : id(xg::newGuid()) {}
     Uniqueable(Unique x) : id(x) {}
     virtual ~Uniqueable() {}
+
+    std::string prettyPrintId() const
+    {
+        return id.print();
+    }
 };
 
 }

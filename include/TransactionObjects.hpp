@@ -28,6 +28,14 @@ namespace pyramid_scheme_simulator {
 
 class ConversionHandler
 {
+    /**
+     * either contains the Conversion::RecordType or
+     * provides information on why a conversion didn't happen
+     *
+     * move the class definition here if we decide to log this information
+     */
+    class ConversionPredicateResult;
+
     static bool testConversion(rd_ptr, 
             const Consumer&, 
             const Distributor&, 

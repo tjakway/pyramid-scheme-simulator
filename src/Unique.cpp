@@ -47,4 +47,10 @@ std::string Unique::print() const
     return ss.str();
 }
 
+
+std::string Unique::prettyPrint() const
+{
+    return print();
+}
+
 }
