@@ -5,6 +5,7 @@
 #include <memory>
 #include <set>
 #include <functional>
+#include <utility>
 
 namespace {
     template <typename T>
@@ -68,8 +69,8 @@ protected:
     /**
      * success constructor (no need to pass a result code or message)
      */
-    ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType> rec)
-        : ConversionPredicateResult(SUCCESS, rec, std::string())
+    ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType>&& rec)
+        : ConversionPredicateResult(SUCCESS, std::move(rec), std::string())
     {}
 
     ConversionPredicateResult(const Result _status, std::string _msg)
@@ -80,9 +81,9 @@ protected:
      * master constructor
      */
     ConversionPredicateResult(const Result _status, 
-            std::unique_ptr<ConversionHandler::RecordType> rec,
+            std::unique_ptr<ConversionHandler::RecordType>&& rec,
             std::string _msg)
-        : status(_status), conversionRecord(rec), msg(_msg)
+        : status(_status), conversionRecord(std::move(rec)), msg(_msg)
     {}
 
     NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
@@ -148,7 +149,7 @@ public:
                 STRCAT("Consumer id=", consumer.prettyPrintId(), " canBecomeDistributor returned false"));
     }
 
-    static ConversionPredicateResult success(Conversion::RecordType&& rec)
+    static ConversionPredicateResult success(ConversionHandler::RecordType&& rec)
     {
         return ConversionPredicateResult(std::unique_ptr<Conversion::RecordType>(rec));
     }

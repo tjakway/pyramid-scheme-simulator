@@ -51,7 +51,6 @@ class ConversionHandler
     ConversionPredicateResult predF(const CapitalHolder&, const CapitalHolder&);
 public:
     ConversionHandler(rd_ptr _rd, const Money _buyIn);
-        : rd(_rd), buyIn(_buyIn) {}
 
     class Conversion : public UniqueRecord
     { 
