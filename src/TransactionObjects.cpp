@@ -53,7 +53,7 @@ const std::function<ConversionHandler::RecordType(
 
 class ConversionHandler::ConversionPredicateResult
 {
-    std::unique_ptr<ConversionHandler::RecordType> conversionRecord;
+    std::unique_ptr<ConversionHandler::ElementType> conversionRecord;
     const std::string msg;
 
 public:
@@ -69,7 +69,7 @@ protected:
     /**
      * success constructor (no need to pass a result code or message)
      */
-    ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType>&& rec)
+    ConversionPredicateResult(std::unique_ptr<ConversionHandler::ElementType>&& rec)
         : ConversionPredicateResult(SUCCESS, std::move(rec), std::string())
     {}
 
@@ -78,19 +78,12 @@ protected:
     {}
 
 
-    /**
-     * move constructor
-     */
-    ConversionPredicateResult(ConversionPredicateResult&& other)
-        : ConversionPredicateResult(other.status, 
-                std::move(other.conversionRecord),
-                other.msg) {}
 
     /**
      * master constructor
      */
     ConversionPredicateResult(const Result _status, 
-            std::unique_ptr<ConversionHandler::RecordType>&& rec,
+            std::unique_ptr<ConversionHandler::ElementType>&& rec,
             std::string _msg)
         : conversionRecord(std::move(rec)), msg(_msg), status(_status)
     {}
@@ -99,6 +92,14 @@ protected:
     NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
 
 public:
+
+    /**
+     * move constructor
+     */
+    ConversionPredicateResult(ConversionPredicateResult&& other)
+        : ConversionPredicateResult(other.status, 
+                std::move(other.conversionRecord),
+                other.msg) {}
 
     const Result status;
 
@@ -159,18 +160,17 @@ public:
                 STRCAT("Consumer id=", consumer.prettyPrintId(), " canBecomeDistributor returned false"));
     }
 
-    static ConversionPredicateResult success(ConversionHandler::RecordType&& rec)
+    static ConversionPredicateResult success(ConversionHandler::ElementType&& rec)
     {
         return ConversionPredicateResult(SUCCESS, 
-                std::unique_ptr<ConversionHandler::RecordType>(
-                    new ConversionHandler::RecordType(std::move(rec))), 
+                std::unique_ptr<ConversionHandler::ElementType>(
+                    new ConversionHandler::ElementType(std::move(rec))), 
                 std::string());
     }
 };
 
 
-
-ConversionPredicateResult ConversionHandler::testConversion(
+ConversionHandler::ConversionPredicateResult ConversionHandler::testConversion(
         rd_ptr rd,
         const SimulationTick when,
         const Consumer& consumer,
@@ -185,7 +185,7 @@ ConversionPredicateResult ConversionHandler::testConversion(
         if(combinedChanceContributor->sampleFrom(rd))
         {
             return ConversionPredicateResult::success(
-                    Conversion::RecordType(when, consumer.id, distributor.id));
+                    ConversionHandler::ElementType(when, consumer.id, distributor.id));
         }
         else
         {
@@ -198,7 +198,9 @@ ConversionPredicateResult ConversionHandler::testConversion(
     }
 }
 
-ConversionPredicateResult ConversionHandler::predF(const CapitalHolder& lhs, const CapitalHolder& rhs)
+ConversionHandler::ConversionPredicateResult ConversionHandler::predF(
+        const SimulationTick when, 
+        const CapitalHolder& lhs, const CapitalHolder& rhs)
 {
     const Consumer*    consumer = nullptr;
     const Distributor* distributor = nullptr;
@@ -250,13 +252,16 @@ ConversionPredicateResult ConversionHandler::predF(const CapitalHolder& lhs, con
 
 ConversionHandler::ConversionHandler(rd_ptr _rd, const Money _buyIn)
     : rd(_rd), 
-    buyIn(_buyIn),
-    predicate(
-        [this](const CapitalHolder& lhs, const CapitalHolder& rhs) { 
-            return predF(lhs, rhs);
-        })
+    buyIn(_buyIn)
 {}
 
+
+PopulationGraph::EdgePredicate ConversionHandler::getPredicate(const SimulationTick when)
+{
+    return [when, this](const CapitalHolder& lhs, const CapitalHolder& rhs) { 
+        return predF(when, lhs, rhs);
+    };
+}
 
 
 

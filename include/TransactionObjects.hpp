@@ -49,7 +49,7 @@ class ConversionHandler
      * wraps testConversion and makes sure the 2 capitalholders
      * are a Consumer and Distributor
      */
-    ConversionPredicateResult predF(const CapitalHolder&, const CapitalHolder&);
+    ConversionPredicateResult predF(const SimulationTick when, const CapitalHolder&, const CapitalHolder&);
 public:
     ConversionHandler(rd_ptr _rd, const Money _buyIn);
 
@@ -80,7 +80,7 @@ public:
 
     static const std::function<RecordType(RecordType&&, RecordType&&)> reduce;
 
-    const PopulationGraph::EdgePredicate predicate;
+    PopulationGraph::EdgePredicate getPredicate(const SimulationTick when);
 };
 
 
