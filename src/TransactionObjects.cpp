@@ -83,7 +83,7 @@ protected:
     ConversionPredicateResult(const Result _status, 
             std::unique_ptr<ConversionHandler::RecordType>&& rec,
             std::string _msg)
-        : status(_status), conversionRecord(std::move(rec)), msg(_msg)
+        : conversionRecord(std::move(rec)), status(_status), msg(_msg)
     {}
 
     NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
