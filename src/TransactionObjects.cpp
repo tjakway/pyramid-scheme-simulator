@@ -161,7 +161,10 @@ public:
 
     static ConversionPredicateResult success(ConversionHandler::RecordType&& rec)
     {
-        return ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType>(rec));
+        return ConversionPredicateResult(SUCCESS, 
+                std::unique_ptr<ConversionHandler::RecordType>(
+                    new ConversionHandler::RecordType(std::move(rec))), 
+                std::string());
     }
 };
 
