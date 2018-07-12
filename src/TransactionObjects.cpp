@@ -83,7 +83,7 @@ protected:
     ConversionPredicateResult(const Result _status, 
             std::unique_ptr<ConversionHandler::RecordType>&& rec,
             std::string _msg)
-        : conversionRecord(std::move(rec)), status(_status), msg(_msg)
+        : conversionRecord(std::move(rec)), msg(_msg), status(_status)
     {}
 
     NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
@@ -110,9 +110,9 @@ public:
 
         if(consumer == nullptr && distributor == nullptr)
         {
-            msg = "Neither entity (id = ", consumerId.prettyPrint(), 
+            msg = STRCAT("Neither entity (id = ", consumerId.prettyPrint(), 
                 ", id = ", distributorId.prettyPrint(), "),"
-                "could be cast to Consumer or Distributor";
+                "could be cast to Consumer or Distributor");
         }
         else if(consumer == nullptr && distributor != nullptr)
         {
@@ -134,7 +134,8 @@ public:
                 ", distributor id=", distributor->prettyPrintId()));
         }
 
-        return ConversionPredicateResult(CAST_FAILED, msg);
+        const Result res = CAST_FAILED;
+        return ConversionPredicateResult(res, msg);
     }
 
     static ConversionPredicateResult procFailed(const ChanceContributor& cc)
