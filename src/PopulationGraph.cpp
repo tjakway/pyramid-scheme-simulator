@@ -325,6 +325,11 @@ std::vector<std::pair<PopulationGraph::Pop, PopulationGraph::Pop>>
 
 CapitalHolder& PopulationGraph::findVertexByUnique(const Unique& vert)
 {
+    return *findVertexPointerByUnique(vert);
+}
+
+PopulationGraph::Pop PopulationGraph::findVertexPointerByUnique(const Unique& vert)
+{
     BGLPopulationGraph::vertex_iterator begin, end;
     std::tie(begin, end) = boost::vertices(graph);
 
@@ -343,7 +348,7 @@ CapitalHolder& PopulationGraph::findVertexByUnique(const Unique& vert)
     {
         auto vd = *res;
         Pop foundVert = graph[vd];
-        return *foundVert;
+        return foundVert;
     }
 }
 

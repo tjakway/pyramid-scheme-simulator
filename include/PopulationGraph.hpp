@@ -152,6 +152,7 @@ public:
     std::vector<std::pair<Pop, Pop>> edges() const;
 
     CapitalHolder& findVertexByUnique(const Unique&);
+    Pop findVertexPointerByUnique(const Unique&);
 
     /** TODO: use templates to reduce duplication between edge and vertex functions */
     using VertexPredicate = std::function<bool(const CapitalHolder&)>;

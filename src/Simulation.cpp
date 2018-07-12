@@ -207,7 +207,7 @@ PopulationGraph::vertices_size_type
     NEW_EXCEPTION_TYPE(ProcessConversionException);
 
     PopulationGraph::MutateVertexFunction mutate = 
-        [&recs](PopulationGraph::Pop toConvert)
+        [&recs, this](PopulationGraph::Pop toConvert)
         {
             assert(!toConvert->isDistributor());
 
@@ -218,13 +218,45 @@ PopulationGraph::vertices_size_type
             {
                 throw ProcessConversionException(
                         STRCAT("Could not find conversion record for ",
-                            toConvert->id, " despite the predicate returning true"));
+                            toConvert->prettyPrint(), 
+                            " despite the predicate returning true"));
             }
             else
             {
-                //throw an exception on error rather than sigsegv
-                return dynamic_cast<Consumer&>(*toConvert)
-                    .becomeDistributor(thisConvertsRecord->convertedBy);
+                //look up the Distributor in the graph
+                //TODO: may want to lift this into another method for synchronization reasons
+                std::shared_ptr<CapitalHolder> distributor = 
+                    this->populationGraph->findVertexPointerByUnique(thisConvertsRecord->convertedBy);
+
+                if(!distributor)
+                {
+                    throw ProcessConversionException(STRCAT("Could not find the distributor ",
+                                "that converted ", toConvert->prettyPrint(), ", distributor id=", 
+                                thisConvertsRecord->convertedBy.prettyPrint()));
+                }
+                else
+                {
+                    //check after casting it
+                    std::shared_ptr<Distributor> dPtr = std::dynamic_pointer_cast<Distributor>(distributor);
+                    if(!distributor->isDistributor())
+                    {
+                        throw ProcessConversionException(STRCAT("distributor->isDistributor() returned false for ",
+                                distributor->prettyPrint(), ", the distributor that converted ",
+                                toConvert->prettyPrint()));
+                    }
+                    else if(dPtr == nullptr)
+                    {
+                        throw ProcessConversionException(STRCAT("Expected a distributor but could not cast ",
+                                distributor->prettyPrint(), ", the distributor that converted ",
+                                toConvert->prettyPrint()));
+                    }
+                    else
+                    {
+                        //throw an exception on error rather than sigsegv
+                        return dynamic_cast<Consumer&>(*toConvert)
+                            .becomeDistributor(dPtr);
+                    }
+                }
             }
         };
 
