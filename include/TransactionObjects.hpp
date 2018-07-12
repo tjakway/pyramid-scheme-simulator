@@ -37,6 +37,7 @@ class ConversionHandler
     class ConversionPredicateResult;
 
     static ConversionPredicateResult testConversion(rd_ptr, 
+            const SimulationTick when,
             const Consumer&, 
             const Distributor&, 
             const Money buyIn);
