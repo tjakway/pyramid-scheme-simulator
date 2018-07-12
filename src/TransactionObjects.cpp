@@ -53,7 +53,7 @@ const std::function<ConversionHandler::RecordType(
 
 class ConversionHandler::ConversionPredicateResult
 {
-    const std::unique_ptr<ConversionHandler::RecordType> conversionRecord;
+    std::unique_ptr<ConversionHandler::RecordType> conversionRecord;
     const std::string msg;
 
 public:
@@ -77,6 +77,15 @@ protected:
         : ConversionPredicateResult(_status, nullptr, _msg)
     {}
 
+
+    /**
+     * move constructor
+     */
+    ConversionPredicateResult(ConversionPredicateResult&& other)
+        : ConversionPredicateResult(other.status, 
+                std::move(other.conversionRecord),
+                other.msg) {}
+
     /**
      * master constructor
      */
@@ -85,6 +94,7 @@ protected:
             std::string _msg)
         : conversionRecord(std::move(rec)), msg(_msg), status(_status)
     {}
+
 
     NEW_EXCEPTION_TYPE(ConversionPredicateResultException);
 
@@ -134,8 +144,7 @@ public:
                 ", distributor id=", distributor->prettyPrintId()));
         }
 
-        const Result res = CAST_FAILED;
-        return ConversionPredicateResult(res, msg);
+        return ConversionPredicateResult(CAST_FAILED, msg);
     }
 
     static ConversionPredicateResult procFailed(const ChanceContributor& cc)
@@ -152,7 +161,7 @@ public:
 
     static ConversionPredicateResult success(ConversionHandler::RecordType&& rec)
     {
-        return ConversionPredicateResult(std::unique_ptr<Conversion::RecordType>(rec));
+        return ConversionPredicateResult(std::unique_ptr<ConversionHandler::RecordType>(rec));
     }
 };
 
