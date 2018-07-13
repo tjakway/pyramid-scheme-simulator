@@ -52,5 +52,5 @@ compile_commands.json: cmake
 #(obviously clang-check has to be on your PATH)
 .PHONY: clang-check
 clang-check: compile_commands.json
-	find src/ include/ test -regextype egrep -regex ".*\.(cpp|h|hpp|cxx|c)" -type f \
+	find src/ include/ test -regextype egrep -regex ".*\.(cpp|cxx|c)" -type f \
 	    -exec clang-check $(CLANG_CHECK_ARGS) {} +
