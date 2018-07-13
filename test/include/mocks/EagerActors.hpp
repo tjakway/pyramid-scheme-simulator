@@ -22,8 +22,12 @@ public:
 class EagerTestDistributor : public EagerDistributor
 {
 public:
-    EagerTestDistributor(Money m, Inventory i = 0)
-        : EagerDistributor(Unique::newUnique(), m, i)
+    EagerTestDistributor(Money m,
+            Inventory startingInventory = 0,
+            Inventory desiredRestockAmount = Config::Defaults::defaultDesiredRestockAmount,
+            Inventory restockThreshold = Config::Defaults::defaultRestockThreshold)
+        : EagerDistributor(Unique::newUnique(), m,
+                startingInventory, desiredRestockAmount, restockThreshold)
     {}
 
     EagerTestDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 

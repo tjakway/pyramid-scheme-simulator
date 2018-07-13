@@ -96,33 +96,24 @@ void Company::deductMoney(Money amt)
     disbursements.emplace_back(amt);
 }
 
-
-
-StaticDistributor::StaticDistributor(Unique id, 
-        Money startingMoney, 
-        Inventory startingInventory,
-        Inventory _desiredRestockAmount,
-        ChanceContributor* _salesChance)
-    : StaticDistributor(id, startingMoney,
-            startingInventory,
-            _desiredRestockAmount,
-            Config::Defaults::defaultRestockThreshold,
-            _salesChance->clone())
-{ }
-
+//master constructor
 StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney,
         Inventory startingInventory,
         Inventory _desiredRestockAmount,
         Inventory _restockThreshold,
-        std::unique_ptr<ChanceContributor>&& _salesChance)
+        std::unique_ptr<ChanceContributor>&& _salesChance,
+        std::unique_ptr<ChanceContributor>&& _conversionChanceContribution)
     : Distributor(id, startingMoney, 
             std::shared_ptr<Distributor>(nullptr)),
         salesChance(std::move(_salesChance)),
+        conversionChanceContribution(std::move(_conversionChanceContribution)),
         desiredRestockAmount(_desiredRestockAmount),
         restockThreshold(_restockThreshold)
 {
     setInventory(startingInventory);
+
+    PP_ASSERT(desiredRestockAmount > restockThreshold);
 }
 
 
@@ -130,19 +121,22 @@ StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney, 
         Inventory startingInventory,
         Inventory _desiredRestockAmount,
-        const double _salesChance)
+        Inventory _restockThreshold,
+        const double _salesChance,
+        const double _conversionChanceContribution)
     : StaticDistributor(id, startingMoney, startingInventory,
         _desiredRestockAmount,
-        Config::Defaults::defaultRestockThreshold,
-        make_unique<StaticChanceContributor>(_salesChance))
+        _restockThreshold,
+        make_unique<StaticChanceContributor>(_salesChance),
+        make_unique<StaticChanceContributor>(_conversionChanceContribution))
 { }
 
 
 //copy constructor
 StaticDistributor::StaticDistributor(const StaticDistributor& other)
     : StaticDistributor(other.id, other.getMoney(), other.getInventory(),
-            other.getDesiredRestockAmount(),
-            other.salesChance.get())
+            other.getDesiredRestockAmount(), other.getRestockThreshold(),
+            *other.salesChance, *other.conversionChanceContribution)
 {
     recruitedBy = other.recruitedBy;
 }
@@ -152,10 +146,16 @@ StaticDistributor::StaticDistributor(Unique id,
         Money startingMoney, 
         Inventory startingInventory,
         Inventory _desiredRestockAmount,
-        std::unique_ptr<ChanceContributor>& _salesChance)
-    : StaticDistributor(id, startingMoney, startingInventory,
-        _desiredRestockAmount,
-        _salesChance.get())
+        Inventory _restockThreshold,
+        const ChanceContributor& _salesChance,
+        const ChanceContributor& _conversionChanceContribution)
+    : StaticDistributor(id, 
+            startingMoney, 
+            startingInventory,
+            _desiredRestockAmount,
+            _restockThreshold,
+            _salesChance.clone(),
+            _conversionChanceContribution.clone())
 {}
 
 StaticDistributor::~StaticDistributor() {}
@@ -165,13 +165,10 @@ ChanceContributor& StaticDistributor::getSalesChanceContribution() const
     return *salesChance;
 }
 
-const std::unique_ptr<ChanceContributor> StaticDistributor::conversionChance =
-    make_unique<StaticChanceContributor>(0.0);
-
 ChanceContributor&
         StaticDistributor::getDistributorConversionChanceContribution() const
 {
-    return *StaticDistributor::conversionChance;
+    return *StaticDistributor::conversionChanceContribution;
 }
 
 

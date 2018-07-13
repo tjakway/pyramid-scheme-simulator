@@ -20,8 +20,19 @@ public:
 class EagerDistributor : public StaticDistributor
 {
 public:
-    EagerDistributor(Unique u, Money m, Inventory i)
-        : StaticDistributor(u, m, i, Config::Defaults::defaultRestockThreshold, 1.0)
+    /**
+     * pass 1.0 for both sales and conversion chance contributions because we're eager
+     */
+    EagerDistributor(Unique u, 
+            Money startingMoney, 
+            Inventory startingInventory, 
+            Inventory desiredRestockAmount,
+            Inventory restockThreshold)
+        : StaticDistributor(u, startingMoney, 
+                startingInventory, 
+                desiredRestockAmount,
+                restockThreshold,
+                1.0, 1.0)
     {}
 
     EagerDistributor(Consumer& self, std::shared_ptr<Distributor> convBy) 
@@ -29,7 +40,11 @@ public:
     {}
 
     EagerDistributor(const EagerDistributor& other)
-        : EagerDistributor(other.id, other.getMoney(), other.getInventory())
+        : EagerDistributor(other.id, 
+                other.getMoney(), 
+                other.getInventory(),
+                other.getDesiredRestockAmount(),
+                other.getRestockThreshold())
     {}
 
     virtual ~EagerDistributor() {}

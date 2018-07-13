@@ -70,6 +70,7 @@ class StaticDistributor : public Distributor
     friend StaticConsumer;
 
     std::unique_ptr<ChanceContributor> salesChance;
+    std::unique_ptr<ChanceContributor> conversionChanceContribution;
 
 protected:
     const Inventory desiredRestockAmount;
@@ -87,13 +88,16 @@ protected:
             Inventory, 
             Inventory,
             Inventory,
+            std::unique_ptr<ChanceContributor>&&,
             std::unique_ptr<ChanceContributor>&&);
 
     static const std::unique_ptr<ChanceContributor> conversionChance;
 public:
-    StaticDistributor(Unique, Money, Inventory, Inventory, const double salesChance);
-    StaticDistributor(Unique, Money, Inventory, Inventory, ChanceContributor*);
-    StaticDistributor(Unique, Money, Inventory, Inventory, std::unique_ptr<ChanceContributor>&);
+    StaticDistributor(Unique, Money, Inventory, Inventory, Inventory,
+            const double salesChance, 
+            const double conversionChanceContribution);
+    StaticDistributor(Unique, Money, Inventory, Inventory, Inventory,
+            const ChanceContributor&, const ChanceContributor&);
 
     //copy constructor
     StaticDistributor(const StaticDistributor&);
