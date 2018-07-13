@@ -14,6 +14,8 @@
 #include "mocks/MockTransactionObjects.hpp"
 #include "mocks/EagerActors.hpp"
 
+#include "BasicGraphSettings.hpp"
+
 #include <unordered_map>
 #include <functional>
 #include <vector>
@@ -25,11 +27,9 @@
 
 namespace pyramid_scheme_simulator {
 
-class BasicGraphSetup : public ::testing::Test
+class BasicGraphSetup : public ::testing::Test, public BasicGraphSettings
 {
 public:
-    Money startingMoney = 100;
-
     PopulationGraph::Pop distributor = 
         std::make_shared<EagerTestDistributor>(startingMoney);
 
@@ -50,11 +50,6 @@ public:
 
     std::unique_ptr<SaleHandler> saleHandler = 
         make_unique<MockSaleHandler>();
-
-    rd_ptr rd = std::make_shared<std::mt19937_64>();
-
-    const Money price = 10;
-    const SimulationTick when = 0;
 };
 
 }
