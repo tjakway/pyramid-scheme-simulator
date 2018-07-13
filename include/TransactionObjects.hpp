@@ -76,7 +76,7 @@ public:
     /**
      * synonym for the other function operator but defined to work on graph pairs
      */
-    virtual ConversionHandler::RecordType operator(SimulationTick, 
+    virtual RecordType operator()(SimulationTick, 
             std::pair<PopulationGraph::Pop, PopulationGraph::Pop>);
 
 
