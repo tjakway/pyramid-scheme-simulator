@@ -11,9 +11,10 @@
 #include "Util/NewExceptionType.hpp"
 #include "Util/AtomicDeque.hpp"
 
+#include "GraphRecordProcessor.hpp"
 namespace pyramid_scheme_simulator {
 
-class Simulation
+class Simulation : protected GraphRecordProcessor
 {
 private:
     std::shared_ptr<Config> config;
@@ -24,20 +25,20 @@ private:
     RestockHandler restockHandler;
 
     SimulationTick now = 0;
-    SimulationTick when() const { return now; }
 
     std::unique_ptr<PopulationGraph> buildGraph(std::shared_ptr<Config>);
-
     
 protected:
+    virtual SimulationTick when() const override { return now; }
+
+    virtual const PopulationGraph& getPopulationGraph() { return *populationGraph; }
+    virtual const ConversionHandler& getConversionHandler() { return conversionHandler; }
+    virtual const RestockHandler& getRestockHandler() { return restockHandler; }
+
     ConversionHandler::RecordType applyConversions();
 
     std::pair<std::shared_ptr<const SaleHandler::RecordType>,
             std::shared_ptr<const RestockHandler::RestockSet>> applySales();
-
-    static ConversionHandler::Conversion* lookupConversionRecord(
-            ConversionHandler::RecordType&,
-            Unique);
 
     PopulationGraph::vertices_size_type 
         processConversions(ConversionHandler::RecordType&);
