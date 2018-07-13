@@ -32,7 +32,7 @@ using BasicGraphTests = BasicGraphSetup;
 
 TEST_F(BasicGraphTests, BasicSaleTest)
 {
-    auto recordResult = (*saleHandler)(when, price, 
+    auto recordResult = (*saleHandler)(when(), price, 
             rd, *distributor, *consumer1);
 
     ASSERT_TRUE(recordResult.records.size() > 0);
@@ -44,7 +44,7 @@ TEST_F(BasicGraphTests, BasicNoInventoryTest)
     distributor->setInventory(0);
     EXPECT_EQ(distributor->getInventory(), static_cast<Inventory>(0));
 
-    auto recordResult = (*saleHandler)(when, price, 
+    auto recordResult = (*saleHandler)(when(), price, 
             rd, *distributor, *consumer1);
 
     ASSERT_EQ(recordResult.records.size(), 1L);
@@ -65,10 +65,10 @@ TEST_F(BasicGraphTests, BasicRestockTest)
     RestockHandler restockHandler;
     RestockHandler::RestockSet restockSet = 
         RestockHandler::toSet(
-            restockHandler(when, price, *distributor));
+            restockHandler(when(), price, *distributor));
 
     SaleHandler h(std::move(restockSet));
-    auto recordResult = h(when, price, rd, *distributor, *consumer1);
+    auto recordResult = h(when(), price, rd, *distributor, *consumer1);
 }
 
 TEST_F(BasicGraphTests, TestVertices)

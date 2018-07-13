@@ -29,34 +29,9 @@ using ConversionHandlerTests = BasicGraphSetup;
  */
 TEST_F(ConversionHandlerTests, BasicConversionRecordTest)
 {
-    const Money buyIn = 1;
-
     //make sure the consumer in our test has enough cash to afford the buy in
     ASSERT_GT(buyIn, startingMoney);
 
-    ConversionHandler conversionHandler(rd_ptr, 1);
-
-    conversionHandler(consumer1, distributor);
-
-    //curry it with the SimulationTick
-    //see note in Simulation.cpp: TODO: consider refactoring into another top-level class that can be derived by test classes
-    const auto f = [this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) {
-        return this->conversionHandler.operator()(this->when(), pops)
-    };
-
-    std::vector<ConversionHandler::RecordType> vecConversions = 
-        populationGraph->forEachEdge(f);
-
-    auto conversionRecs = 
-        emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
-                std::list<ConversionHandler::RecordType>(
-                    std::make_move_iterator(vecConversions.begin()),
-                    std::make_move_iterator(vecConversions.end())),
-                conversionHandler.reduce);
-
-
-    const auto numConversions = processConversions(conversionRecs);
-    assert(numConversions == conversionRecs.records.size());
 
 }
 

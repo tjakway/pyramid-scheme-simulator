@@ -29,8 +29,8 @@
 namespace pyramid_scheme_simulator {
 
 class BasicGraphSetup : public ::testing::Test, 
-    public BasicGraphSettings,
-    public GraphRecordProcessor
+    public GraphRecordProcessor,
+    public BasicGraphSettings
 {
 public:
     PopulationGraph::Pop distributor = 
@@ -60,9 +60,12 @@ public:
     std::unique_ptr<RestockHandler> restockHandler = 
         make_unique<RestockHandler>();
 
-    virtual PopulationGraph* getPopulationGraph() { return tinyGraph.get(); }
-    virtual const ConversionHandler& getConversionHandler() { return *conversionHandler; }
-    virtual const RestockHandler& getRestockHandler() { return *restockHandler; }
+    virtual PopulationGraph* getPopulationGraph() override { return tinyGraph.get(); }
+    virtual const ConversionHandler& getConversionHandler() override { return *conversionHandler; }
+    virtual const RestockHandler& getRestockHandler() override { return *restockHandler; }
+
+    //resolve diamond inheritance
+    virtual SimulationTick when() const override { return BasicGraphSettings::when(); }
 };
 
 }

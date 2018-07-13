@@ -4,13 +4,14 @@
 
 #include "Types.hpp"
 #include "Tick.hpp"
+#include "HasTime.hpp"
 
 BEGIN_PYRAMID_NAMESPACE;
 
 /**
  * straightforward data for tests
  */
-class BasicGraphSettings
+class BasicGraphSettings : public HasTime
 {
 public:
     const Money price = 10;
@@ -18,7 +19,10 @@ public:
     const Money buyIn = 1;
 
     //starting tick
-    const SimulationTick when = 0;
+    const SimulationTick start = 0;
+    SimulationTick now = start;
+
+    virtual SimulationTick when() const override { return now; }
 
     rd_ptr rd = std::make_shared<std::mt19937_64>();
 };
