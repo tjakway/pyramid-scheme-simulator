@@ -30,7 +30,7 @@ using ConversionHandlerTests = BasicGraphSetup;
 TEST_F(ConversionHandlerTests, BasicConversionRecordTest)
 {
     //make sure the consumer in our test has enough cash to afford the buy in
-    ASSERT_GT(buyIn, startingMoney);
+    ASSERT_GT(startingMoney, buyIn);
 
 
 }
