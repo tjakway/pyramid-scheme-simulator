@@ -151,19 +151,10 @@ std::pair<std::shared_ptr<const SaleHandler::RecordType>,
 
 ConversionHandler::RecordType Simulation::applyConversions()
 {
-    const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop,
-            PopulationGraph::Pop>)> f =
-        [this](std::pair<PopulationGraph::Pop,
-            PopulationGraph::Pop> pops)
-            -> ConversionHandler::RecordType
-        {
-            CapitalHolder& a = *(pops.first);
-            CapitalHolder& b = *(pops.second);
-            return this->conversionHandler.operator()(this->when(), 
-                    a,
-                    b);
-                    
-        };
+    //TODO: consider refactoring into another top-level class that can be derived by test classes
+    const auto f = [this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) {
+        return this->conversionHandler.operator()(this->when(), pops)
+    };
 
     std::vector<ConversionHandler::RecordType> vecConversions = 
         populationGraph->forEachEdge(f);

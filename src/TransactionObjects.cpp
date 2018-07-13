@@ -264,6 +264,18 @@ PopulationGraph::EdgePredicate ConversionHandler::getPredicate(const SimulationT
 }
 
 
+ConversionHandler::RecordType ConversionHandler::operator(SimulationTick when, 
+        std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops)
+{
+    CapitalHolder& a = *(pops.first);
+    CapitalHolder& b = *(pops.second);
+    return operator()(when, a, b);
+}
+
+
+
+
+
 
 const std::function<SaleHandler::RecordType(
         SaleHandler::RecordType&&, 

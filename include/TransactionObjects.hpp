@@ -72,6 +72,13 @@ public:
             CapitalHolder&, 
             CapitalHolder&);
 
+    
+    /**
+     * synonym for the other function operator but defined to work on graph pairs
+     */
+    virtual ConversionHandler::RecordType operator(SimulationTick, 
+            std::pair<PopulationGraph::Pop, PopulationGraph::Pop>);
+
 
     using ComparatorType = const std::function<bool(const std::unique_ptr<ElementType>&, 
             const std::unique_ptr<ElementType>&)>;
