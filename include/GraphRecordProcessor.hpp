@@ -7,6 +7,9 @@
 
 BEGIN_PYRAMID_NAMESPACE
 
+/**
+ * TODO: may want to break this up into ConversionRecordProcessor, RestockRecordProcessor, etc.
+ */
 class GraphRecordProcessor : protected HasTime
 {
     PopulationGraph::vertices_size_type 

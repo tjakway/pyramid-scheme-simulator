@@ -31,9 +31,9 @@ private:
 protected:
     virtual SimulationTick when() const override { return now; }
 
-    virtual const PopulationGraph& getPopulationGraph() { return *populationGraph; }
-    virtual const ConversionHandler& getConversionHandler() { return conversionHandler; }
-    virtual const RestockHandler& getRestockHandler() { return restockHandler; }
+    virtual const PopulationGraph& getPopulationGraph() override { return *populationGraph; }
+    virtual const ConversionHandler& getConversionHandler() override { return conversionHandler; }
+    virtual const RestockHandler& getRestockHandler() override { return restockHandler; }
 
     ConversionHandler::RecordType applyConversions();
 
