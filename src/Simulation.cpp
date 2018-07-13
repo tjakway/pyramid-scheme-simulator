@@ -149,27 +149,4 @@ std::pair<std::shared_ptr<const SaleHandler::RecordType>,
             std::make_shared<RestockHandler::RestockSet>(restockSet));
 }
 
-ConversionHandler::RecordType Simulation::applyConversions()
-{
-    const auto f = [this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) {
-        return this->conversionHandler.operator()(this->when(), pops)
-    };
-
-    std::vector<ConversionHandler::RecordType> vecConversions = 
-        populationGraph->forEachEdge(f);
-
-    auto conversionRecs = 
-        emptyListTransactionRecord<ConversionHandler::ElementType>().leftFold(
-                std::list<ConversionHandler::RecordType>(
-                    std::make_move_iterator(vecConversions.begin()),
-                    std::make_move_iterator(vecConversions.end())),
-                conversionHandler.reduce);
-
-    const auto numConversions = processConversions(conversionRecs);
-    assert(numConversions == conversionRecs.records.size());
-    return conversionRecs;
-}
-
-
-
 }

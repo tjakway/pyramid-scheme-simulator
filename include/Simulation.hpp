@@ -31,7 +31,7 @@ private:
 protected:
     virtual SimulationTick when() const override { return now; }
 
-    virtual const PopulationGraph& getPopulationGraph() override { return *populationGraph; }
+    virtual PopulationGraph* getPopulationGraph() override { return populationGraph.get(); }
     virtual const ConversionHandler& getConversionHandler() override { return conversionHandler; }
     virtual const RestockHandler& getRestockHandler() override { return restockHandler; }
 

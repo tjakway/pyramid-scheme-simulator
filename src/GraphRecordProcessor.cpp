@@ -5,8 +5,10 @@ BEGIN_PYRAMID_NAMESPACE
 
 ConversionHandler::RecordType GraphRecordProcessor::applyConversions()
 {
-    const auto f = [this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) {
-        return this->getConversionHandler().operator()(this->when(), pops)
+    const std::function<ConversionHandler::RecordType(std::pair<PopulationGraph::Pop, PopulationGraph::Pop>)> f = 
+        [this](std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) 
+        -> ConversionHandler::RecordType {
+        return this->getConversionHandler().operator()(this->when(), pops);
     };
 
     std::vector<ConversionHandler::RecordType> vecConversions = 

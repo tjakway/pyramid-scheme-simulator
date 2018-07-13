@@ -70,14 +70,14 @@ public:
 
     virtual RecordType operator()(SimulationTick,
             CapitalHolder&, 
-            CapitalHolder&);
+            CapitalHolder&) const;
 
     
     /**
      * synonym for the other function operator but defined to work on graph pairs
      */
     virtual RecordType operator()(SimulationTick, 
-            std::pair<PopulationGraph::Pop, PopulationGraph::Pop>);
+            std::pair<PopulationGraph::Pop, PopulationGraph::Pop>) const;
 
 
     using ComparatorType = const std::function<bool(const std::unique_ptr<ElementType>&, 

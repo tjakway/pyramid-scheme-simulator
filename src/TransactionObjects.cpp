@@ -31,7 +31,7 @@ namespace pyramid_scheme_simulator {
 
 ConversionHandler::RecordType ConversionHandler::operator()(SimulationTick,
     CapitalHolder&, 
-    CapitalHolder&)
+    CapitalHolder&) const
 {
     //TODO: implement
     return emptyListTransactionRecord<ConversionHandler::ElementType>();
@@ -264,8 +264,8 @@ PopulationGraph::EdgePredicate ConversionHandler::getPredicate(const SimulationT
 }
 
 
-ConversionHandler::RecordType ConversionHandler::operator(SimulationTick when, 
-        std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops)
+ConversionHandler::RecordType ConversionHandler::operator()(SimulationTick when, 
+        std::pair<PopulationGraph::Pop, PopulationGraph::Pop> pops) const
 {
     CapitalHolder& a = *(pops.first);
     CapitalHolder& b = *(pops.second);
