@@ -9,6 +9,7 @@
 #include "Types.hpp"
 #include "CapitalHolder.hpp"
 #include "PopulationGraph.hpp"
+#include "GraphRecordProcessor.hpp"
 
 #include "mocks/MockPopulationGraph.hpp"
 #include "mocks/MockTransactionObjects.hpp"
@@ -27,7 +28,9 @@
 
 namespace pyramid_scheme_simulator {
 
-class BasicGraphSetup : public ::testing::Test, public BasicGraphSettings
+class BasicGraphSetup : public ::testing::Test, 
+    public BasicGraphSettings,
+    public GraphRecordProcessor
 {
 public:
     PopulationGraph::Pop distributor = 
@@ -48,8 +51,18 @@ public:
     std::unique_ptr<PopulationGraph> tinyGraph = 
         make_unique<MockPopulationGraph>(tinyGraphTuples);
 
+    std::unique_ptr<ConversionHandler> conversionHandler = 
+        make_unique<ConversionHandler>(rd, buyIn);
+
     std::unique_ptr<SaleHandler> saleHandler = 
         make_unique<MockSaleHandler>();
+
+    std::unique_ptr<RestockHandler> restockHandler = 
+        make_unique<RestockHandler>();
+
+    virtual PopulationGraph* getPopulationGraph() { return tinyGraph.get(); }
+    virtual const ConversionHandler& getConversionHandler() { return *conversionHandler; }
+    virtual const RestockHandler& getRestockHandler() { return *restockHandler; }
 };
 
 }

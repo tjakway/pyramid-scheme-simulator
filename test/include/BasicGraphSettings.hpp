@@ -15,6 +15,7 @@ class BasicGraphSettings
 public:
     const Money price = 10;
     const Money startingMoney = 100;
+    const Money buyIn = 1;
 
     //starting tick
     const SimulationTick when = 0;
