@@ -34,7 +34,12 @@ PopulationGraph::vertices_size_type
     PopulationGraph::MutateVertexFunction mutate = 
         [&recs, this](PopulationGraph::Pop toConvert)
         {
-            assert(!toConvert->isDistributor());
+            if(toConvert->isDistributor())
+            {
+                throw ProcessConversionException(STRCAT("Could not convert ",
+                            toConvert->prettyPrint(), " because it is already a "
+                            "distributor"));
+            }
 
             ConversionHandler::Conversion* thisConvertsRecord = 
                 lookupConversionRecord(recs, toConvert->id);
