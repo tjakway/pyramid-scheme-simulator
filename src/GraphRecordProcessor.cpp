@@ -37,7 +37,7 @@ PopulationGraph::vertices_size_type
             if(toConvert->isDistributor())
             {
                 throw ProcessConversionException(STRCAT("Could not convert ",
-                            toConvert->prettyPrint(), " because it is already a "
+                            toConvert->prettyPrint(), " because it is already a ",
                             "distributor"));
             }
 
