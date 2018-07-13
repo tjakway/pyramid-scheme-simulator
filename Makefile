@@ -50,7 +50,11 @@ compile_commands.json: cmake
 
 #run clang-check on the source folders
 #(obviously clang-check has to be on your PATH)
+#(the first line creates an anonymous pipe used to filter stderr)
+#see https://superuser.com/questions/184307/bash-create-anonymous-fifo (especially re: attaching it to file descriptor 3)
 .PHONY: clang-check
 clang-check: compile_commands.json
-	find src/ include/ test -regextype egrep -regex ".*\.(cpp|cxx|c)" -type f \
-	    -exec clang-check $(CLANG_CHECK_ARGS) {} +
+	PIPE=$$(mktemp -u); mkfifo "$$PIPE" ; exec 3<>$$PIPE ; rm $$PIPE ; \
+	     find src/ include/ test -regextype egrep -regex ".*\.(cpp|cxx|c)" -type f \
+		-exec clang-check $(CLANG_CHECK_ARGS) {} + 2>&3 ; \
+		grep -v '^\s*Skipping\s*.*\.\s*Compile command not found.\s*$$' <&3 
