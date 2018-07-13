@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Util/StringifyMacro.hpp"
+
 //this file defines the STRCAT macro for less painful C++ string concatenation
 
 //first need to define a FOREACH macro

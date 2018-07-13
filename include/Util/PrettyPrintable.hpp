@@ -5,6 +5,15 @@
 
 #include <memory>
 
+#include "Util/AssertWithMessage.hpp"
+#include "Util/Strcat.hpp"
+
+//a better assert that will print the object if not null
+#define PP_ASSERT_PTR(condition, ptr) ASSERT_WITH_MESSAGE(condition, \
+        STRCAT(STRINGIFY_MACRO__(condition), " failed for ", PrettyPrintable::tryPrettyPrint(ptr)))
+
+#define PP_ASSERT(condition) PP_ASSERT_PTR(condition, this) 
+
 class PrettyPrintable
 {
      //standardize pretty print formatting
