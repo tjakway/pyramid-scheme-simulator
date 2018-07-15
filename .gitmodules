@@ -3,16 +3,16 @@
 	url = https://github.com/graeme-hill/crossguid.git
 [submodule "lib/googletest"]
 	path = lib/googletest
-	url = git@github.com:google/googletest.git
+	url = https://github.com/google/googletest.git
 [submodule "lib/spdlog"]
 	path = lib/spdlog
-	url = git@github.com:gabime/spdlog.git
+	url = https://github.com/gabime/spdlog.git
 [submodule "lib/lodepng"]
 	path = lib/lodepng
-	url = git@github.com:tjakway/lodepng.git
+	url = https://github.com/tjakway/lodepng.git
 [submodule "lib/glm"]
 	path = lib/glm
 	url = https://github.com/g-truc/glm.git
 [submodule "cmake/sdl2"]
 	path = cmake/sdl2
-	url = git@github.com:tcbrindle/sdl2-cmake-scripts.git
+	url = https://github.com/tcbrindle/sdl2-cmake-scripts.git
