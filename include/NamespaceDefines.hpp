@@ -5,3 +5,6 @@
 
 #define BEGIN_PYRAMID_GL_NAMESPACE namespace pyramid_scheme_simulator { namespace gl {
 #define END_PYRAMID_GL_NAMESPACE } }
+
+#define BEGIN_PYRAMID_SQL_NAMESPACE namespace pyramid_scheme_simulator { namespace sql {
+#define END_PYRAMID_SQL_NAMESPACE } }
