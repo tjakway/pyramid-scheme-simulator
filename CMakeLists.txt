@@ -13,6 +13,7 @@ set(MAIN_LIB_GL_TARGET "pyramid-gl")
 option(ENABLE_SIGNAL_HANDLER "whether to catch signals to exit gracefully" ON)
 option(BUILD_TESTS "whether to build unit tests" ON)
 option(BUILD_OPENGL_BACKEND "whether to build the OpenGL backend" OFF)
+option(BUILD_SQL_BACKEND "whether to build the soci-based SQL backend" OFF)
 
 include("cmake/default_build_type.cmake"    OPTIONAL)
 include("cmake/build_spdlog_dep.cmake"      REQUIRED)
@@ -20,6 +21,9 @@ include("cmake/signal_handler_option.cmake" REQUIRED)
 include("cmake/target_require_cxx11.cmake"  REQUIRED)
 include("cmake/warnings.cmake")
 
+if(BUILD_SQL_BACKEND)
+    include("cmake/build_soci.cmake" REQUIRED)
+endif()
 
 #enable exporting commands if supported
 #see https://cmake.org/cmake/help/v3.5/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
