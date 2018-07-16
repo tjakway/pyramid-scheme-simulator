@@ -17,6 +17,7 @@ public:
     {
     protected:
         virtual std::string indexType() const;
+        virtual std::string moneyType() const;
     public:
         TABLE_METHOD(Ticks);
         TABLE_METHOD(Config);
@@ -24,6 +25,7 @@ public:
         TABLE_METHOD(Inventory);
         TABLE_METHOD(StartingDistributors);
         TABLE_METHOD(Sales);
+        TABLE_METHOD(Conversions);
 
         virtual ~CreateTables() {}
     };
@@ -38,6 +40,7 @@ public:
     {
     protected:
         virtual std::string indexType() const override;
+        virtual std::string moneyType() const override;
     };
 
     virtual ~Strings() {}

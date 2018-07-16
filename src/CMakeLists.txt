@@ -33,3 +33,8 @@ if(${BUILD_OPENGL_BACKEND})
     add_subdirectory(gl)
     target_link_libraries(${MAIN_LIB_TARGET} PUBLIC ${MAIN_LIB_GL_TARGET})
 endif(${BUILD_OPENGL_BACKEND})
+
+if(${BUILD_SQL_BACKEND})
+    add_subdirectory(sql)
+    target_link_libraries(${MAIN_LIB_TARGET} PUBLIC ${MAIN_LIB_SQL_TARGET})
+endif(${BUILD_SQL_BACKEND})
