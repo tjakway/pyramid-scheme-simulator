@@ -49,7 +49,8 @@ class ConversionHandler
      * wraps testConversion and makes sure the 2 capitalholders
      * are a Consumer and Distributor
      */
-    ConversionPredicateResult predF(const SimulationTick when, const CapitalHolder&, const CapitalHolder&);
+    ConversionPredicateResult predF(const SimulationTick when,
+            const CapitalHolder&, const CapitalHolder&) const;
 public:
     ConversionHandler(rd_ptr _rd, const Money _buyIn);
 

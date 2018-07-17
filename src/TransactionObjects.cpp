@@ -29,13 +29,6 @@ namespace {
 namespace pyramid_scheme_simulator {
 
 
-ConversionHandler::RecordType ConversionHandler::operator()(SimulationTick,
-    CapitalHolder&, 
-    CapitalHolder&) const
-{
-    //TODO: implement
-    return emptyListTransactionRecord<ConversionHandler::ElementType>();
-}
 
 const ConversionHandler::ComparatorType ConversionHandler::comparator =
     mkCmpUniqueables<ConversionHandler::Conversion>();
@@ -111,6 +104,20 @@ public:
     operator bool() const
     {
         return success();
+    }
+
+    std::unique_ptr<ConversionHandler::ElementType>&& getElement()
+    {
+        if(!success())
+        {
+            throw ConversionPredicateResultException(
+                    STRCAT("Tried to access ConversionPredicateResult ",
+                        "record but result != SUCCESS"));
+        }
+        else
+        {
+            return std::move(conversionRecord);
+        }
     }
 
     static ConversionPredicateResult castFailed(
@@ -200,7 +207,7 @@ ConversionHandler::ConversionPredicateResult ConversionHandler::testConversion(
 
 ConversionHandler::ConversionPredicateResult ConversionHandler::predF(
         const SimulationTick when, 
-        const CapitalHolder& lhs, const CapitalHolder& rhs)
+        const CapitalHolder& lhs, const CapitalHolder& rhs) const
 {
     const Consumer*    consumer = nullptr;
     const Distributor* distributor = nullptr;
@@ -273,6 +280,23 @@ ConversionHandler::RecordType ConversionHandler::operator()(SimulationTick when,
 }
 
 
+ConversionHandler::RecordType ConversionHandler::operator()(
+    SimulationTick when,
+    CapitalHolder& a, 
+    CapitalHolder& b) const
+{
+    ConversionPredicateResult res = predF(when, a, b);
+    if(res.success())
+    {
+        return singleElementListTransactionRecord<
+            ConversionHandler::ElementType>(res.getElement());
+    }
+    else
+    {
+        return emptyListTransactionRecord<ConversionHandler::ElementType>();
+    }
+
+}
 
 
 
