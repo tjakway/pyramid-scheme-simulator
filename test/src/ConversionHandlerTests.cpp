@@ -29,6 +29,10 @@ using ConversionHandlerTests = BasicGraphSetup;
  */
 TEST_F(ConversionHandlerTests, BasicConversionRecordTest)
 {
+    ASSERT_FALSE(consumer1->isDistributor());
+    ASSERT_FALSE(consumer2->isDistributor());
+    ASSERT_TRUE(distributor->isDistributor());
+
     //make sure the consumer in our test has enough cash to afford the buy in
     ASSERT_GT(startingMoney, buyIn);
 
