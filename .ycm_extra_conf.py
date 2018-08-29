@@ -24,6 +24,7 @@ flags = [
 '-x',
 'c++',
 '-std=c++11',
+'-stdlib=libc++',
 '-I', 'include/',
 '-I', 'src/gl/include',
 '-I', 'lib/glm',

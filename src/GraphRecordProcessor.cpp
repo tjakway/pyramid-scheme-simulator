@@ -31,9 +31,13 @@ PopulationGraph::vertices_size_type
 {
     NEW_EXCEPTION_TYPE(ProcessConversionException);
 
+    std::vector<Unique> seenIds;
+
     PopulationGraph::MutateVertexFunction mutate = 
-        [&recs, this](PopulationGraph::Pop toConvert)
+        [&recs, &seenIds, this](PopulationGraph::Pop toConvert)
         {
+            seenIds.push_back(toConvert->id);
+
             if(toConvert->isDistributor())
             {
                 throw ProcessConversionException(STRCAT("Could not convert ",
