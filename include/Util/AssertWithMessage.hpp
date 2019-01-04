@@ -5,6 +5,10 @@
 #include <sstream>
 #include <string>
 
+#ifdef ASSERT_WITH_MESSAGE_NS
+namespace ASSERT_WITH_MESSASGE_NS {
+#endif
+
 class AssertionFailedException : public std::runtime_error
 {
 public:
@@ -13,6 +17,9 @@ public:
     {}
 };
 
+#ifdef ASSERT_WITH_MESSAGE_NS
+}
+#endif
 
 //see https://stackoverflow.com/questions/3767869/adding-message-to-assert
 #ifndef NDEBUG
