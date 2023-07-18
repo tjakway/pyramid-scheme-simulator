@@ -14,6 +14,10 @@
 
 #define PP_ASSERT(condition) PP_ASSERT_PTR(condition, this) 
 
+#ifdef PRETTY_PRINTABLE_UTIL_NS
+namespace PRETTY_PRINTABLE_UTIL_NS {
+#endif
+
 class PrettyPrintable
 {
      //standardize pretty print formatting
@@ -70,3 +74,7 @@ public:
         }
     }
 };
+
+#ifdef PRETTY_PRINTABLE_UTIL_NS
+}
+#endif

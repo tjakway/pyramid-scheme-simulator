@@ -5,7 +5,9 @@
 
 #include <string>
 
-namespace pyramid_scheme_simulator {
+#ifdef PRETTY_PRINTABLE_UTIL_NS
+namespace PRETTY_PRINTABLE_UTIL_NS {
+#endif
 
 class PrettyPrintUniqueable : public PrettyPrintable, public Uniqueable
 {
@@ -27,4 +29,6 @@ public:
     virtual ~PrettyPrintUniqueable() = 0;
 };
 
+#ifdef PRETTY_PRINTABLE_UTIL_NS
 }
+#endif
